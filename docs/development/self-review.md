@@ -56,15 +56,17 @@ Run the relevant checklist before creating a PR. Include the checklist name in t
 
 ## frontend
 
-- [ ] React + TS + Vite; source in `frontend/`, build to `public_html/assets/` only
-- [ ] Files grouped by feature/role; components named after their role
-- [ ] All UI strings (incl. widget, errors, aria-labels) via `t(key)` from `shared/i18n`; no hardcoded ja/en (i18n.md)
-- [ ] New keys added to `messages/en.ts` (source of truth) AND `ja.ts`; key-parity test passes
-- [ ] Errors localized by mapping problem `type`/`code` to catalog messages; API responses not translated
-- [ ] API calls via typed client only (`frontend/src/api`); no direct `fetch` in components
-- [ ] Money integer end-to-end; UTC→JST conversion only at the view edge
-- [ ] No secrets / PAN in frontend code or built assets
-- [ ] `npm run check --prefix frontend` passes
+Use the full, binding checklist: [`../review/frontend.md`](../review/frontend.md)
+(FSD architecture, zero-tolerance placement, data flow, theming, Storybook,
+security, testing — ADR 0019 / `frontend-standards.md`). Key reminders:
+
+- [ ] FSD layers `app→pages→features→entities→shared`; slices via `index.ts` only; no cross-feature/upward imports
+- [ ] Entity files in mandated paths; DTOs/`fetch`/query-keys not outside their files
+- [ ] Read/write data flow honored; loading/empty/error/success explicit
+- [ ] Visual values only in `shared/ui/theme/*`; semantic Tailwind utilities; no literals / arbitrary values
+- [ ] All UI strings via `t(key)` (ja+en parity); errors mapped from Problem Details
+- [ ] Money integer (format at view edge); UTC→JST; no PAN/secrets; tenant server-resolved
+- [ ] mapper + feature-hook (MSW) tests; `npm run check --prefix frontend` passes
 
 ## docs
 

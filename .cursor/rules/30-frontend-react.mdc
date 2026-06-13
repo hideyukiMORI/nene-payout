@@ -1,0 +1,55 @@
+---
+description: NeNe Payout フロント（React/TS）— 厳格アーキテクチャ・データフロー・テーマ・テスト規約
+globs: "frontend/**/*.{ts,tsx,css}"
+alwaysApply: false
+---
+
+# Frontend React / TypeScript（厳格）
+
+正本: **`docs/development/frontend-standards.md`**（ADR 0019・違反はマージ不可）。
+セルフレビュー: `docs/review/frontend.md`。
+
+## アーキテクチャ（FSD）
+
+- レイヤー: `app → pages → features → entities → shared`。上向き・feature 横断 import 禁止。
+- 公開面: `entities/{resource}/index.ts` と `features/{feature}/index.ts` のみ。
+- sibling `entities/*` 相互 import 禁止。フロント実装は Phase 2 から。
+
+## 配置（zero tolerance）
+
+- model / enum / ids / api-types / mapper / query-keys / queries / mutations は `entities/{resource}/`（kebab-case = OpenAPI tag）の規定ファイルのみ。
+- generated 型は `shared/api/generated/` のみ。features / pages / `*.tsx` から DTO を import しない。
+- HTTP は `shared/api/client.ts` のみ。default export 禁止・named export のみ。
+
+## データフロー
+
+- Read: API → client → mapper → entity query → feature hook → UI（UI は model のみ）。
+- Write: UI → mutation hook → client → API → 明示的 invalidation。
+- `useEffect`+fetch 禁止。Query cache を useState に複製しない。loading/empty/error/success を明示。
+
+## 金額・日時・コンプラ
+
+- 金額は整数（最小通貨単位）。float 演算禁止。整形は view 端のみ。`amount`/`charge_amount`/`processing_fee` を混同しない。
+- 日時は UTC→JST 表示（ADR 0012）。
+- **カード PAN/CVV をフロントで扱わない**（ADR 0010、ゲートウェイの hosted iframe/redirect のみ）。
+- `organization_id` を scope 目的で送らない（サーバ解決・ADR 0018）。
+
+## テーマ（Tailwind v4・zero tolerance）
+
+- 生の color/spacing/font/background/radius/shadow/z-index は `shared/ui/theme/themes/*.css` のみ。
+- テーマ差し替えは `active.css` の import 差し替えだけで全 UI が変わること。
+- Tailwind 任意値（`p-[13px]`/`text-[#fff]`）禁止。セマンティック utility のみ。
+- features は `shared/ui` barrel のみ import。primitives 直 import・素の `<button>` スタイル禁止。
+
+## Storybook
+
+- `shared/ui/primitives` と `components` に必須（features/pages 禁止）。
+- 各 story 先頭に In / Out / Does not 契約コメント。`build-storybook` を CI に含める。
+
+## 型・セキュリティ・テスト
+
+- TS strict + `noUncheckedIndexedAccess`。`any`/無理由 `@ts-ignore`/`!` 禁止。branded ID（`ids.ts`）。
+- 401/403 fail closed。秘密情報・トークンをソースに置かない。
+- Vitest + Testing Library + MSW。mapper テスト＋feature hook テスト（happy + Problem Details error）必須。
+- i18n: 文言は `t(key)`（ja/en）。`messages/en.ts` と `ja.ts` に追加し parity を通す。
+- `npm run check --prefix frontend` 必須。ESLint boundary 違反は fail。

@@ -22,7 +22,8 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | NENE2 compliance (binding) | `docs/development/nene2-compliance.md` |
 | NENE2 runtime reference (binding) | `docs/development/nene2-runtime-reference.md` |
 | Database & schema (binding) | `docs/development/database-standards.md` |
-| Frontend standards (binding) | `docs/development/frontend-standards.md` |
+| Frontend standards — strict FSD (binding) | `docs/development/frontend-standards.md` |
+| Frontend self-review (binding) | `docs/review/frontend.md` |
 | Local Docker ports (binding) | `docs/development/local-ports.md` |
 | Current tasks | `docs/todo/current.md` |
 | Roadmap | `docs/roadmap.md` |

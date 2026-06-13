@@ -235,3 +235,20 @@ Action format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 
 > Message keys live in `frontend/src/shared/i18n/messages/en.ts` (the typed
 > source of truth), not in this file; `terms.md` governs code/API/DB identifiers.
+
+## §14 Frontend (FSD — frontend-standards.md, ADR 0019)
+
+### Layers (import order: `app → pages → features → entities → shared`)
+`app` / `pages` / `features` / `entities` / `shared`
+
+### Entity resource slugs (kebab-case = OpenAPI tag)
+`received-invoice` / `vendor` / `payment-execution` / `organization` /
+`gateway-setting` / `user` / `audit-log`
+
+### Entity file set (per `entities/{resource}/`)
+`index.ts` / `ids.ts` / `enum.ts` / `api-types.ts` / `model.ts` / `mapper.ts` /
+`query-keys.ts` / `queries.ts` / `mutations.ts`
+
+### File-name casing
+Components `PascalCase.tsx`; hooks `use-kebab-case.ts`; other modules `kebab-case.ts`;
+component props `{Component}Props`. Named exports only (no default exports).
