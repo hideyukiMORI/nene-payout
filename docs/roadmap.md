@@ -32,7 +32,7 @@ pass `docs/review/compliance.md`.
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
 - [ ] Stripe adapter (hosted charge + verify)
 - [ ] PaymentExecution create / status update (immutable terminal records — ADR 0013)
-- [ ] Audit logging (`AuditRecorderInterface`, before/after, mutation+audit in one transaction — ADR 0011, audit-logging.md)
+- [x] Audit foundation (`Ulid`, `AuditRecorder`, audit_logs migration, `GET /api/v1/audit-logs`); mutation+audit transaction wiring applied per resource — ADR 0011 — Issue #32
 - [ ] UTC storage / JST display bootstrap (ADR 0012)
 - [ ] Webhook handler (payment result from gateway; signature-verified, idempotent)
 - [ ] OpenAPI contract validation (composer openapi)
