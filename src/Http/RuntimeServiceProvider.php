@@ -17,13 +17,17 @@ use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
 use Nene2\Error\DomainExceptionHandlerInterface;
 use Nene2\Error\ProblemDetailsResponseFactory;
+use Nene2\Http\ClockInterface;
 use Nene2\Http\JsonResponseFactory;
 use Nene2\Http\RequestScopedHolder;
 use Nene2\Http\ResponseEmitter;
 use Nene2\Http\RuntimeApplicationFactory;
+use Nene2\Http\UtcClock;
 use Nene2\Log\MonologLoggerFactory;
 use Nene2\Log\RequestIdHolder;
 use NenePayout\ApplicationServiceProvider;
+use NenePayout\Auth\BearerAuthMiddleware;
+use NenePayout\Auth\CapabilityMiddleware;
 use NenePayout\Organization\OrganizationRepositoryInterface;
 use NenePayout\Organization\Resolution\CustomDomainResolutionStrategy;
 use NenePayout\Organization\Resolution\EnvResolutionStrategy;
@@ -113,6 +117,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                     return new PdoDatabaseTransactionManager($connectionFactory);
                 },
             )
+            ->set(ClockInterface::class, static fn (ContainerInterface $container): ClockInterface => new UtcClock())
             ->set(Psr17Factory::class, static fn (ContainerInterface $container): Psr17Factory => new Psr17Factory())
             ->set(
                 ResponseFactoryInterface::class,
@@ -251,6 +256,17 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
 
                     $orgResolver = new OrgResolverMiddleware($orgIdHolder, $orgRepository, $problemDetails, $strategy);
 
+                    $bearerAuth = $container->get(BearerAuthMiddleware::class);
+                    $capability = $container->get(CapabilityMiddleware::class);
+
+                    if (!$bearerAuth instanceof BearerAuthMiddleware) {
+                        throw new LogicException('Bearer auth middleware service is invalid.');
+                    }
+
+                    if (!$capability instanceof CapabilityMiddleware) {
+                        throw new LogicException('Capability middleware service is invalid.');
+                    }
+
                     return new RuntimeApplicationFactory(
                         responseFactory: $responseFactory,
                         streamFactory: $streamFactory,
@@ -259,7 +275,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                         domainExceptionHandlers: $exceptionHandlers,
                         requestIdHolder: $requestIdHolder,
                         routeRegistrars: $routeRegistrars,
-                        authMiddleware: [$orgResolver],
+                        authMiddleware: [$orgResolver, $bearerAuth, $capability],
                         healthChecks: [],
                         debug: $config->debug,
                         problemDetailsBaseUrl: $config->problemDetailsBaseUrl,
