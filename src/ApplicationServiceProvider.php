@@ -14,6 +14,10 @@ use NenePayout\Auth\AuthRouteRegistrar;
 use NenePayout\Auth\AuthServiceProvider;
 use NenePayout\Auth\InvalidCredentialsExceptionHandler;
 use NenePayout\Organization\OrganizationServiceProvider;
+use NenePayout\Payment\PaymentExecutionNotFoundExceptionHandler;
+use NenePayout\Payment\PaymentNotAllowedExceptionHandler;
+use NenePayout\Payment\PaymentRouteRegistrar;
+use NenePayout\Payment\PaymentServiceProvider;
 use NenePayout\ReceivedInvoice\InvoiceNotEditableExceptionHandler;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundExceptionHandler;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRouteRegistrar;
@@ -51,6 +55,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
         $builder->addProvider(new AuditServiceProvider());
         $builder->addProvider(new VendorServiceProvider());
         $builder->addProvider(new ReceivedInvoiceServiceProvider());
+        $builder->addProvider(new PaymentServiceProvider());
 
         $builder
             ->set(
@@ -69,6 +74,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $audit = $container->get(AuditRouteRegistrar::class);
                     $vendor = $container->get(VendorRouteRegistrar::class);
                     $receivedInvoice = $container->get(ReceivedInvoiceRouteRegistrar::class);
+                    $payment = $container->get(PaymentRouteRegistrar::class);
 
                     if (!$auth instanceof AuthRouteRegistrar) {
                         throw new LogicException('Auth route registrar service is invalid.');
@@ -86,7 +92,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Received invoice route registrar service is invalid.');
                     }
 
-                    return [$auth, $audit, $vendor, $receivedInvoice];
+                    if (!$payment instanceof PaymentRouteRegistrar) {
+                        throw new LogicException('Payment route registrar service is invalid.');
+                    }
+
+                    return [$auth, $audit, $vendor, $receivedInvoice, $payment];
                 },
             )
             ->set(
@@ -97,6 +107,8 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $vendorNotFound = $container->get(VendorNotFoundExceptionHandler::class);
                     $invoiceNotFound = $container->get(ReceivedInvoiceNotFoundExceptionHandler::class);
                     $invoiceNotEditable = $container->get(InvoiceNotEditableExceptionHandler::class);
+                    $paymentNotFound = $container->get(PaymentExecutionNotFoundExceptionHandler::class);
+                    $paymentNotAllowed = $container->get(PaymentNotAllowedExceptionHandler::class);
 
                     if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
                         throw new LogicException('Invalid credentials exception handler service is invalid.');
@@ -114,7 +126,15 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Invoice not editable exception handler service is invalid.');
                     }
 
-                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable];
+                    if (!$paymentNotFound instanceof PaymentExecutionNotFoundExceptionHandler) {
+                        throw new LogicException('Payment execution not found exception handler service is invalid.');
+                    }
+
+                    if (!$paymentNotAllowed instanceof PaymentNotAllowedExceptionHandler) {
+                        throw new LogicException('Payment not allowed exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed];
                 },
             );
     }

@@ -24,4 +24,7 @@ interface ReceivedInvoiceRepositoryInterface
 
     /** Sets the stored PDF path without touching other fields. */
     public function attachPdf(string $id, string $pdfPath): void;
+
+    /** Transitions the invoice status without touching other fields. */
+    public function updateStatus(string $id, string $status): void;
 }
