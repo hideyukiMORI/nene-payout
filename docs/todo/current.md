@@ -21,7 +21,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] 監査ログ設計（全操作・前後記録・アトミック、audit-logging.md, ADR 0011 格上げ） — Issue #13
 - [x] i18n 設計（ja/en メッセージ一覧・即時切替、i18n.md） — Issue #15
 - [x] ローカル Docker ポートを衝突しない 90 lane に固定＋ルール化（local-ports.md） — Issue #17
-  - [ ] nene-playbook 側のレジストリも 90 lane に更新（外部リポジトリ）
+  - [x] nene-playbook レジストリを 90 lane に更新（nene-playbook #8 / PR #9）
+- [x] 90 lane のローカル Docker 構成（compose.yaml / .env.example / docker） — Issue #19
 
 ## Next (Phase 1)
 
