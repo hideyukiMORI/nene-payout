@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace NenePayout;
 
+use LogicException;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
 use Nene2\Http\RequestScopedHolder;
+use NenePayout\Auth\AuthRouteRegistrar;
+use NenePayout\Auth\AuthServiceProvider;
+use NenePayout\Auth\InvalidCredentialsExceptionHandler;
 use NenePayout\Organization\OrganizationServiceProvider;
 use Psr\Container\ContainerInterface;
 
@@ -34,6 +38,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
     public function register(ContainerBuilder $builder): void
     {
         $builder->addProvider(new OrganizationServiceProvider());
+        $builder->addProvider(new AuthServiceProvider());
 
         $builder
             ->set(
@@ -47,12 +52,28 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
             ->set(
                 self::ROUTE_REGISTRARS,
                 /** @return list<callable(\Nene2\Routing\Router): void> */
-                static fn (ContainerInterface $container): array => [],
+                static function (ContainerInterface $container): array {
+                    $auth = $container->get(AuthRouteRegistrar::class);
+
+                    if (!$auth instanceof AuthRouteRegistrar) {
+                        throw new LogicException('Auth route registrar service is invalid.');
+                    }
+
+                    return [$auth];
+                },
             )
             ->set(
                 self::EXCEPTION_HANDLERS,
                 /** @return list<\Nene2\Error\DomainExceptionHandlerInterface> */
-                static fn (ContainerInterface $container): array => [],
+                static function (ContainerInterface $container): array {
+                    $invalidCredentials = $container->get(InvalidCredentialsExceptionHandler::class);
+
+                    if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
+                        throw new LogicException('Invalid credentials exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials];
+                },
             );
     }
 }
