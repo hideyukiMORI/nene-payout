@@ -28,6 +28,7 @@ Typos and unregistered names block merge.
 | `ReceivedInvoice` | Entity | 受け取った請求書 |
 | `Vendor` | Entity | 支払先の仕入先・外注先 |
 | `PaymentExecution` | Entity | 決済実行記録 |
+| `AuditLog` | Entity | 監査ログ（`audit_logs` テーブル） — ADR 0011 |
 
 ## §4 Status values
 
@@ -38,6 +39,7 @@ Typos and unregistered names block merge.
 | `processing` | 決済中 |
 | `paid` | 支払い完了 |
 | `failed` | 失敗 |
+| `voided` | 無効化（論理削除 — ADR 0013） |
 
 ### PaymentExecution.status
 | Value | Meaning |
@@ -45,6 +47,8 @@ Typos and unregistered names block merge.
 | `initiated` | 開始済み |
 | `succeeded` | 成功 |
 | `failed` | 失敗 |
+| `refunded` | 返金（新規リンクレコード — ADR 0013, 0015） |
+| `charged_back` | チャージバック（新規リンクレコード — ADR 0013, 0015） |
 
 ## §5 Account type values
 
@@ -67,16 +71,25 @@ Typos and unregistered names block merge.
 | `received_invoice_id` | |
 | `vendor_id` | |
 | `organization_id` | |
-| `amount` | Integer cents |
-| `due_date` | ISO 8601 date string |
+| `amount` | Integer cents — invoice amount the vendor is owed/receives |
+| `charge_amount` | Integer cents — amount the operator's card is charged (ADR 0015) |
+| `processing_fee` | Integer cents — card-payment processing fee (ADR 0015) |
+| `due_date` | ISO 8601 date string (JST calendar date — ADR 0012) |
 | `bank_code` | |
 | `branch_code` | |
 | `account_type` | |
 | `account_number` | |
 | `account_name` | |
-| `gateway_reference` | |
-| `initiated_at` | |
-| `completed_at` | |
+| `registration_number` | Vendor 適格請求書発行事業者 登録番号; format `^T[0-9]{13}$`, syntax-only (ADR 0014) |
+| `tax_rate_bps` | Tax rate in basis points; allowed `1000` (10%) / `800` (8% reduced) |
+| `taxable_amount` | Integer cents — taxable amount for a tax-rate group (recorded copy) |
+| `tax_amount` | Integer cents — consumption tax for a tax-rate group (recorded copy) |
+| `vault_document_url` | HTTP reference to a nene-vault document (ADR 0014) |
+| `invoice_client_url` | HTTP reference to a nene-invoice client |
+| `gateway` | Gateway identifier (§6) |
+| `gateway_reference` | Gateway transaction / reference id |
+| `initiated_at` | UTC instant (ADR 0012) |
+| `completed_at` | UTC instant (ADR 0012) |
 
 ## §8 Env variables
 
@@ -97,3 +110,15 @@ Typos and unregistered names block merge.
 | `orgId` | `organization_id` |
 | `vendorId` | `vendor_id` |
 | `invoiceId` | `received_invoice_id` |
+
+## §10 Audit action names (ADR 0011)
+
+Format: `{entity}.{verb}` (snake_case entity, past-tense verb).
+
+| Action | Meaning |
+| --- | --- |
+| `vendor.created` / `vendor.updated` / `vendor.deactivated` | Vendor mutations |
+| `received_invoice.created` / `received_invoice.updated` / `received_invoice.voided` | Invoice mutations |
+| `payment.initiated` | Payment instruction sent to gateway |
+| `payment.succeeded` / `payment.failed` | Gateway result recorded |
+| `payment.refunded` / `payment.charged_back` | Post-settlement events (linked records) |

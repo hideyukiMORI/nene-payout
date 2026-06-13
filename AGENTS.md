@@ -17,6 +17,8 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 
 - **Canonical terms — single source of truth (binding):** `docs/terms.md` ← **START HERE for any identifier**
 - **Scope contract (binding):** `docs/explanation/scope-contract.md`
+- **Payment / legal / tax compliance (binding, non-negotiable):** `docs/explanation/payment-compliance.md`
+- **Compliance self-review (binding):** `docs/review/compliance.md`
 - **Product vision:** `docs/explanation/product-vision.md`
 - **Requirements:** `docs/explanation/requirements.md`
 - **Domain model:** `docs/explanation/domain-model.md`
@@ -35,6 +37,10 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 - Do **not** add bank reconciliation / dunning — **`nene-clear`**
 - Do **not** add long-term document archiving — **`nene-vault`**
 - Do **not** add full accounts payable management
+- Do **not** move money, hold funds, or do AML/KYC in Payout — **delegated to the gateway** (ADR 0009)
+- Do **not** store card PAN — hosted-only capture, SAQ-A (ADR 0010)
+- Do **not** implement fee/refund/chargeback accounting without a 税理士/会計士-signed ADR (ADR 0015)
+- **Compliance is binding & non-negotiable** — `docs/explanation/payment-compliance.md`; run `docs/review/compliance.md`
 - **Follow NENE2 conventions** — `docs/development/nene2-compliance.md`
 - Namespace: `NenePayout\`; money: integer cents
 - **Repository docs: English only** (ADR 0006)

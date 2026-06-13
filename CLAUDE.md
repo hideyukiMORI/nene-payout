@@ -7,6 +7,8 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | Purpose | Document |
 | --- | --- |
 | Scope contract (binding) | `docs/explanation/scope-contract.md` |
+| **Payment/legal/tax compliance (binding)** | `docs/explanation/payment-compliance.md` |
+| Compliance self-review (binding) | `docs/review/compliance.md` |
 | Canonical terms (binding) | `docs/terms.md` |
 | NENE2 inheritance | `docs/inheritance-from-nene2.md` |
 | Agent entry | `AGENTS.md` |
@@ -28,6 +30,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 - **Framework**: NENE2 via Composer — read `vendor/hideyukimori/nene2/docs/` for runtime patterns.
 - **Terms**: every identifier must match `docs/terms.md` exactly. Check before writing any name.
 - **Scope**: Payout pays vendor invoices by card. Does NOT issue invoices, reconcile deposits, or archive documents.
+- **Compliance (binding)**: `docs/explanation/payment-compliance.md` is non-negotiable. Payout is software only — all regulated money movement is delegated to the licensed gateway (ADR 0009); no PAN (SAQ-A, ADR 0010); financial records immutable & retained (ADR 0013); fee/refund/chargeback accounting needs a 税理士/会計士-signed ADR (ADR 0015). Run `docs/review/compliance.md` for any change with possible compliance impact.
 
 ## Product Direction
 

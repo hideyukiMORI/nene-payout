@@ -8,20 +8,31 @@
 - [x] Port registry update (nene-playbook)
 - [x] docs/explanation/ full set (requirements, features, pages, glossary, domain-model, product-vision, scope-contract, scope-boundary)
 - [x] docs/development/ full set (coding-standards, naming-conventions, backend-standards, nene2-compliance, commit-conventions, self-review)
+- [x] Payment/legal/tax compliance foundation (binding payment-compliance.md, ADRs 0008–0015, review/compliance.md)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
 ## Phase 1 — Core payment API
 
+All Phase 1 work is bound by `docs/explanation/payment-compliance.md` and must
+pass `docs/review/compliance.md`.
+
 - [ ] NENE2 runtime scaffold (health, OpenAPI endpoint)
 - [ ] Multi-tenant auth (organization + JWT, inherits NENE2 BearerAuth)
-- [ ] Vendor management CRUD
-- [ ] ReceivedInvoice CRUD (registration, PDF upload)
-- [ ] Payment gateway adapter interface
-- [ ] Stripe adapter (charge + verify)
-- [ ] PaymentExecution create / status update
-- [ ] Webhook handler (payment result from gateway)
+- [ ] Vendor management CRUD (with registration_number, record & link only)
+- [ ] ReceivedInvoice CRUD (registration, PDF upload, void semantics)
+- [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
+- [ ] Stripe adapter (hosted charge + verify)
+- [ ] PaymentExecution create / status update (immutable terminal records — ADR 0013)
+- [ ] Audit logging (AuditRecorder — ADR 0011)
+- [ ] UTC storage / JST display bootstrap (ADR 0012)
+- [ ] Webhook handler (payment result from gateway; signature-verified, idempotent)
 - [ ] OpenAPI contract validation (composer openapi)
+
+## Compliance follow-ups (gated)
+
+- [ ] Fee / refund / chargeback accounting model + **税理士/会計士 sign-off** (ADR 0015 → follow-up ADR), then implement
+- [ ] Launch gateway selection ADR (licensed/contracted entity — ADR 0009)
 
 ## Phase 2 — Admin UI + widget
 
