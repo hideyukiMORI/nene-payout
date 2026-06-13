@@ -18,4 +18,5 @@ export {
   useCreateReceivedInvoice,
   useUpdateReceivedInvoice,
   useVoidReceivedInvoice,
+  useAttachReceivedInvoicePdf,
 } from './mutations'
