@@ -15,6 +15,7 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] GitHub Issue #1: Governance bootstrap
 - [x] nene-playbook port registry に 89 レーンを登録
 - [x] 支払側コンプライアンス基盤（binding payment-compliance.md, ADR 0008–0015, review/compliance.md） — Issue #5
+- [x] NENE2 コーディング規約の binding 化（ADR 0016, nene2-runtime-reference, database-standards, frontend-standards, 既存誤記の訂正） — Issue #7
 
 ## Next (Phase 1)
 

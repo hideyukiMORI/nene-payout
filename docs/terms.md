@@ -17,9 +17,15 @@ Typos and unregistered names block merge.
 | Suffix | Use |
 | --- | --- |
 | `Handler` | HTTP request handler (NOT `Controller`) |
-| `UseCase` | Business logic (NOT `Service`) |
+| `UseCase` / `UseCaseInterface` | Business logic (NOT `Service`); method `execute` |
 | `RepositoryInterface` | Repository abstraction |
 | `PdoXxxRepository` | PDO implementation |
+| `Input` / `Output` | Readonly use-case DTOs |
+| `InputMapper` | Request → Input DTO mapper |
+| `GatewayAdapter` | Payment gateway adapter (e.g. `StripeGatewayAdapter`) |
+| `ServiceProvider` | DI registration per domain concept |
+| `Exception` | Named domain exception |
+| `Status` | Backed enum for entity status (e.g. `ReceivedInvoiceStatus`) |
 
 ## §3 Entities
 

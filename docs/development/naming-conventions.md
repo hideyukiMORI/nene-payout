@@ -8,13 +8,22 @@ All identifiers must match [`docs/terms.md`](../terms.md) exactly. This file exp
 | --- | --- | --- |
 | Namespace root | `NenePayout\` | `NenePayout\ReceivedInvoice\Handler\ListHandler` |
 | HTTP handler | `XxxHandler` (never `Controller`) | `CreateReceivedInvoiceHandler` |
-| Business logic | `XxxUseCase` (never `Service`) | `InitiatePaymentUseCase` |
+| UseCase logic | `XxxUseCase` + `XxxUseCaseInterface` (never `Service`) | `InitiatePaymentUseCase` |
 | Repository abstraction | `XxxRepositoryInterface` | `ReceivedInvoiceRepositoryInterface` |
 | PDO implementation | `PdoXxxRepository` | `PdoReceivedInvoiceRepository` |
 | Gateway adapter | `XxxGatewayAdapter` | `StripeGatewayAdapter` |
 | Gateway interface | `PaymentGatewayInterface` | — |
-| Input DTO | `XxxInput` | `CreateVendorInput` |
+| Input DTO | `XxxInput` (final readonly) | `CreateVendorInput` |
+| Output DTO | `XxxOutput` (final readonly) | `InitiatePaymentOutput` |
+| Input mapper | `XxxInputMapper` | `CreateVendorInputMapper` |
+| Service provider | `XxxServiceProvider` | `PaymentServiceProvider` |
+| Entity / value object | `Xxx` (final readonly), status `XxxStatus` (backed enum) | `Vendor`, `ReceivedInvoiceStatus` |
 | Exception | `XxxException` | `PaymentFailedException` |
+
+The single UseCase method is always named `execute`. DTOs are `final readonly`,
+constructed from already-validated values. Group files by **domain concept**
+(`src/{Domain}/...`), not by layer type — see
+[`backend-standards.md`](./backend-standards.md).
 
 ## Database
 

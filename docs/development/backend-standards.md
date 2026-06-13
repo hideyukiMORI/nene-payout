@@ -63,20 +63,40 @@ src/
 - Raw card numbers must never pass through Payout — use gateway iframe / tokenization
 - Webhook signature must be verified before processing
 
-## PDO injection pattern
+## Repository persistence pattern (binding)
+
+Repositories depend on NENE2's `DatabaseQueryExecutorInterface` via constructor
+injection — **not** raw `PDO`, **not** a singleton/`getInstance()`. Connections
+are built by `PdoConnectionFactory` from typed `DatabaseConfig`; multi-query
+atomic work uses `DatabaseTransactionManagerInterface`.
 
 ```php
-public function __construct(private readonly ?PDO $db = null) {}
-
-private function db(): PDO
+final class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepositoryInterface
 {
-    return $this->db ?? PdoConnection::getInstance();
+    public function __construct(
+        private readonly DatabaseQueryExecutorInterface $query,
+    ) {}
+
+    public function findById(string $id, string $organizationId): ?ReceivedInvoice
+    {
+        $row = $this->query->fetchOne(
+            'SELECT id, amount, status FROM received_invoices WHERE id = ? AND organization_id = ?',
+            [$id, $organizationId],
+        );
+        return $row !== null ? /* typed cast */ : null;
+    }
 }
 ```
 
+See [`database-standards.md`](./database-standards.md) and
+[`nene2-runtime-reference.md`](./nene2-runtime-reference.md) for the full rules.
+
 ## Error responses
 
-All error responses use RFC 9457 Problem Details (`application/problem+json`) via NENE2 `ProblemDetailsResponseFactory`.
+All error responses use RFC 9457 Problem Details (`application/problem+json`) via
+NENE2 `ProblemDetailsResponseFactory`. Domain exceptions are mapped to stable
+Problem types at the error boundary (`ErrorHandlerMiddleware` +
+`DomainExceptionHandlerInterface`), never shaped inside the Handler.
 
 ## CONTRIBUTING.md cross-reference
 

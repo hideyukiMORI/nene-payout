@@ -17,6 +17,9 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | Coding (index) | `docs/development/coding-standards.md` |
 | Backend standards (binding) | `docs/development/backend-standards.md` |
 | NENE2 compliance (binding) | `docs/development/nene2-compliance.md` |
+| NENE2 runtime reference (binding) | `docs/development/nene2-runtime-reference.md` |
+| Database & schema (binding) | `docs/development/database-standards.md` |
+| Frontend standards (binding) | `docs/development/frontend-standards.md` |
 | Current tasks | `docs/todo/current.md` |
 | Roadmap | `docs/roadmap.md` |
 
@@ -28,6 +31,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 - **PR**: purpose, changes, verification, checklist name, `Closes #n`.
 - **Secrets**: never commit `.env`, tokens, or credentials.
 - **Framework**: NENE2 via Composer — read `vendor/hideyukimori/nene2/docs/` for runtime patterns.
+- **Coding (binding)**: follow NENE2 conventions exactly (ADR 0016). Use real NENE2 classes per `docs/development/nene2-runtime-reference.md` — there is NO `PdoConnection::getInstance()`, `DbUpsert`, `BearerAuth`, or `ResponseDecorator`; use `DatabaseQueryExecutorInterface`, `BearerTokenMiddleware`, `SecurityHeadersMiddleware`. Layer Handler→UseCase→RepositoryInterface→PdoRepository; constructor injection; no service locator in domain code.
 - **Terms**: every identifier must match `docs/terms.md` exactly. Check before writing any name.
 - **Scope**: Payout pays vendor invoices by card. Does NOT issue invoices, reconcile deposits, or archive documents.
 - **Compliance (binding)**: `docs/explanation/payment-compliance.md` is non-negotiable. Payout is software only — all regulated money movement is delegated to the licensed gateway (ADR 0009); no PAN (SAQ-A, ADR 0010); financial records immutable & retained (ADR 0013); fee/refund/chargeback accounting needs a 税理士/会計士-signed ADR (ADR 0015). Run `docs/review/compliance.md` for any change with possible compliance impact.

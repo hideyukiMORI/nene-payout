@@ -25,6 +25,9 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 - **Naming rules:** `docs/development/naming-conventions.md`
 - **Backend standards:** `docs/development/backend-standards.md`
 - **NENE2 compliance (binding):** `docs/development/nene2-compliance.md`
+- **NENE2 runtime reference — common objects, data flow (binding):** `docs/development/nene2-runtime-reference.md`
+- **Database & schema (binding):** `docs/development/database-standards.md`
+- **Frontend standards (binding):** `docs/development/frontend-standards.md`
 - **Sibling integration:** `docs/integrations/sibling-products.md`
 - **NENE2 inheritance map:** `docs/inheritance-from-nene2.md`
 - **Current work:** `docs/todo/current.md`
