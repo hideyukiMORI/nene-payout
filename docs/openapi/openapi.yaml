@@ -1,0 +1,25 @@
+openapi: 3.1.0
+info:
+  title: NeNe Payout API
+  version: 0.1.0
+  description: Self-hosted vendor invoice payment via credit card.
+servers:
+  - url: http://localhost:8900
+    description: Local development
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Health check
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok

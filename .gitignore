@@ -1,0 +1,11 @@
+vendor/
+node_modules/
+.env
+.env.local
+var/
+storage/
+public_html/assets/
+frontend/dist/
+*.sqlite
+*.sqlite3
+.DS_Store

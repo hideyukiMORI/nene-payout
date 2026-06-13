@@ -1,0 +1,16 @@
+---
+description: nene-payout の基本ルール。常に適用される。
+alwaysApply: true
+---
+
+# Project Rules
+
+- Canonical docs: `README.md`, `AGENTS.md`, `docs/explanation/scope-contract.md`, `docs/workflow.md`.
+- **NeNe Payout = vendor invoice payment via card only** (ADR 0002). Not invoice issuance, not reconciliation, not document archiving.
+- **Canonical terms (binding): `docs/terms.md`** — check before writing any identifier. Typos and unregistered names block merge.
+- Issue-driven; English repository docs (ADR 0006); no secrets in git.
+- New or renamed identifier → update `docs/terms.md` in the same PR. No exceptions.
+- **Fixed local Docker ports ("89 lane"): API 8900 · Frontend 5189 · MySQL 3398 · phpMyAdmin 8901.**
+- Do NOT name, reference, or compare third-party commercial services in docs (ADR 0007).
+- Follow NENE2 conventions: Handler → UseCase → Repository; money in integer cents; `organization_id` on every tenant table.
+- If Cursor rules conflict with docs, update docs first; keep rules concise.
