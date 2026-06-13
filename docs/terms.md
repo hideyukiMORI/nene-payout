@@ -66,6 +66,8 @@ or other variants in docs/UI.
 | `InputMapper` | Request → Input DTO mapper |
 | `GatewayAdapter` | Payment gateway adapter (e.g. `StripeGatewayAdapter`) |
 | `ServiceProvider` | DI registration per domain concept |
+| `Middleware` | PSR-15 middleware (e.g. `OrgResolverMiddleware`, `CapabilityMiddleware`) |
+| `ResolutionStrategy` | Tenant resolution strategy (e.g. `SubdomainResolutionStrategy`) |
 | `Exception` | Named domain exception |
 | `Status` | Backed enum for entity status (e.g. `ReceivedInvoiceStatus`) |
 
@@ -73,6 +75,7 @@ or other variants in docs/UI.
 
 | Identifier | Type | Notes |
 | --- | --- | --- |
+| `Organization` | Entity | テナント（`organizations` テーブル：`slug` / `custom_domain` / `is_active`） — ADR 0004, 0018 |
 | `ReceivedInvoice` | Entity | 受け取った請求書 |
 | `Vendor` | Entity | 支払先の仕入先・外注先 |
 | `PaymentExecution` | Entity | 決済実行記録 |
@@ -147,6 +150,10 @@ or other variants in docs/UI.
 | `NENE_PAYOUT_FRONTEND_PORT` | Vite port (default 5189) |
 | `NENE_PAYOUT_MYSQL_PORT` | MySQL port (default 3398) |
 | `NENE_PAYOUT_PHPMYADMIN_PORT` | phpMyAdmin port (default 8901) |
+| `NENE2_LOCAL_JWT_SECRET` | Local JWT HS256 secret (NENE2 `LocalBearerTokenVerifier`) |
+| `TENANT_RESOLUTION` | Tenant resolution mode: `single` / `subdomain` / `path` / `custom_domain` (ADR 0018) |
+| `BASE_DOMAIN` | Base domain for subdomain resolution (e.g. `pay.example.com`) |
+| `ORG_SLUG` | Organization slug for `single` mode (Tier A / dev) |
 
 ## §9 Prohibited spellings
 
@@ -170,3 +177,33 @@ Format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 | `payment.initiated` | Payment instruction sent to gateway |
 | `payment.succeeded` / `payment.failed` | Gateway result recorded |
 | `payment.refunded` / `payment.charged_back` | Post-settlement events (linked records) |
+| `organization.created` / `organization.updated` / `organization.deactivated` | Organization mutations (superadmin) |
+
+## §11 Roles & capabilities (ADR 0004, multi-tenancy.md)
+
+### Roles
+| Value | Scope |
+| --- | --- |
+| `superadmin` | Cross-tenant (Suite orchestration / org management only) |
+| `admin` | Full access within own organization |
+| `operator` | Create invoices & initiate payments; no settings |
+
+### Capabilities
+| Identifier | Meaning |
+| --- | --- |
+| `ManageOrganizations` | Cross-tenant org management (superadmin) |
+| `ManageGatewaySettings` | Gateway configuration |
+| `ManageVendors` | Vendor management |
+| `ManageOrganizationSettings` | Organization settings |
+| `RegisterInvoice` | Register received invoices |
+| `InitiatePayment` | Initiate card payment |
+| `ViewPayments` | View payment history |
+
+## §12 Request attributes (tenant context)
+
+| Attribute | Value |
+| --- | --- |
+| `nene2.org.id` | Resolved `organization_id` (ULID) |
+| `nene2.org.slug` | Resolved organization slug |
+| `nene2.auth.credential_type` | `"bearer"` (NENE2 auth) |
+| `nene2.auth.claims` | Decoded JWT claims (user id, role) |

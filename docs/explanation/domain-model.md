@@ -6,6 +6,21 @@ document differ, the compliance document wins.
 
 ## Core entities
 
+### Organization (tenant)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| id | ULID | Primary key (`organization_id` on other tables) |
+| slug | string | URL-safe tenant key (subdomain / path); unique |
+| name | string | Display name |
+| custom_domain | string\|null | Optional vanity domain; unique when set |
+| is_active | bool | Inactive orgs rejected at resolution (403) |
+| created_at / updated_at | datetime | UTC (ADR 0012) |
+
+Tenant context is resolved from the request and held in a `RequestScopedHolder`;
+every tenant query filters `organization_id`. See
+[`multi-tenancy.md`](./multi-tenancy.md) (ADR 0004, 0018).
+
 ### ReceivedInvoice
 
 | Field | Type | Notes |

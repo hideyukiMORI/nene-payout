@@ -11,6 +11,7 @@
 - [x] Payment/legal/tax compliance foundation (binding payment-compliance.md, ADRs 0008–0015, review/compliance.md)
 - [x] NENE2 coding conventions binding (ADR 0016, nene2-runtime-reference, database-standards, frontend-standards)
 - [x] Terminology single source of truth + zero-typo enforcement (terms.md, ADR 0017)
+- [x] Multi-tenancy design (request-based resolution + RequestScopedHolder; multi-tenancy.md, ADR 0018, ADR 0004 revised)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
@@ -20,7 +21,7 @@ All Phase 1 work is bound by `docs/explanation/payment-compliance.md` and must
 pass `docs/review/compliance.md`.
 
 - [ ] NENE2 runtime scaffold (health, OpenAPI endpoint)
-- [ ] Multi-tenant auth (organization + JWT, NENE2 `BearerTokenMiddleware` + `TokenVerifierInterface`)
+- [ ] Multi-tenant runtime: `Organization` + tenant resolution (`OrgResolverMiddleware` + strategies) → `RequestScopedHolder`; user auth via `BearerTokenMiddleware`; `CapabilityMiddleware` (ADR 0018)
 - [ ] Vendor management CRUD (with registration_number, record & link only)
 - [ ] ReceivedInvoice CRUD (registration, PDF upload, void semantics)
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)

@@ -45,6 +45,7 @@ All classes are in the `Nene2\` namespace.
 | Container | `Container` / `ContainerBuilder` | `Nene2\DependencyInjection` | service-locator inside domain code |
 | Service registration | `ServiceProviderInterface` | `Nene2\DependencyInjection` | global wiring blob |
 | Clock (now) | `ClockInterface` → `UtcClock` | `Nene2\Http` | ambient `date()` / `new DateTimeImmutable()` |
+| Request-scoped value (e.g. tenant org_id) | `RequestScopedHolder` | `Nene2\Http` | global/static request state |
 | Token hashing | `SecureTokenHelper` | `Nene2\Http` | bespoke hashing |
 | Conditional GET / write | `ConditionalGetHelper` / `ConditionalWriteHelper` | `Nene2\Http` | manual ETag handling |
 | Typed config | `AppConfig` / `DatabaseConfig` (via `ConfigLoader`) | `Nene2\Config` | `getenv()` in app code |
@@ -102,9 +103,11 @@ On success `BearerTokenMiddleware` sets:
 | `nene2.auth.credential_type` | `"bearer"` |
 | `nene2.auth.claims` | decoded JWT payload (`array<string,mixed>`) |
 
-Extract `organization_id` (tenant scope) from `nene2.auth.claims` **in the
-Handler**, then pass it to the UseCase as an explicit argument. Never trust an
-`organization_id` from the request body (ADR 0004; payment-compliance §). 
+Auth gives **user identity and role**. The **tenant** (`organization_id`) is a
+separate concern: it is resolved from the request by `OrgResolverMiddleware` and
+held in a `RequestScopedHolder<string>` that repositories inject and read
+(ADR 0018). Never derive `organization_id` for scoping from the request body,
+path, or query. Full design: [`../explanation/multi-tenancy.md`](../explanation/multi-tenancy.md).
 
 ---
 
@@ -142,6 +145,10 @@ Inherits NENE2's documented order. `ErrorHandlerMiddleware` wraps everything.
 
 CORS origins are config-driven (allowlist in production). Security header set,
 request-id header (`X-Request-Id`), and size limits follow NENE2 defaults.
+
+Payout adds `OrgResolverMiddleware` (tenant resolution → `RequestScopedHolder`)
+after authentication and before routing, then a `CapabilityMiddleware` for
+authorization. See [`../explanation/multi-tenancy.md`](../explanation/multi-tenancy.md) §3.
 
 ---
 
