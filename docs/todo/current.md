@@ -32,7 +32,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] スライス2: マルチテナント runtime（Organization 解決 OrgResolverMiddleware＋RequestScopedHolder, ADR 0018, organizations migration） — Issue #28
 - [x] スライス3: 認証（BearerAuthMiddleware＋LocalBearerTokenVerifier）＋ Role/Capability、login/me、users migration — Issue #30
 - [x] スライス4: 監査基盤（Ulid, AuditRecorder, audit_logs migration, GET /api/v1/audit-logs） — Issue #32
-- [ ] スライス5以降: Vendor CRUD（AuditRecorder 利用・1トランザクション）→ ReceivedInvoice CRUD → payment gateway adapter → Stripe adapter → PaymentExecution → Webhook
+- [x] スライス5: Vendor CRUD（list/get/create/update/deactivate、監査付き・1トランザクション、vendors migration） — Issue #34
+- [ ] スライス6以降: ReceivedInvoice CRUD → payment gateway adapter → Stripe adapter → PaymentExecution → Webhook
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 

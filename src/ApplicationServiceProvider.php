@@ -14,6 +14,9 @@ use NenePayout\Auth\AuthRouteRegistrar;
 use NenePayout\Auth\AuthServiceProvider;
 use NenePayout\Auth\InvalidCredentialsExceptionHandler;
 use NenePayout\Organization\OrganizationServiceProvider;
+use NenePayout\Vendor\VendorNotFoundExceptionHandler;
+use NenePayout\Vendor\VendorRouteRegistrar;
+use NenePayout\Vendor\VendorServiceProvider;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -42,6 +45,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
         $builder->addProvider(new OrganizationServiceProvider());
         $builder->addProvider(new AuthServiceProvider());
         $builder->addProvider(new AuditServiceProvider());
+        $builder->addProvider(new VendorServiceProvider());
 
         $builder
             ->set(
@@ -58,6 +62,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                 static function (ContainerInterface $container): array {
                     $auth = $container->get(AuthRouteRegistrar::class);
                     $audit = $container->get(AuditRouteRegistrar::class);
+                    $vendor = $container->get(VendorRouteRegistrar::class);
 
                     if (!$auth instanceof AuthRouteRegistrar) {
                         throw new LogicException('Auth route registrar service is invalid.');
@@ -67,7 +72,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Audit route registrar service is invalid.');
                     }
 
-                    return [$auth, $audit];
+                    if (!$vendor instanceof VendorRouteRegistrar) {
+                        throw new LogicException('Vendor route registrar service is invalid.');
+                    }
+
+                    return [$auth, $audit, $vendor];
                 },
             )
             ->set(
@@ -75,12 +84,17 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                 /** @return list<\Nene2\Error\DomainExceptionHandlerInterface> */
                 static function (ContainerInterface $container): array {
                     $invalidCredentials = $container->get(InvalidCredentialsExceptionHandler::class);
+                    $vendorNotFound = $container->get(VendorNotFoundExceptionHandler::class);
 
                     if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
                         throw new LogicException('Invalid credentials exception handler service is invalid.');
                     }
 
-                    return [$invalidCredentials];
+                    if (!$vendorNotFound instanceof VendorNotFoundExceptionHandler) {
+                        throw new LogicException('Vendor not found exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials, $vendorNotFound];
                 },
             );
     }
