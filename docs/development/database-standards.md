@@ -87,8 +87,12 @@ These come from `docs/explanation/payment-compliance.md` and its ADRs:
 - **Tax fields are recorded copies** — `registration_number` (`^T[0-9]{13}$`,
   syntax-only), `tax_rate_bps` (`1000`/`800`), `taxable_amount`, `tax_amount`;
   Payout never computes deductions (ADR 0014).
-- **Audit** — `audit_logs` table per ADR 0011; sanitized before/after; never
-  store tokens, API keys, secrets, or PAN.
+- **Audit** — `audit_logs` table per ADR 0011 / [`../explanation/audit-logging.md`](../explanation/audit-logging.md):
+  every mutating op records actor / before_json / after_json / request_id;
+  **append-only** (no UPDATE/DELETE); indexes on `organization_id`,
+  `(entity_type, entity_id)`, `created_at`; the mutation and its audit row commit
+  in **one transaction** (`DatabaseTransactionManagerInterface`); never store
+  tokens, API keys, secrets, or PAN.
 - **Retention** — no auto-purge of financial records before the statutory period
   (generally 7y, up to 10y).
 

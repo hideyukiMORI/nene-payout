@@ -210,7 +210,10 @@ rules (下請法 / フリーランス・事業者間取引適正化等法) may a
   **who / when / what / before / after** (ADR 0011).
 - Audit snapshots are **sanitized**: card tokens, gateway API keys, webhook
   secrets, and any PAN-adjacent data are **never** written to the audit trail.
-- Audit records follow the same no-silent-mutation rule as §7.
+- The mutation and its audit record **commit in one transaction**; the
+  `audit_logs` table is append-only.
+- Audit records follow the same no-silent-mutation rule as §7. Full binding
+  design: [`audit-logging.md`](./audit-logging.md).
 
 ---
 

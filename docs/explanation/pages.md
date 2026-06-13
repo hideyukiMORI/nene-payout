@@ -25,6 +25,7 @@ Admin UI pages (React). All paths are under the admin shell.
 | `/admin/settings/gateway` | Payment gateway configuration + 疎通確認 | admin |
 | `/admin/settings/organization` | Organization settings | admin |
 | `/admin/users` | User management | admin |
+| `/admin/audit-logs` | Audit trail (who changed what, before/after; filter + CSV) | admin (own org), superadmin (cross-tenant) |
 
 ## Role definitions
 

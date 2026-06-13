@@ -10,6 +10,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | **Payment/legal/tax compliance (binding)** | `docs/explanation/payment-compliance.md` |
 | Compliance self-review (binding) | `docs/review/compliance.md` |
 | Multi-tenancy (binding) | `docs/explanation/multi-tenancy.md` |
+| Audit logging (binding) | `docs/explanation/audit-logging.md` |
 | Canonical terms (binding) | `docs/terms.md` |
 | NENE2 inheritance | `docs/inheritance-from-nene2.md` |
 | Agent entry | `AGENTS.md` |
