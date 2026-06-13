@@ -1,0 +1,13 @@
+---
+description: Issue 駆動ワークフロー。常に適用される。
+alwaysApply: true
+---
+
+# Issue Driven Workflow
+
+- All code, documentation, and configuration changes **require a GitHub Issue** first.
+- Before starting: read `docs/roadmap.md` and `docs/todo/current.md`.
+- **Never commit or push directly to `main`.** Branch name: `type/issue-number-summary`.
+- Standard completion: commit → push → PR (`Closes #number`) → checks → **merge** → sync local `main`.
+- Commits: Conventional Commits — English `type`/`scope`, Japanese description/body, `(#issue)` in subject.
+- If the user limits scope (investigation only, no commit, PR only), follow that instruction.

@@ -1,0 +1,20 @@
+{
+  "name": "hideyukimori/nene-payout",
+  "description": "Self-hosted vendor invoice payment via credit card — NeNe Payout",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "hideyukimori/nene2": "^1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "NenePayout\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "NenePayout\\Tests\\": "tests/"
+    }
+  }
+}
