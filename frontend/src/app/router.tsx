@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { VendorsPage } from '@/pages/vendors/VendorsPage'
+import { InvoicesPage } from '@/pages/invoices/InvoicesPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
 import { AuthGate } from './auth-gate'
@@ -14,6 +15,14 @@ export function AppRoutes() {
         element={
           <AuthGate>
             <VendorsPage />
+          </AuthGate>
+        }
+      />
+      <Route
+        path="/received-invoices"
+        element={
+          <AuthGate>
+            <InvoicesPage />
           </AuthGate>
         }
       />
