@@ -63,6 +63,9 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       ...jsxA11y.configs.recommended.rules,
+      // Numbers in template literals are safe and needed for RHF typed
+      // field-array paths (e.g. `taxBreakdown.${index}.taxAmount`).
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       'import/no-restricted-paths': ['error', { zones: importZones }],
       'no-restricted-syntax': [
         'error',

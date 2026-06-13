@@ -3,6 +3,8 @@ import { VendorsPage } from '@/pages/vendors/VendorsPage'
 import { VendorCreatePage } from '@/pages/vendors/VendorCreatePage'
 import { VendorEditPage } from '@/pages/vendors/VendorEditPage'
 import { InvoicesPage } from '@/pages/invoices/InvoicesPage'
+import { InvoiceCreatePage } from '@/pages/invoices/InvoiceCreatePage'
+import { InvoiceEditPage } from '@/pages/invoices/InvoiceEditPage'
 import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
@@ -22,6 +24,8 @@ export function AppRoutes() {
         }
       >
         <Route path="/received-invoices" element={<InvoicesPage />} />
+        <Route path="/received-invoices/new" element={<InvoiceCreatePage />} />
+        <Route path="/received-invoices/:receivedInvoiceId/edit" element={<InvoiceEditPage />} />
         <Route path="/vendors" element={<VendorsPage />} />
         <Route path="/vendors/new" element={<VendorCreatePage />} />
         <Route path="/vendors/:vendorId/edit" element={<VendorEditPage />} />
