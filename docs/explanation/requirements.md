@@ -49,7 +49,15 @@
 | Tier B (Docker) | PHP 8.4, MySQL 8, Docker Compose |
 | Authentication | JWT HS256 via NENE2 BearerAuth |
 | Money | Integer cents only — no floats |
-| PCI DSS | Card input via gateway iframe only — raw card numbers never stored |
+| PCI DSS | Hosted-only capture, SAQ-A — raw card numbers (PAN) never stored (ADR 0010) |
+| Legal positioning | Software only; all regulated money movement delegated to the licensed gateway — not a 資金移動業/為替 (ADR 0009) |
+| Record integrity | Financial records immutable, tamper-evident, soft delete / void only (ADR 0013) |
+| Retention | No auto-purge before the statutory period (in general 7y, up to 10y) — 電子帳簿保存法 (ADR 0013) |
+| Audit trail | Every mutating op + payment status transition, sanitized before/after (ADR 0011) |
+| Time | UTC storage, JST display/derivation for statutory dates (ADR 0012) |
+| Tax evidence | Record & link only (registration_number, per-rate breakdown); not the deduction authority (ADR 0014) |
+| Money | Integer cents only — no floats; `amount` / `charge_amount` / `processing_fee` kept distinct |
 | Data ownership | All invoice and payment records on operator's server |
 | Language | ja / en admin UI |
 | OpenAPI | All endpoints documented in `docs/openapi/openapi.yaml` |
+| Compliance gate | Binding `docs/explanation/payment-compliance.md`; deviations need a 税理士/会計士-signed ADR (ADR 0008) |

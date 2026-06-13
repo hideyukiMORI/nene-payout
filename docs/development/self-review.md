@@ -2,6 +2,13 @@
 
 Run the relevant checklist before creating a PR. Include the checklist name in the PR body.
 
+> **Binding compliance gate.** Any change touching received invoices, vendors,
+> payment execution, amounts, fees, tax fields, gateway integration, webhooks,
+> document references, or retention **MUST** also run
+> [`../review/compliance.md`](../review/compliance.md) (source of truth:
+> [`../explanation/payment-compliance.md`](../explanation/payment-compliance.md)).
+> If unsure whether a change has compliance impact, assume it does.
+
 ## backend-api
 
 - [ ] Handler is thin: parse → use-case → response only

@@ -14,12 +14,18 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] OpenAPI skeleton (docs/openapi/openapi.yaml)
 - [x] GitHub Issue #1: Governance bootstrap
 - [x] nene-playbook port registry に 89 レーンを登録
+- [x] 支払側コンプライアンス基盤（binding payment-compliance.md, ADR 0008–0015, review/compliance.md） — Issue #5
 
 ## Next (Phase 1)
 
 NENE2 runtime scaffold → vendor CRUD → received invoice CRUD → payment gateway adapter → Stripe adapter
 
+**すべて `docs/explanation/payment-compliance.md`（binding）に拘束され、`docs/review/compliance.md` を通すこと。**
 **Issue を立ててから着手すること（Issue 駆動）。**
+
+### コンプライアンス follow-up（ゲート付き）
+- 手数料・返金・チャージバックの会計モデル ＋ 税理士/会計士サインオフ（ADR 0015 → follow-up ADR）後に実装
+- ローンチ決済ゲートウェイ選定 ADR（認可・契約済みの主体 — ADR 0009）
 
 ## Handoff
 
