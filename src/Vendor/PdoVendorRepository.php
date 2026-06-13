@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NenePayout\Vendor;
 
 use Nene2\Database\DatabaseQueryExecutorInterface;
+use Nene2\Http\ClockInterface;
 use Nene2\Http\RequestScopedHolder;
 
 final readonly class PdoVendorRepository implements VendorRepositoryInterface
@@ -17,7 +18,13 @@ final readonly class PdoVendorRepository implements VendorRepositoryInterface
     public function __construct(
         private DatabaseQueryExecutorInterface $query,
         private RequestScopedHolder $orgId,
+        private ClockInterface $clock,
     ) {
+    }
+
+    private function now(): string
+    {
+        return $this->clock->now()->format('Y-m-d H:i:s');
     }
 
     public function findById(string $id): ?Vendor
@@ -54,7 +61,7 @@ final readonly class PdoVendorRepository implements VendorRepositoryInterface
 
     public function save(Vendor $vendor): void
     {
-        $now = date('Y-m-d H:i:s');
+        $now = $this->now();
 
         $this->query->execute(
             'INSERT INTO vendors
@@ -92,7 +99,7 @@ final readonly class PdoVendorRepository implements VendorRepositoryInterface
                 $vendor->accountName,
                 $vendor->registrationNumber,
                 $vendor->isActive ? 1 : 0,
-                date('Y-m-d H:i:s'),
+                $this->now(),
                 $vendor->id,
                 $this->orgId->get(),
             ],

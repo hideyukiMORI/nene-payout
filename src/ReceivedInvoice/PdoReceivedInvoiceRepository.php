@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NenePayout\ReceivedInvoice;
 
 use Nene2\Database\DatabaseQueryExecutorInterface;
+use Nene2\Http\ClockInterface;
 use Nene2\Http\RequestScopedHolder;
 
 final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepositoryInterface
@@ -17,7 +18,13 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
     public function __construct(
         private DatabaseQueryExecutorInterface $query,
         private RequestScopedHolder $orgId,
+        private ClockInterface $clock,
     ) {
+    }
+
+    private function now(): string
+    {
+        return $this->clock->now()->format('Y-m-d H:i:s');
     }
 
     public function findById(string $id): ?ReceivedInvoice
@@ -54,7 +61,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
 
     public function save(ReceivedInvoice $invoice): void
     {
-        $now = date('Y-m-d H:i:s');
+        $now = $this->now();
 
         $this->query->execute(
             'INSERT INTO received_invoices
@@ -91,7 +98,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
                 $invoice->registrationNumber,
                 json_encode($invoice->taxBreakdown, JSON_THROW_ON_ERROR),
                 $invoice->vaultDocumentUrl,
-                date('Y-m-d H:i:s'),
+                $this->now(),
                 $invoice->id,
                 $this->orgId->get(),
             ],
@@ -102,7 +109,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
     {
         $this->query->execute(
             'UPDATE received_invoices SET pdf_path = ?, updated_at = ? WHERE id = ? AND organization_id = ?',
-            [$pdfPath, date('Y-m-d H:i:s'), $id, $this->orgId->get()],
+            [$pdfPath, $this->now(), $id, $this->orgId->get()],
         );
     }
 
@@ -110,7 +117,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
     {
         $this->query->execute(
             'UPDATE received_invoices SET status = ?, updated_at = ? WHERE id = ? AND organization_id = ?',
-            [$status, date('Y-m-d H:i:s'), $id, $this->orgId->get()],
+            [$status, $this->now(), $id, $this->orgId->get()],
         );
     }
 
