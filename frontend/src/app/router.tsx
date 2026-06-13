@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { VendorsPage } from '@/pages/vendors/VendorsPage'
+import { VendorCreatePage } from '@/pages/vendors/VendorCreatePage'
+import { VendorEditPage } from '@/pages/vendors/VendorEditPage'
 import { InvoicesPage } from '@/pages/invoices/InvoicesPage'
 import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { LoginPage } from '@/pages/login/LoginPage'
@@ -21,6 +23,8 @@ export function AppRoutes() {
       >
         <Route path="/received-invoices" element={<InvoicesPage />} />
         <Route path="/vendors" element={<VendorsPage />} />
+        <Route path="/vendors/new" element={<VendorCreatePage />} />
+        <Route path="/vendors/:vendorId/edit" element={<VendorEditPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/received-invoices" replace />} />

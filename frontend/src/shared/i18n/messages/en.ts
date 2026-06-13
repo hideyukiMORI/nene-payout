@@ -132,13 +132,28 @@ export const en = {
   // ── Admin: vendors ────────────────────────────────────────────────────────
   'admin.vendors.pageTitle': 'Vendors',
   'admin.vendors.newTitle': 'Register vendor',
+  'admin.vendors.editTitle': 'Edit vendor',
   'admin.vendors.detailTitle': 'Vendor detail',
   'admin.vendors.empty': 'No vendors yet.',
+  'admin.vendors.actions.new': 'New vendor',
+  'admin.vendors.field.name': 'Name',
   'admin.vendors.field.bankCode': 'Bank code',
   'admin.vendors.field.branchCode': 'Branch code',
   'admin.vendors.field.accountType': 'Account type',
   'admin.vendors.field.accountNumber': 'Account number',
   'admin.vendors.field.accountName': 'Account holder (kana)',
+  'admin.vendors.field.registrationNumber': 'Registration number',
+  'admin.vendors.accountType.ordinary': 'Ordinary',
+  'admin.vendors.accountType.checking': 'Checking',
+  'admin.vendors.form.error.nameRequired': 'Name is required.',
+  'admin.vendors.form.error.bankCode': 'Bank code must be 4 digits.',
+  'admin.vendors.form.error.branchCode': 'Branch code must be 3 digits.',
+  'admin.vendors.form.error.accountNumber': 'Account number must be up to 7 digits.',
+  'admin.vendors.form.error.accountNameRequired': 'Account holder is required.',
+  'admin.vendors.form.error.registrationNumber':
+    'Registration number must match T followed by 13 digits.',
+  'admin.vendors.form.saveFailed':
+    'Could not save the vendor. Please check the form and try again.',
   'admin.vendors.deactivate.confirmTitle': 'Deactivate vendor "{{name}}"?',
   'admin.vendors.deactivate.confirmBody':
     'The vendor will be deactivated and hidden from new payments.',

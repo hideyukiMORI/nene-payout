@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { useTranslation } from '@/shared/i18n'
 import type { VendorsPageState } from '../hooks/use-vendors-page'
@@ -11,7 +12,17 @@ export function VendorListView({ state }: VendorListViewProps) {
 
   return (
     <section className="px-inline-md">
-      <PageHeader title={t('admin.vendors.pageTitle')} />
+      <PageHeader
+        title={t('admin.vendors.pageTitle')}
+        actions={
+          <Link
+            to="/vendors/new"
+            className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+          >
+            {t('admin.vendors.actions.new')}
+          </Link>
+        }
+      />
       <VendorListBody state={state} />
     </section>
   )
@@ -37,11 +48,22 @@ function VendorListBody({ state }: VendorListViewProps) {
       return (
         <ul>
           {state.vendors.map((vendor) => (
-            <li key={vendor.id} className="border-b border-border py-stack-sm">
-              <Text>{vendor.name}</Text>
-              <Text tone="muted">
-                {vendor.bankCode}-{vendor.branchCode} {vendor.accountNumber}
-              </Text>
+            <li
+              key={vendor.id}
+              className="flex items-center justify-between border-b border-border py-stack-sm"
+            >
+              <div>
+                <Text>{vendor.name}</Text>
+                <Text tone="muted">
+                  {vendor.bankCode}-{vendor.branchCode} {vendor.accountNumber}
+                </Text>
+              </div>
+              <Link
+                to={`/vendors/${vendor.id}/edit`}
+                className="font-sans text-body font-medium text-accent"
+              >
+                {t('common.actions.edit')}
+              </Link>
             </li>
           ))}
         </ul>
