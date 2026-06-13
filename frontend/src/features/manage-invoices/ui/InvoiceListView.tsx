@@ -1,0 +1,61 @@
+import type { ReceivedInvoiceStatus } from '@/entities/received-invoice'
+import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
+import { formatDate, formatJpy } from '@/shared/lib'
+import { useTranslation, type MessageKey } from '@/shared/i18n'
+import type { InvoicesPageState } from '../hooks/use-invoices-page'
+
+const STATUS_LABEL_KEY: Record<ReceivedInvoiceStatus, MessageKey> = {
+  pending: 'admin.receivedInvoices.status.pending',
+  processing: 'admin.receivedInvoices.status.processing',
+  paid: 'admin.receivedInvoices.status.paid',
+  failed: 'admin.receivedInvoices.status.failed',
+  voided: 'admin.receivedInvoices.status.voided',
+}
+
+export interface InvoiceListViewProps {
+  state: InvoicesPageState
+}
+
+export function InvoiceListView({ state }: InvoiceListViewProps) {
+  const { t } = useTranslation()
+
+  return (
+    <section className="px-inline-md">
+      <PageHeader title={t('admin.receivedInvoices.pageTitle')} />
+      <InvoiceListBody state={state} />
+    </section>
+  )
+}
+
+function InvoiceListBody({ state }: InvoiceListViewProps) {
+  const { t, locale } = useTranslation()
+
+  switch (state.status) {
+    case 'loading':
+      return <Spinner label={t('common.state.loading')} />
+    case 'error':
+      return (
+        <ErrorState
+          message={t('common.state.error')}
+          retryLabel={t('common.actions.retry')}
+          onRetry={state.retry}
+        />
+      )
+    case 'empty':
+      return <EmptyState message={t('admin.receivedInvoices.empty')} />
+    case 'success':
+      return (
+        <ul>
+          {state.invoices.map((invoice) => (
+            <li key={invoice.id} className="border-b border-border py-stack-sm">
+              <Text>{formatJpy(invoice.amount, locale)}</Text>
+              <Text tone="muted">
+                {t('common.field.dueDate')}: {formatDate(invoice.dueDate, locale)} ·{' '}
+                {t(STATUS_LABEL_KEY[invoice.status])}
+              </Text>
+            </li>
+          ))}
+        </ul>
+      )
+  }
+}
