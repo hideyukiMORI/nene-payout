@@ -32,7 +32,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 - **Secrets**: never commit `.env`, tokens, or credentials.
 - **Framework**: NENE2 via Composer — read `vendor/hideyukimori/nene2/docs/` for runtime patterns.
 - **Coding (binding)**: follow NENE2 conventions exactly (ADR 0016). Use real NENE2 classes per `docs/development/nene2-runtime-reference.md` — there is NO `PdoConnection::getInstance()`, `DbUpsert`, `BearerAuth`, or `ResponseDecorator`; use `DatabaseQueryExecutorInterface`, `BearerTokenMiddleware`, `SecurityHeadersMiddleware`. Layer Handler→UseCase→RepositoryInterface→PdoRepository; constructor injection; no service locator in domain code.
-- **Terms**: every identifier must match `docs/terms.md` exactly. Check before writing any name.
+- **Terms (binding)**: `docs/terms.md` is the single source of truth (唯一の真実) for every identifier and product/domain spelling (ADR 0017). Match it character-for-character; register new/renamed names in the same PR; typos and 表記ゆれ block merge — no exceptions.
 - **Scope**: Payout pays vendor invoices by card. Does NOT issue invoices, reconcile deposits, or archive documents.
 - **Compliance (binding)**: `docs/explanation/payment-compliance.md` is non-negotiable. Payout is software only — all regulated money movement is delegated to the licensed gateway (ADR 0009); no PAN (SAQ-A, ADR 0010); financial records immutable & retained (ADR 0013); fee/refund/chargeback accounting needs a 税理士/会計士-signed ADR (ADR 0015). Run `docs/review/compliance.md` for any change with possible compliance impact.
 

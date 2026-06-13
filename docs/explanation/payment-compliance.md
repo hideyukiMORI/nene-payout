@@ -117,7 +117,7 @@ operator to a licensed gateway.
 A card payment of a vendor invoice involves up to three distinct figures. They
 **MUST** be modelled and stored separately, never conflated:
 
-| Figure | Meaning | Identifier (terms.md §10) |
+| Figure | Meaning | Identifier (terms.md §7) |
 | --- | --- | --- |
 | Invoice amount | What the vendor is owed / receives | `amount` |
 | Charge amount | What the operator's card is charged | `charge_amount` |

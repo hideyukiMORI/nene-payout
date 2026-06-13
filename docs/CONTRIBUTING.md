@@ -14,7 +14,7 @@
 
 ## Code review expectations
 
-- Naming must match `docs/terms.md` exactly
+- Naming must match `docs/terms.md` exactly — the single source of truth; typos and 表記ゆれ block merge (ADR 0017)
 - Money must be integer cents
 - Every tenant query must include `organization_id`
 - No raw card numbers in logs, storage, or responses

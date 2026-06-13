@@ -1,7 +1,8 @@
 # Glossary — NeNe Payout
 
-For canonical identifier spellings, see [`docs/terms.md`](../terms.md).
-This file explains the meaning of domain concepts.
+For canonical identifier spellings, see [`docs/terms.md`](../terms.md) — the
+single source of truth (ADR 0017). This file explains the **meaning** of domain
+concepts only; it must never define or compete with a spelling registered there.
 
 ## Domain terms
 

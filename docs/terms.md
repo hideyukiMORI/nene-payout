@@ -1,8 +1,50 @@
 # Canonical Terms — NeNe Payout
 
-Single source of truth for all identifiers in this repository.
-Every identifier in code, API, DB, tests, and docs must match this file exactly.
-Typos and unregistered names block merge.
+**This file is the single source of truth (唯一の真実) for every identifier and
+canonical spelling in this repository. It is binding (ADR 0017).**
+
+This is the **only** file allowed to define the canonical spelling of an
+identifier. Every other document (including `glossary.md`) must defer to it and
+must never introduce a competing spelling.
+
+## The rule — zero typos, strict enforcement (binding)
+
+1. **Exact match, everywhere.** Every identifier in code, API/JSON, DB,
+   tests, OpenAPI, docs, commit scopes, and branch names **MUST** match an entry
+   in this file **character-for-character** (case, separators, and spelling).
+2. **No unregistered names.** Introducing or renaming any identifier **MUST**
+   update this file in the **same PR**. An identifier not registered here is a
+   defect.
+3. **Typos and 表記ゆれ block merge — no exceptions.** A mismatch (typo, wrong
+   case, camelCase vs snake_case, `Nene` vs `NeNe`, etc.) is a merge blocker.
+   Reviewers **MUST** reject it. There is no "fix later".
+4. **One spelling per concept.** If a concept needs a new name, register it here
+   first, then use only that spelling. Never ship two spellings for one thing.
+5. **Deletions/renames are tracked.** Renaming an identifier updates this file
+   and every usage in the same PR; the old spelling must not remain anywhere.
+
+### How to verify (before every PR)
+
+- Self-check identifiers against this file (`docs/development/self-review.md`).
+- Grep for the spelling you are introducing and confirm it matches an entry:
+  ```bash
+  git grep -n "<identifier>"
+  ```
+- A CI term-lint check is a planned follow-up; until then, this is a manual,
+  reviewer-enforced gate.
+
+## Product & domain names (canonical spelling)
+
+Use these exact spellings — never `Nene`, `nene Payout`, `NenePayout` (in prose),
+or other variants in docs/UI.
+
+| Canonical | Use | Wrong |
+| --- | --- | --- |
+| `NeNe Payout` | Product display name (prose, UI, docs) | `Nene Payout`, `NENE Payout`, `NenePayout` |
+| `NeNe Invoice` / `NeNe Clear` / `NeNe Vault` | Sibling product display names | `Nene *`, `nene-*` in prose |
+| `NENE2` | Framework display name **in prose** | `Nene2` / `nene2` as prose name |
+| `Nene2\` | NENE2 PHP namespace root (code) — correct as-is | writing `NENE2\` in code |
+| `nene-payout` | Repository / composer package id | `nene_payout` (that is the DB prefix only) |
 
 ## §1 Namespace
 
