@@ -1,0 +1,180 @@
+/**
+ * English message catalog — the source of truth for all UI text.
+ *
+ * Key naming: `common.*` | `auth.*` | `admin.{feature}.{element}` | `widget.*`.
+ * Param interpolation: `{{paramName}}`.
+ *
+ * Every other locale is `Partial<MessageCatalog>` and falls back to these values.
+ * `ja.ts` must define every key here — the parity test (`locales.test.ts`) fails
+ * the build otherwise, so language switching never shows a gap.
+ *
+ * Only static UI text lives here. Data fetched from the API (vendor names,
+ * amounts, etc.) is never translated.
+ */
+
+export const en = {
+  // ── Common: actions ───────────────────────────────────────────────────────
+  'common.actions.create': 'Create',
+  'common.actions.save': 'Save changes',
+  'common.actions.saving': 'Saving…',
+  'common.actions.cancel': 'Cancel',
+  'common.actions.edit': 'Edit',
+  'common.actions.deactivate': 'Deactivate',
+  'common.actions.void': 'Void',
+  'common.actions.retry': 'Retry',
+  'common.actions.confirm': 'Confirm',
+  'common.actions.search': 'Search',
+  'common.actions.upload': 'Upload',
+  'common.actions.back': 'Back',
+  'common.actions.next': 'Next',
+  'common.actions.previous': 'Previous',
+  'common.actions.signIn': 'Sign in',
+  'common.actions.signOut': 'Sign out',
+
+  // ── Common: fields ────────────────────────────────────────────────────────
+  'common.field.name': 'Name',
+  'common.field.email': 'Email',
+  'common.field.password': 'Password',
+  'common.field.amount': 'Amount',
+  'common.field.dueDate': 'Due date',
+  'common.field.status': 'Status',
+  'common.field.createdAt': 'Created',
+  'common.field.updatedAt': 'Updated',
+  'common.field.actions': 'Actions',
+
+  // ── Common: errors (mapped from Problem Details status) ───────────────────
+  'common.error.unknown': 'An unexpected error occurred.',
+  'common.error.unauthorized': 'Authentication required. Please sign in.',
+  'common.error.forbidden': 'You do not have permission to perform this action.',
+  'common.error.notFound': 'The requested resource was not found.',
+  'common.error.conflict': 'A conflict occurred. The resource may already exist or be in use.',
+  'common.error.validation': 'The submitted data is invalid. Please check the form.',
+  'common.error.payloadTooLarge': 'The uploaded file is too large.',
+  'common.error.serverError': 'A server error occurred. Please try again later.',
+
+  // ── Common: dialog / states ───────────────────────────────────────────────
+  'common.dialog.close': 'Close',
+  'common.state.loading': 'Loading…',
+  'common.state.empty': 'No items to display.',
+  'common.state.error': 'Could not load data.',
+
+  // ── Common: pagination ────────────────────────────────────────────────────
+  'common.pagination.summary': '{{from}}–{{to}} of {{total}}',
+  'common.pagination.page': 'Page {{page}}',
+
+  // ── Common: invoice status labels ─────────────────────────────────────────
+  'common.invoiceStatus.pending': 'Unpaid',
+  'common.invoiceStatus.processing': 'Processing',
+  'common.invoiceStatus.paid': 'Paid',
+  'common.invoiceStatus.failed': 'Failed',
+  'common.invoiceStatus.voided': 'Voided',
+
+  // ── Common: payment status labels ─────────────────────────────────────────
+  'common.paymentStatus.initiated': 'Initiated',
+  'common.paymentStatus.succeeded': 'Succeeded',
+  'common.paymentStatus.failed': 'Failed',
+  'common.paymentStatus.refunded': 'Refunded',
+  'common.paymentStatus.charged_back': 'Charged back',
+
+  // ── Common: account types ─────────────────────────────────────────────────
+  'common.accountType.普通': 'Ordinary',
+  'common.accountType.当座': 'Current',
+
+  // ── Common: roles ─────────────────────────────────────────────────────────
+  'common.role.superadmin': 'Superadmin',
+  'common.role.admin': 'Admin',
+  'common.role.operator': 'Operator',
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+  'auth.login.title': 'Sign in to NeNe Payout',
+  'auth.login.emailLabel': 'Email address',
+  'auth.login.passwordLabel': 'Password',
+  'auth.login.submit': 'Sign in',
+  'auth.login.failed': 'Invalid email or password.',
+
+  // ── Admin navigation ──────────────────────────────────────────────────────
+  'admin.nav.dashboard': 'Dashboard',
+  'admin.nav.receivedInvoices': 'Received invoices',
+  'admin.nav.vendors': 'Vendors',
+  'admin.nav.payments': 'Payments',
+  'admin.nav.settings': 'Settings',
+  'admin.nav.users': 'Users',
+  'admin.nav.auditLogs': 'Audit logs',
+
+  // ── Admin: dashboard ──────────────────────────────────────────────────────
+  'admin.dashboard.pageTitle': 'Dashboard',
+  'admin.dashboard.pendingInvoices': 'Pending invoices',
+  'admin.dashboard.recentPayments': 'Recent payments',
+
+  // ── Admin: received invoices ──────────────────────────────────────────────
+  'admin.receivedInvoices.pageTitle': 'Received invoices',
+  'admin.receivedInvoices.newTitle': 'Register received invoice',
+  'admin.receivedInvoices.detailTitle': 'Invoice detail',
+  'admin.receivedInvoices.empty': 'No received invoices yet.',
+  'admin.receivedInvoices.field.vendor': 'Vendor',
+  'admin.receivedInvoices.field.registrationNumber': 'Registration number',
+  'admin.receivedInvoices.filter.status': 'Filter by status',
+  'admin.receivedInvoices.uploadPdf': 'Upload PDF',
+  'admin.receivedInvoices.void.confirmTitle': 'Void this invoice?',
+  'admin.receivedInvoices.void.confirmBody': 'The invoice will be voided. This cannot be undone.',
+  'admin.receivedInvoices.paymentHistory': 'Payment history',
+
+  // ── Admin: vendors ────────────────────────────────────────────────────────
+  'admin.vendors.pageTitle': 'Vendors',
+  'admin.vendors.newTitle': 'Register vendor',
+  'admin.vendors.detailTitle': 'Vendor detail',
+  'admin.vendors.empty': 'No vendors yet.',
+  'admin.vendors.field.bankCode': 'Bank code',
+  'admin.vendors.field.branchCode': 'Branch code',
+  'admin.vendors.field.accountType': 'Account type',
+  'admin.vendors.field.accountNumber': 'Account number',
+  'admin.vendors.field.accountName': 'Account holder (kana)',
+  'admin.vendors.deactivate.confirmTitle': 'Deactivate vendor "{{name}}"?',
+  'admin.vendors.deactivate.confirmBody': 'The vendor will be deactivated and hidden from new payments.',
+
+  // ── Admin: payments ───────────────────────────────────────────────────────
+  'admin.payments.pageTitle': 'Payment history',
+  'admin.payments.empty': 'No payments yet.',
+  'admin.payments.field.gateway': 'Gateway',
+  'admin.payments.field.chargeAmount': 'Charged amount',
+  'admin.payments.field.processingFee': 'Processing fee',
+  'admin.payments.initiate': 'Pay by card',
+  'admin.payments.amountDue': 'Amount due: {{amount}}',
+
+  // ── Admin: gateway settings ───────────────────────────────────────────────
+  'admin.gatewaySettings.pageTitle': 'Payment gateway',
+  'admin.gatewaySettings.activeGateway': 'Active gateway',
+  'admin.gatewaySettings.credentials': 'Credentials',
+  'admin.gatewaySettings.verify': 'Test connection',
+  'admin.gatewaySettings.verifySuccess': 'Connection succeeded.',
+  'admin.gatewaySettings.verifyFailure': 'Connection failed.',
+
+  // ── Admin: organization ───────────────────────────────────────────────────
+  'admin.organization.pageTitle': 'Organization settings',
+  'admin.organization.field.name': 'Organization name',
+  'admin.organization.field.slug': 'Slug',
+
+  // ── Admin: users ──────────────────────────────────────────────────────────
+  'admin.users.pageTitle': 'Users',
+  'admin.users.newTitle': 'Invite user',
+  'admin.users.empty': 'No users yet.',
+  'admin.users.field.role': 'Role',
+
+  // ── Admin: audit logs ─────────────────────────────────────────────────────
+  'admin.auditLogs.pageTitle': 'Audit logs',
+  'admin.auditLogs.empty': 'No audit entries.',
+  'admin.auditLogs.field.actor': 'Actor',
+  'admin.auditLogs.field.action': 'Action',
+  'admin.auditLogs.field.entity': 'Entity',
+
+  // ── Widget ────────────────────────────────────────────────────────────────
+  'widget.pay.title': 'Pay invoice',
+  'widget.pay.amount': 'Amount: {{amount}}',
+  'widget.pay.submit': 'Pay',
+  'widget.pay.processing': 'Processing payment…',
+  'widget.complete.success': 'Payment complete.',
+  'widget.complete.failure': 'Payment failed.',
+}
+
+/** Message key set is fixed by `en`; values are plain strings per locale. */
+export type MessageCatalog = typeof en
