@@ -18,7 +18,7 @@
 - Money must be integer cents
 - Every tenant query must include `organization_id`
 - No raw card numbers in logs, storage, or responses
-- No third-party commercial product names in docs
+- No competitor commercial product names or comparisons in docs (integrated payment gateway names are allowed)
 
 ## Language
 

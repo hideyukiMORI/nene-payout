@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 0 — Governance bootstrap in progress.
+Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to start.
 
 ## Now (Phase 0) — ✅ Complete
 
