@@ -46,7 +46,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 ## Frontend
 
 - [x] i18n 基盤（frontend scaffold＋shared/i18n、ja/en カタログ一元管理、parity/切替テスト） — Issue #44
-- [ ] FSD 本実装（app/pages/features、shared/ui テーマ、API クライアント、Storybook、ESLint/Prettier 完全 CI 化）
+- [x] FSD 堅牢スキャフォールド（tooling: strictTypeChecked ESLint＋import 境界＋Tailwind 任意値禁止＋Prettier、shared/config・api・ui テーマ＋primitives、app providers/router/error-boundary/auth-gate、entities/vendor 縦スライス、features/manage-vendors＋MSW フックテスト、pages/vendors、tests render/msw/factories、check green） — Issue #50
+- [ ] FSD 横展開（他リソース画面、フォーム（RHF＋zod）、Storybook、knip、husky/CI 化）
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
@@ -63,4 +64,4 @@ Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
 Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
-Last updated: 2026-06-13
+Last updated: 2026-06-14

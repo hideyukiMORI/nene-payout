@@ -15,11 +15,11 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
