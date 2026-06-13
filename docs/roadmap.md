@@ -14,6 +14,7 @@
 - [x] Multi-tenancy design (request-based resolution + RequestScopedHolder; multi-tenancy.md, ADR 0018, ADR 0004 revised)
 - [x] Audit logging design (all ops, before/after, atomic; audit-logging.md, ADR 0011 upgraded)
 - [x] i18n design (ja/en message catalogs, instant switch; i18n.md)
+- [x] Frontend architecture — strict FSD + mandated stack (frontend-standards.md, review/frontend.md, ADR 0019)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
@@ -41,7 +42,7 @@ pass `docs/review/compliance.md`.
 
 ## Phase 2 — Admin UI + widget
 
-- [ ] React admin UI (received invoice list, vendor list, payment history)
+- [ ] React admin UI (FSD per frontend-standards.md / ADR 0019: received invoice list, vendor list, payment history)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
