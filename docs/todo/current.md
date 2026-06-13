@@ -41,6 +41,7 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 ## テスト
 
 - [x] バックエンド UT を全機能・境界値重視で拡充（InputMapper／CapabilityResolver／Ulid／Audit filter／Query UseCase、151 tests） — Issue #46
+- [x] ハンドラ層の検証・AuthContext を境界値で網羅（gateway enum／PDF 種別／login 必須／claims、168 tests） — Issue #48
 
 ## Frontend
 
