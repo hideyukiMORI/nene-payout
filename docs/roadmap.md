@@ -15,6 +15,7 @@
 - [x] Audit logging design (all ops, before/after, atomic; audit-logging.md, ADR 0011 upgraded)
 - [x] i18n design (ja/en message catalogs, instant switch; i18n.md)
 - [x] Frontend architecture — strict FSD + mandated stack (frontend-standards.md, review/frontend.md, ADR 0019)
+- [x] API surface + OpenAPI contract (docs/api/endpoints.md, docs/openapi/openapi.yaml — full surface)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 

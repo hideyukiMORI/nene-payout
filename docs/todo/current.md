@@ -24,6 +24,7 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
   - [x] nene-playbook レジストリを 90 lane に更新（nene-playbook #8 / PR #9）
 - [x] 90 lane のローカル Docker 構成（compose.yaml / .env.example / docker） — Issue #19
 - [x] フロント規約を業界最厳格（FSD）に強化（frontend-standards 全面書換, review/frontend, ADR 0019, cursor rule 30） — Issue #22
+- [x] 必要 API 洗い出し＋OpenAPI 契約整備（docs/api/endpoints.md, openapi.yaml 全面） — Issue #24
 
 ## Next (Phase 1)
 
