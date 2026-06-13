@@ -2,10 +2,14 @@
 
 ## Phase 0 — Governance and product design (current)
 
-- [ ] Governance bootstrap (AGENTS.md, CLAUDE.md, scope-contract, ADRs 0001–0007)
-- [ ] Domain model and terms registry
-- [ ] OpenAPI skeleton
-- [ ] Port registry update (nene-playbook)
+- [x] Governance bootstrap (AGENTS.md, CLAUDE.md, scope-contract, ADRs 0001–0007)
+- [x] Domain model and terms registry
+- [x] OpenAPI skeleton
+- [x] Port registry update (nene-playbook)
+- [x] docs/explanation/ full set (requirements, features, pages, glossary, domain-model, product-vision, scope-contract, scope-boundary)
+- [x] docs/development/ full set (coding-standards, naming-conventions, backend-standards, nene2-compliance, commit-conventions, self-review)
+- [x] GitHub repository created and initial commit pushed
+- [x] Issue #1 created
 
 ## Phase 1 — Core payment API
 
