@@ -18,11 +18,19 @@ use Nene2\DependencyInjection\ServiceProviderInterface;
 use Nene2\Error\DomainExceptionHandlerInterface;
 use Nene2\Error\ProblemDetailsResponseFactory;
 use Nene2\Http\JsonResponseFactory;
+use Nene2\Http\RequestScopedHolder;
 use Nene2\Http\ResponseEmitter;
 use Nene2\Http\RuntimeApplicationFactory;
 use Nene2\Log\MonologLoggerFactory;
 use Nene2\Log\RequestIdHolder;
 use NenePayout\ApplicationServiceProvider;
+use NenePayout\Organization\OrganizationRepositoryInterface;
+use NenePayout\Organization\Resolution\CustomDomainResolutionStrategy;
+use NenePayout\Organization\Resolution\EnvResolutionStrategy;
+use NenePayout\Organization\Resolution\OrgResolutionStrategyInterface;
+use NenePayout\Organization\Resolution\OrgResolverMiddleware;
+use NenePayout\Organization\Resolution\PathPrefixResolutionStrategy;
+use NenePayout\Organization\Resolution\SubdomainResolutionStrategy;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -222,6 +230,27 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                     /** @var list<DomainExceptionHandlerInterface> $exceptionHandlers */
                     /** @var list<callable(\Nene2\Routing\Router): void> $routeRegistrars */
 
+                    $problemDetails = $container->get(ProblemDetailsResponseFactory::class);
+                    $orgRepository  = $container->get(OrganizationRepositoryInterface::class);
+                    $orgIdHolder    = $container->get(ApplicationServiceProvider::ORG_ID_HOLDER);
+
+                    if (!$problemDetails instanceof ProblemDetailsResponseFactory) {
+                        throw new LogicException('ProblemDetailsResponseFactory service is invalid.');
+                    }
+
+                    if (!$orgRepository instanceof OrganizationRepositoryInterface) {
+                        throw new LogicException('Organization repository service is invalid.');
+                    }
+
+                    if (!$orgIdHolder instanceof RequestScopedHolder) {
+                        throw new LogicException('Org id holder service is invalid.');
+                    }
+
+                    /** @var RequestScopedHolder<string> $orgIdHolder */
+                    $strategy = self::resolutionStrategy();
+
+                    $orgResolver = new OrgResolverMiddleware($orgIdHolder, $orgRepository, $problemDetails, $strategy);
+
                     return new RuntimeApplicationFactory(
                         responseFactory: $responseFactory,
                         streamFactory: $streamFactory,
@@ -230,7 +259,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                         domainExceptionHandlers: $exceptionHandlers,
                         requestIdHolder: $requestIdHolder,
                         routeRegistrars: $routeRegistrars,
-                        authMiddleware: null,
+                        authMiddleware: [$orgResolver],
                         healthChecks: [],
                         debug: $config->debug,
                         problemDetailsBaseUrl: $config->problemDetailsBaseUrl,
@@ -250,5 +279,23 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                 },
             )
             ->set(ResponseEmitter::class, static fn (ContainerInterface $container): ResponseEmitter => new ResponseEmitter());
+    }
+
+    /**
+     * Selects the tenant resolution strategy from the environment (ADR 0018).
+     * `TENANT_RESOLUTION`: single (default) | subdomain | path | custom_domain.
+     */
+    private static function resolutionStrategy(): OrgResolutionStrategyInterface
+    {
+        $mode   = (string) (getenv('TENANT_RESOLUTION') ?: 'single');
+        $slug   = (string) (getenv('ORG_SLUG') ?: '');
+        $domain = (string) (getenv('BASE_DOMAIN') ?: 'localhost');
+
+        return match ($mode) {
+            'subdomain'     => new SubdomainResolutionStrategy($domain),
+            'path'          => new PathPrefixResolutionStrategy(),
+            'custom_domain' => new CustomDomainResolutionStrategy(),
+            default         => new EnvResolutionStrategy($slug),
+        };
     }
 }
