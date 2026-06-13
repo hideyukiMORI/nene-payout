@@ -146,10 +146,10 @@ or other variants in docs/UI.
 
 | Variable | Notes |
 | --- | --- |
-| `NENE_PAYOUT_PORT` | HTTP port (default 8900) |
-| `NENE_PAYOUT_FRONTEND_PORT` | Vite port (default 5189) |
-| `NENE_PAYOUT_MYSQL_PORT` | MySQL port (default 3398) |
-| `NENE_PAYOUT_PHPMYADMIN_PORT` | phpMyAdmin port (default 8901) |
+| `NENE_PAYOUT_PORT` | HTTP port (default 9000) — 90 lane, see `development/local-ports.md` |
+| `NENE_PAYOUT_FRONTEND_PORT` | Vite port (default 5190) |
+| `NENE_PAYOUT_MYSQL_PORT` | MySQL port (default 3400) |
+| `NENE_PAYOUT_PHPMYADMIN_PORT` | phpMyAdmin port (default 9001) |
 | `NENE2_LOCAL_JWT_SECRET` | Local JWT HS256 secret (NENE2 `LocalBearerTokenVerifier`) |
 | `TENANT_RESOLUTION` | Tenant resolution mode: `single` / `subdomain` / `path` / `custom_domain` (ADR 0018) |
 | `BASE_DOMAIN` | Base domain for subdomain resolution (e.g. `pay.example.com`) |

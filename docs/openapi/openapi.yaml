@@ -4,7 +4,7 @@ info:
   version: 0.1.0
   description: Self-hosted vendor invoice payment via credit card.
 servers:
-  - url: http://localhost:8900
+  - url: http://localhost:9000
     description: Local development
 paths:
   /health:

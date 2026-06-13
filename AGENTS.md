@@ -31,6 +31,7 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 - **NENE2 runtime reference — common objects, data flow (binding):** `docs/development/nene2-runtime-reference.md`
 - **Database & schema (binding):** `docs/development/database-standards.md`
 - **Frontend standards (binding):** `docs/development/frontend-standards.md`
+- **Local Docker ports (binding):** `docs/development/local-ports.md`
 - **Sibling integration:** `docs/integrations/sibling-products.md`
 - **NENE2 inheritance map:** `docs/inheritance-from-nene2.md`
 - **Current work:** `docs/todo/current.md`

@@ -23,6 +23,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | NENE2 runtime reference (binding) | `docs/development/nene2-runtime-reference.md` |
 | Database & schema (binding) | `docs/development/database-standards.md` |
 | Frontend standards (binding) | `docs/development/frontend-standards.md` |
+| Local Docker ports (binding) | `docs/development/local-ports.md` |
 | Current tasks | `docs/todo/current.md` |
 | Roadmap | `docs/roadmap.md` |
 
@@ -46,16 +47,16 @@ pay by credit card, and the payment gateway transfers funds to the vendor's bank
 An embeddable widget allows integration into any existing system. All data stays on the
 operator's own server.
 
-## Local stack
+## Local stack (90 lane — fixed, unique; see `docs/development/local-ports.md`)
 
 | Service | URL | Env var |
 | --- | --- | --- |
-| API | http://localhost:8900 | `NENE_PAYOUT_PORT` |
-| phpMyAdmin | http://localhost:8901 | `NENE_PAYOUT_PHPMYADMIN_PORT` |
-| MySQL (host) | localhost:3398 | `NENE_PAYOUT_MYSQL_PORT` |
-| Frontend dev | http://localhost:5189 | `NENE_PAYOUT_FRONTEND_PORT` |
+| API | http://localhost:9000 | `NENE_PAYOUT_PORT` |
+| phpMyAdmin | http://localhost:9001 | `NENE_PAYOUT_PHPMYADMIN_PORT` |
+| MySQL (host) | localhost:3400 | `NENE_PAYOUT_MYSQL_PORT` |
+| Frontend dev | http://localhost:5190 | `NENE_PAYOUT_FRONTEND_PORT` |
 
-Health check: `curl -fsS http://localhost:8900/health`
+Health check: `curl -fsS http://localhost:9000/health`
 
 ## Verification
 
