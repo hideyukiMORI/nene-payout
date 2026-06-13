@@ -135,6 +135,11 @@ export const ja: Partial<MessageCatalog> = {
   'admin.payments.field.gateway': 'ゲートウェイ',
   'admin.payments.field.chargeAmount': '請求金額',
   'admin.payments.field.processingFee': '決済手数料',
+  'admin.payments.status.initiated': '開始',
+  'admin.payments.status.succeeded': '成功',
+  'admin.payments.status.failed': '失敗',
+  'admin.payments.status.refunded': '返金済',
+  'admin.payments.status.chargedBack': 'チャージバック',
   'admin.payments.initiate': 'カードで支払う',
   'admin.payments.amountDue': '支払金額: {{amount}}',
 

@@ -144,6 +144,11 @@ export const en = {
   'admin.payments.field.gateway': 'Gateway',
   'admin.payments.field.chargeAmount': 'Charged amount',
   'admin.payments.field.processingFee': 'Processing fee',
+  'admin.payments.status.initiated': 'Initiated',
+  'admin.payments.status.succeeded': 'Succeeded',
+  'admin.payments.status.failed': 'Failed',
+  'admin.payments.status.refunded': 'Refunded',
+  'admin.payments.status.chargedBack': 'Charged back',
   'admin.payments.initiate': 'Pay by card',
   'admin.payments.amountDue': 'Amount due: {{amount}}',
 

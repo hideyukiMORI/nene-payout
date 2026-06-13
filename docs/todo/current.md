@@ -48,7 +48,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] i18n 基盤（frontend scaffold＋shared/i18n、ja/en カタログ一元管理、parity/切替テスト） — Issue #44
 - [x] FSD 堅牢スキャフォールド（tooling: strictTypeChecked ESLint＋import 境界＋Tailwind 任意値禁止＋Prettier、shared/config・api・ui テーマ＋primitives、app providers/router/error-boundary/auth-gate、entities/vendor 縦スライス、features/manage-vendors＋MSW フックテスト、pages/vendors、tests render/msw/factories、check green） — Issue #50
 - [x] ReceivedInvoice 縦スライス（shared/lib フォーマッタ、entities/received-invoice＋mapper test、features/manage-invoices＋MSW フックテスト、pages/invoices、/received-invoices ルート、ステータスラベル ja/en、check green 35 tests） — Issue #52
-- [ ] FSD 横展開の続き（PaymentExecution 縦スライス、フォーム（RHF＋zod）登録/編集、PDF アップロード UI、ナビゲーション/レイアウト、Storybook、knip、husky/CI 化）
+- [x] PaymentExecution 縦スライス（entities/payment-execution＋mapper test、queries（status・received_invoice_id フィルタ）＋initiate mutation、features/view-payments＋MSW フックテスト、pages/payments、/payments ルート、決済ステータスラベル ja/en、check green 43 tests） — Issue #54
+- [ ] FSD 横展開の続き（フォーム（RHF＋zod）登録/編集、決済開始 UI、PDF アップロード UI、ナビゲーション/レイアウトシェル、Storybook、knip、husky/CI 化）
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
@@ -65,4 +66,4 @@ Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
 Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
-Last updated: 2026-06-14 (ReceivedInvoice frontend slice)
+Last updated: 2026-06-14 (PaymentExecution frontend slice)
