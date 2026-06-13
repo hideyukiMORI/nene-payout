@@ -29,7 +29,7 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 ## Next (Phase 1)
 
 - [x] スライス1: NENE2 ランタイム scaffold ＋ `GET /health`（composer check green） — Issue #26
-- [ ] スライス2: マルチテナント runtime（Organization 解決 OrgResolverMiddleware＋RequestScopedHolder, ADR 0018）
+- [x] スライス2: マルチテナント runtime（Organization 解決 OrgResolverMiddleware＋RequestScopedHolder, ADR 0018, organizations migration） — Issue #28
 - [ ] スライス3: 認証（BearerTokenMiddleware）＋ Capability
 - [ ] スライス4以降: Vendor CRUD → ReceivedInvoice CRUD → payment gateway adapter → Stripe adapter → PaymentExecution → Webhook → AuditRecorder
 
