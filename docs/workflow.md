@@ -11,8 +11,11 @@ Inherits [NENE2 workflow](https://github.com/hideyukiMORI/NENE2/blob/main/docs/w
 5. Run verification: `composer check` / `npm run check --prefix frontend`.
 6. Commit with Conventional Commits, include Issue number.
 7. Push and create a PR with `Closes #n`.
-8. Merge after checks pass.
+8. Merge after CI checks pass (see [CI](development/ci.md)).
 9. Return local `main` to clean state.
+
+The same `composer check` / `npm run check` gates run in CI on every PR; see
+[docs/development/ci.md](development/ci.md) for CI, Dependabot, and secret scanning.
 
 ## Commit format
 

@@ -16,6 +16,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | NENE2 inheritance | `docs/inheritance-from-nene2.md` |
 | Agent entry | `AGENTS.md` |
 | Workflow | `docs/workflow.md` |
+| CI / Dependabot / secret scanning | `docs/development/ci.md` |
 | Commits | `docs/development/commit-conventions.md` |
 | Coding (index) | `docs/development/coding-standards.md` |
 | Backend standards (binding) | `docs/development/backend-standards.md` |
