@@ -5,6 +5,11 @@ import type { MessageCatalog } from './en'
  * parity test in `locales.test.ts`) so language switching never shows a gap.
  */
 export const ja: Partial<MessageCatalog> = {
+  // ── App shell ─────────────────────────────────────────────────────────────
+  'app.name': 'NeNe Payout',
+  'app.nav.label': 'メイン',
+  'app.locale.label': '言語',
+
   // ── Common: actions ───────────────────────────────────────────────────────
   'common.actions.create': '作成',
   'common.actions.save': '変更を保存',

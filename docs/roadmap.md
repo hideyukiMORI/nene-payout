@@ -48,7 +48,8 @@ pass `docs/review/compliance.md`.
 - [x] FSD scaffold + tooling (strict ESLint boundaries, shared/ui theme + API client, app providers/router, entities/vendor + manage-vendors slice with MSW tests — Issue #50)
 - [x] Received invoice list slice (shared/lib formatters, entities/received-invoice + manage-invoices feature, MSW tests — Issue #52)
 - [x] Payment history slice (entities/payment-execution + view-payments feature, initiate mutation, MSW tests — Issue #54)
-- [ ] React admin UI (remaining: forms via RHF + zod; payment initiation flow; navigation/layout shell)
+- [x] Navigation/layout shell (app/layout AppLayout, switch-locale feature, sign-out, nested auth routes — Issue #56)
+- [ ] React admin UI (remaining: forms via RHF + zod; payment initiation flow; dashboard/settings/audit-log screens)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
