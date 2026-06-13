@@ -166,9 +166,9 @@ or other variants in docs/UI.
 | `vendorId` | `vendor_id` |
 | `invoiceId` | `received_invoice_id` |
 
-## §10 Audit action names (ADR 0011)
+## §10 Audit log — actions & fields (ADR 0011, audit-logging.md)
 
-Format: `{entity}.{verb}` (snake_case entity, past-tense verb).
+Action format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 
 | Action | Meaning |
 | --- | --- |
@@ -177,7 +177,23 @@ Format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 | `payment.initiated` | Payment instruction sent to gateway |
 | `payment.succeeded` / `payment.failed` | Gateway result recorded |
 | `payment.refunded` / `payment.charged_back` | Post-settlement events (linked records) |
+| `gateway_settings.updated` | Gateway configuration change (secret value never stored) |
 | `organization.created` / `organization.updated` / `organization.deactivated` | Organization mutations (superadmin) |
+| `user.created` / `user.updated` / `user.deactivated` | User mutations |
+
+### `audit_logs` fields
+| Field | Notes |
+| --- | --- |
+| `actor_user_id` | Acting user (ULID); null for system/webhook |
+| `organization_id` | Tenant scope (ULID) |
+| `action` | `{entity}.{verb}` |
+| `entity_type` | Changed entity type (`vendor`, `received_invoice`, …) |
+| `entity_id` | Changed entity id (ULID) |
+| `before_json` | Sanitized snapshot before (null for create) |
+| `after_json` | Sanitized snapshot after (null for void/delete) |
+| `request_id` | `X-Request-Id` correlation |
+| `created_at` | UTC instant |
+| `actor_email` | Resolved at read time only — never stored |
 
 ## §11 Roles & capabilities (ADR 0004, multi-tenancy.md)
 

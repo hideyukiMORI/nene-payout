@@ -12,6 +12,7 @@
 - [x] NENE2 coding conventions binding (ADR 0016, nene2-runtime-reference, database-standards, frontend-standards)
 - [x] Terminology single source of truth + zero-typo enforcement (terms.md, ADR 0017)
 - [x] Multi-tenancy design (request-based resolution + RequestScopedHolder; multi-tenancy.md, ADR 0018, ADR 0004 revised)
+- [x] Audit logging design (all ops, before/after, atomic; audit-logging.md, ADR 0011 upgraded)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
@@ -27,7 +28,7 @@ pass `docs/review/compliance.md`.
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
 - [ ] Stripe adapter (hosted charge + verify)
 - [ ] PaymentExecution create / status update (immutable terminal records — ADR 0013)
-- [ ] Audit logging (AuditRecorder — ADR 0011)
+- [ ] Audit logging (`AuditRecorderInterface`, before/after, mutation+audit in one transaction — ADR 0011, audit-logging.md)
 - [ ] UTC storage / JST display bootstrap (ADR 0012)
 - [ ] Webhook handler (payment result from gateway; signature-verified, idempotent)
 - [ ] OpenAPI contract validation (composer openapi)

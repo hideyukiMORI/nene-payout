@@ -88,11 +88,15 @@ every tenant query filters `organization_id`. See
 | entity_type | string | Changed entity type |
 | entity_id | string | Changed entity id |
 | before_json | json\|null | Sanitized snapshot before (null for create) |
-| after_json | json\|null | Sanitized snapshot after (null for delete) |
+| after_json | json\|null | Sanitized snapshot after (null for void/delete) |
+| request_id | string\|null | `X-Request-Id` correlation |
 | created_at | datetime | UTC instant |
+| actor_email | string\|null | Resolved at read time only — never stored |
 
-Audit snapshots are sanitized: tokens, API keys, and secrets are never written
-(ADR 0011).
+Every mutating operation records who/what/before/after; the mutation and its
+audit row commit in one transaction; the table is append-only. Snapshots are
+sanitized (no PAN, tokens, API keys, secrets). Full design:
+[`audit-logging.md`](./audit-logging.md) (ADR 0011, 0013).
 
 ## Status lifecycle
 

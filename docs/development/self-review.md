@@ -29,6 +29,9 @@ Run the relevant checklist before creating a PR. Include the checklist name in t
 - [ ] Validation errors use `ValidationException` + `ValidationError` (422)
 - [ ] No raw SQL outside Repository; repos depend on `DatabaseQueryExecutorInterface`
 - [ ] No raw card numbers / tokens / secrets logged or stored
+- [ ] Audit: every mutating op + state transition records via `AuditRecorderInterface` (who / action / before / after) — ADR 0011
+- [ ] Audit: mutation + audit write commit in **one transaction**; before/after via sanitized `*Response` presenters (no PAN/tokens/secrets)
+- [ ] Audit: `audit_logs` treated as append-only (no UPDATE/DELETE); reads not audited
 - [ ] OpenAPI updated and passes `composer openapi`
 - [ ] `docs/terms.md` checked for all new identifiers
 - [ ] Compliance gate run when applicable (`../review/compliance.md`)

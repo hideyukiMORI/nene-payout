@@ -20,6 +20,7 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 - **Payment / legal / tax compliance (binding, non-negotiable):** `docs/explanation/payment-compliance.md`
 - **Compliance self-review (binding):** `docs/review/compliance.md`
 - **Multi-tenancy (binding):** `docs/explanation/multi-tenancy.md`
+- **Audit logging (binding):** `docs/explanation/audit-logging.md`
 - **Product vision:** `docs/explanation/product-vision.md`
 - **Requirements:** `docs/explanation/requirements.md`
 - **Domain model:** `docs/explanation/domain-model.md`
