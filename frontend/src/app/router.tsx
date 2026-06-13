@@ -5,6 +5,7 @@ import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
 import { AuthGate } from './auth-gate'
+import { AppLayout } from './layout/AppLayout'
 
 export function AppRoutes() {
   return (
@@ -12,31 +13,18 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forbidden" element={<ForbiddenPage />} />
       <Route
-        path="/vendors"
         element={
           <AuthGate>
-            <VendorsPage />
+            <AppLayout />
           </AuthGate>
         }
-      />
-      <Route
-        path="/received-invoices"
-        element={
-          <AuthGate>
-            <InvoicesPage />
-          </AuthGate>
-        }
-      />
-      <Route
-        path="/payments"
-        element={
-          <AuthGate>
-            <PaymentsPage />
-          </AuthGate>
-        }
-      />
-      <Route path="/" element={<Navigate to="/vendors" replace />} />
-      <Route path="*" element={<Navigate to="/vendors" replace />} />
+      >
+        <Route path="/received-invoices" element={<InvoicesPage />} />
+        <Route path="/vendors" element={<VendorsPage />} />
+        <Route path="/payments" element={<PaymentsPage />} />
+      </Route>
+      <Route path="/" element={<Navigate to="/received-invoices" replace />} />
+      <Route path="*" element={<Navigate to="/received-invoices" replace />} />
     </Routes>
   )
 }

@@ -49,7 +49,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] FSD 堅牢スキャフォールド（tooling: strictTypeChecked ESLint＋import 境界＋Tailwind 任意値禁止＋Prettier、shared/config・api・ui テーマ＋primitives、app providers/router/error-boundary/auth-gate、entities/vendor 縦スライス、features/manage-vendors＋MSW フックテスト、pages/vendors、tests render/msw/factories、check green） — Issue #50
 - [x] ReceivedInvoice 縦スライス（shared/lib フォーマッタ、entities/received-invoice＋mapper test、features/manage-invoices＋MSW フックテスト、pages/invoices、/received-invoices ルート、ステータスラベル ja/en、check green 35 tests） — Issue #52
 - [x] PaymentExecution 縦スライス（entities/payment-execution＋mapper test、queries（status・received_invoice_id フィルタ）＋initiate mutation、features/view-payments＋MSW フックテスト、pages/payments、/payments ルート、決済ステータスラベル ja/en、check green 43 tests） — Issue #54
-- [ ] FSD 横展開の続き（フォーム（RHF＋zod）登録/編集、決済開始 UI、PDF アップロード UI、ナビゲーション/レイアウトシェル、Storybook、knip、husky/CI 化）
+- [x] ナビゲーション/レイアウトシェル（app/layout AppLayout＝ヘッダー＋サイドナビ＋Outlet、features/switch-locale、app/layout sign-out、認証ルートを AuthGate＋AppLayout 配下にネスト、app.* i18n、AppLayout レンダリングテスト、check green 46 tests） — Issue #56
+- [ ] FSD 横展開の続き（フォーム（RHF＋zod）登録/編集、決済開始 UI、PDF アップロード UI、ダッシュボード/設定/監査ログ画面、Storybook、knip、husky/CI 化）
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
@@ -66,4 +67,4 @@ Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
 Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
-Last updated: 2026-06-14 (PaymentExecution frontend slice)
+Last updated: 2026-06-14 (frontend navigation/layout shell)

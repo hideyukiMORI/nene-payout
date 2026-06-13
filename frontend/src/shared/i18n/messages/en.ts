@@ -13,6 +13,11 @@
  */
 
 export const en = {
+  // ── App shell ─────────────────────────────────────────────────────────────
+  'app.name': 'NeNe Payout',
+  'app.nav.label': 'Primary',
+  'app.locale.label': 'Language',
+
   // ── Common: actions ───────────────────────────────────────────────────────
   'common.actions.create': 'Create',
   'common.actions.save': 'Save changes',
