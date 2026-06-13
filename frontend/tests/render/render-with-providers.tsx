@@ -8,6 +8,7 @@ import {
   type RenderResult,
 } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { I18nProvider } from '@/shared/i18n'
 
 export function createTestQueryClient(): QueryClient {
@@ -31,6 +32,26 @@ function Wrapper({ children }: { children: ReactNode }) {
 
 export function renderWithProviders(ui: ReactElement, options?: RenderOptions): RenderResult {
   return render(ui, { wrapper: Wrapper, ...options })
+}
+
+function RouterWrapper({ children }: { children: ReactNode }) {
+  const queryClient = createTestQueryClient()
+
+  return (
+    <I18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>{children}</MemoryRouter>
+      </QueryClientProvider>
+    </I18nProvider>
+  )
+}
+
+/** Like renderWithProviders but also provides a router (for components with <Link>). */
+export function renderWithRouterAndProviders(
+  ui: ReactElement,
+  options?: RenderOptions,
+): RenderResult {
+  return render(ui, { wrapper: RouterWrapper, ...options })
 }
 
 export function renderHookWithProviders<Result, Props>(

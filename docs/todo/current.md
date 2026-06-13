@@ -55,7 +55,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] CI 基盤（GitHub Actions: backend composer check＋NENE2 兄弟 checkout／frontend npm run check／gitleaks、Dependabot composer・npm・actions、docs/development/ci.md）— Issue #62（PR 上で CI green を確認）
 - [x] 決済開始 UI（features/initiate-payment＝gateway Select フォーム＋PayInvoicePanel、pending 請求書 → useInitiatePayment → gateway_redirect_url へ遷移、/received-invoices/:id/pay、一覧 pending 行に導線、ゲートウェイ名/決済開始 i18n、schema＋form テスト、check green 81 tests） — Issue #69
 - [x] PDF アップロード UI（shared/api postForm＝multipart、entities useAttachReceivedInvoicePdf、features/upload-invoice-pdf＝pdf-file 検証（application/pdf・soft cap）＋UploadInvoicePdfForm/Panel、/received-invoices/:id/pdf、一覧の全行に導線、pdf.* i18n、検証＋form テスト、check green 88 tests） — Issue #76
-- [ ] FSD 横展開の続き（詳細画面、ダッシュボード/設定/監査ログ画面、i18n 未使用キー整理、Storybook、knip）
+- [x] 詳細画面（shared/ui DetailList＋shared/lib formatDateTime（JST 表示）、VendorDetailView／InvoiceDetailView（仕入先名を子で解決・税区分表示）／PaymentDetailView、/vendors/:id・/received-invoices/:id・/payments/:id、一覧から詳細リンク、詳細タイトル/フィールド i18n、各詳細の MSW happy-path テスト、check green 94 tests） — Issue #78
+- [ ] FSD 横展開の続き（ダッシュボード/設定/監査ログ画面、i18n 未使用キー整理、Storybook、knip）
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
@@ -72,4 +73,4 @@ Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
 Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
-Last updated: 2026-06-14 (invoice PDF upload UI)
+Last updated: 2026-06-14 (resource detail screens)

@@ -26,6 +26,13 @@ export const paymentExecutionHandlers = [
   }),
 ]
 
+export const paymentExecutionDetailHandlers = [
+  http.get('*/api/v1/payment-executions/:id', ({ params }) => {
+    const id = typeof params.id === 'string' ? params.id : '01PAY0000000000000000000001'
+    return HttpResponse.json(paymentExecutionDto({ id }))
+  }),
+]
+
 export const emptyPaymentExecutionHandlers = [
   http.get('*/api/v1/payment-executions', () => {
     const body: PaymentExecutionListDto = { items: [], limit: 20, offset: 0, total: 0 }

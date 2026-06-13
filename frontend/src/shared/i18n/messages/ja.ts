@@ -176,10 +176,15 @@ export const ja: Partial<MessageCatalog> = {
 
   // ── Admin: payments ───────────────────────────────────────────────────────
   'admin.payments.pageTitle': '決済履歴',
+  'admin.payments.detailTitle': '決済詳細',
   'admin.payments.empty': '決済はまだありません。',
   'admin.payments.field.gateway': 'ゲートウェイ',
+  'admin.payments.field.gatewayReference': 'ゲートウェイ参照',
   'admin.payments.field.chargeAmount': '請求金額',
   'admin.payments.field.processingFee': '決済手数料',
+  'admin.payments.field.initiatedAt': '開始日時',
+  'admin.payments.field.completedAt': '完了日時',
+  'admin.payments.field.receivedInvoice': '受取請求書',
   'admin.payments.status.initiated': '開始',
   'admin.payments.status.succeeded': '成功',
   'admin.payments.status.failed': '失敗',

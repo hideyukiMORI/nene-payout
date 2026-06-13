@@ -21,6 +21,13 @@ export const receivedInvoiceHandlers = [
   }),
 ]
 
+export const receivedInvoiceDetailHandlers = [
+  http.get('*/api/v1/received-invoices/:id', ({ params }) => {
+    const id = typeof params.id === 'string' ? params.id : '01INV0000000000000000000001'
+    return HttpResponse.json(receivedInvoiceDto({ id }))
+  }),
+]
+
 export const emptyReceivedInvoiceHandlers = [
   http.get('*/api/v1/received-invoices', () => {
     const body: ReceivedInvoiceListDto = { items: [], limit: 20, offset: 0, total: 0 }

@@ -53,7 +53,12 @@ function VendorListBody({ state }: VendorListViewProps) {
               className="flex items-center justify-between border-b border-border py-stack-sm"
             >
               <div>
-                <Text>{vendor.name}</Text>
+                <Link
+                  to={`/vendors/${vendor.id}`}
+                  className="font-sans text-body font-medium text-accent"
+                >
+                  {vendor.name}
+                </Link>
                 <Text tone="muted">
                   {vendor.bankCode}-{vendor.branchCode} {vendor.accountNumber}
                 </Text>

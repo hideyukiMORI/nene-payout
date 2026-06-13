@@ -185,10 +185,15 @@ export const en = {
 
   // ── Admin: payments ───────────────────────────────────────────────────────
   'admin.payments.pageTitle': 'Payment history',
+  'admin.payments.detailTitle': 'Payment detail',
   'admin.payments.empty': 'No payments yet.',
   'admin.payments.field.gateway': 'Gateway',
+  'admin.payments.field.gatewayReference': 'Gateway reference',
   'admin.payments.field.chargeAmount': 'Charged amount',
   'admin.payments.field.processingFee': 'Processing fee',
+  'admin.payments.field.initiatedAt': 'Initiated at',
+  'admin.payments.field.completedAt': 'Completed at',
+  'admin.payments.field.receivedInvoice': 'Received invoice',
   'admin.payments.status.initiated': 'Initiated',
   'admin.payments.status.succeeded': 'Succeeded',
   'admin.payments.status.failed': 'Failed',

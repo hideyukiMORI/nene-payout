@@ -54,7 +54,8 @@ pass `docs/review/compliance.md`.
 - [x] Received invoice create/edit form (vendor select + tax-breakdown field array, schema mirroring backend, pending-only edit — Issue #60)
 - [x] Payment initiation UI (initiate-payment feature: gateway select → useInitiatePayment → gateway redirect, pending-only — Issue #69)
 - [x] Invoice PDF upload UI (multipart postForm, upload-invoice-pdf feature, client type/size validation — Issue #76)
-- [ ] React admin UI (remaining: detail screens, dashboard/settings/audit-log screens)
+- [x] Detail screens (DetailList + formatDateTime; vendor/invoice/payment detail views with list links — Issue #78)
+- [ ] React admin UI (remaining: dashboard/settings/audit-log screens)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
