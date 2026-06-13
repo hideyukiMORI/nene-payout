@@ -48,6 +48,7 @@
 | Tier A (shared hosting) | PHP 8.4, SQLite, mod_php or PHP-FPM |
 | Tier B (Docker) | PHP 8.4, MySQL 8, Docker Compose |
 | Authentication | JWT HS256 via NENE2 `BearerTokenMiddleware` + `LocalBearerTokenVerifier` (`NENE2_LOCAL_JWT_SECRET`) |
+| Multi-tenancy | Tenant resolved from request (`OrgResolverMiddleware`) → `RequestScopedHolder`; repos filter `organization_id` (ADR 0004, 0018) |
 | Money | Integer cents only — no floats |
 | PCI DSS | Hosted-only capture, SAQ-A — raw card numbers (PAN) never stored (ADR 0010) |
 | Legal positioning | Software only; all regulated money movement delegated to the licensed gateway — not a 資金移動業/為替 (ADR 0009) |

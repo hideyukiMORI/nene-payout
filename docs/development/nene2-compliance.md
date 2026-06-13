@@ -58,7 +58,7 @@ Integer cents only. No floats. No `DECIMAL` in SQLite test schemas.
 
 ## Tenant isolation (binding)
 
-Every query on a tenant table includes `organization_id` in WHERE. Extract from JWT; never trust request body.
+Every query on a tenant table includes `organization_id` in WHERE. The org is resolved from the request by `OrgResolverMiddleware` and read from a `RequestScopedHolder` in the repository (ADR 0018); never derive it from the request body/path/query. See [`../explanation/multi-tenancy.md`](../explanation/multi-tenancy.md).
 
 ## Verification commands
 

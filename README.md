@@ -42,6 +42,7 @@ Built on [NENE2](https://github.com/hideyukiMORI/NENE2), runs on shared hosting 
 | --- | --- |
 | **Scope contract (GOAL / DO / DON'T)** | [`docs/explanation/scope-contract.md`](./docs/explanation/scope-contract.md) |
 | **Payment / legal / tax compliance (binding)** | [`docs/explanation/payment-compliance.md`](./docs/explanation/payment-compliance.md) |
+| **Multi-tenancy (binding)** | [`docs/explanation/multi-tenancy.md`](./docs/explanation/multi-tenancy.md) |
 | **Domain boundary** | [`docs/explanation/scope-boundary.md`](./docs/explanation/scope-boundary.md) |
 | **Product vision** | [`docs/explanation/product-vision.md`](./docs/explanation/product-vision.md) |
 | **Requirements** | [`docs/explanation/requirements.md`](./docs/explanation/requirements.md) |

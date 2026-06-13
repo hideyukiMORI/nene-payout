@@ -20,7 +20,7 @@ Run the relevant checklist before creating a PR. Include the checklist name in t
 - [ ] UseCase has no HTTP/DB knowledge and never calls the container
 - [ ] Real NENE2 classes used (no invented objects) — see `nene2-runtime-reference.md`
 - [ ] Path params read from `Router::PARAMETERS_ATTRIBUTE` (not `getAttribute('id')`)
-- [ ] `organization_id` taken from JWT claims (`nene2.auth.claims`), never request body
+- [ ] `organization_id` read from the resolved `RequestScopedHolder` (ADR 0018), never from request body/path/query; repos filter by it
 - [ ] Constructor injection only; no service locator in UseCase/domain code
 - [ ] Time via injected `ClockInterface`/`UtcClock` (no ambient `date()`)
 - [ ] All amounts are integer cents (no floats); `amount`/`charge_amount`/`processing_fee` distinct

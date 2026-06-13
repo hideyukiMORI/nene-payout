@@ -53,8 +53,12 @@ src/
 ## Tenant isolation (binding)
 
 - Every query on a tenant table **must** include `organization_id` in WHERE
-- Extract `org_id` from JWT in Handler; pass to UseCase as parameter
-- Never trust `organization_id` from request body — always use JWT claim
+- `organization_id` is resolved from the **request** by `OrgResolverMiddleware`
+  and held in a `RequestScopedHolder<string>` (ADR 0018); repositories inject the
+  holder and read it — they do not receive `org_id` as a method parameter
+- Never trust `organization_id` from the request body, path, or query for scoping
+- User identity / role come from auth (`BearerTokenMiddleware`); tenant context is
+  separate. Full design: [`../explanation/multi-tenancy.md`](../explanation/multi-tenancy.md)
 
 ## Payment gateway adapter (binding)
 
