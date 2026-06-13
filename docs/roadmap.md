@@ -10,6 +10,7 @@
 - [x] docs/development/ full set (coding-standards, naming-conventions, backend-standards, nene2-compliance, commit-conventions, self-review)
 - [x] Payment/legal/tax compliance foundation (binding payment-compliance.md, ADRs 0008–0015, review/compliance.md)
 - [x] NENE2 coding conventions binding (ADR 0016, nene2-runtime-reference, database-standards, frontend-standards)
+- [x] Terminology single source of truth + zero-typo enforcement (terms.md, ADR 0017)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 

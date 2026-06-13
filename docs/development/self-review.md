@@ -2,6 +2,11 @@
 
 Run the relevant checklist before creating a PR. Include the checklist name in the PR body.
 
+> **Terminology gate (binding, every PR).** Every identifier and product/domain
+> spelling must match [`../terms.md`](../terms.md) character-for-character. New or
+> renamed identifiers update `terms.md` in the **same PR**. Typos and 表記ゆれ
+> block merge — no exceptions (ADR 0017). Verify with `git grep -n "<identifier>"`.
+
 > **Binding compliance gate.** Any change touching received invoices, vendors,
 > payment execution, amounts, fees, tax fields, gateway integration, webhooks,
 > document references, or retention **MUST** also run
@@ -58,6 +63,8 @@ Run the relevant checklist before creating a PR. Include the checklist name in t
 
 ## docs
 
-- [ ] New identifiers registered in `docs/terms.md`
+- [ ] Every identifier matches `docs/terms.md` exactly (no typos / 表記ゆれ) — ADR 0017
+- [ ] New or renamed identifiers registered in `docs/terms.md` in this PR; old spelling removed everywhere
+- [ ] Product/domain names use canonical spelling (`NeNe Payout`, `NENE2`, …)
 - [ ] ADR created when an architectural decision is made
 - [ ] `docs/todo/current.md` updated if phase status changed
