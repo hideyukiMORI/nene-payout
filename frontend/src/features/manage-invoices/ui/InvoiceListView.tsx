@@ -63,7 +63,12 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
               className="flex items-center justify-between border-b border-border py-stack-sm"
             >
               <div>
-                <Text>{formatJpy(invoice.amount, locale)}</Text>
+                <Link
+                  to={`/received-invoices/${invoice.id}`}
+                  className="font-sans text-body font-medium text-accent"
+                >
+                  {formatJpy(invoice.amount, locale)}
+                </Link>
                 <Text tone="muted">
                   {t('common.field.dueDate')}: {formatDate(invoice.dueDate, locale)} ·{' '}
                   {t(STATUS_LABEL_KEY[invoice.status])}

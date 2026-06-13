@@ -14,6 +14,13 @@ export const vendorHandlers = [
   }),
 ]
 
+export const vendorDetailHandlers = [
+  http.get('*/api/v1/vendors/:id', ({ params }) => {
+    const id = typeof params.id === 'string' ? params.id : '01VENDOR000000000000000001'
+    return HttpResponse.json(vendorDto({ id }))
+  }),
+]
+
 export const emptyVendorHandlers = [
   http.get('*/api/v1/vendors', () => {
     const body: VendorListDto = { items: [], limit: 20, offset: 0, total: 0 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDate, formatJpy } from './format'
+import { formatDate, formatDateTime, formatJpy } from './format'
 
 describe('formatJpy', () => {
   it('formats an integer yen amount without minor units', () => {
@@ -26,5 +26,19 @@ describe('formatDate', () => {
 
   it('returns the raw value when the input is not a date', () => {
     expect(formatDate('not-a-date', 'ja')).toBe('not-a-date')
+  })
+})
+
+describe('formatDateTime', () => {
+  it('formats a UTC instant in JST (ADR 0012)', () => {
+    expect(formatDateTime('2026-06-14T01:00:00Z', 'ja')).toBe('2026年6月14日 10:00')
+  })
+
+  it('formats with the en locale in JST', () => {
+    expect(formatDateTime('2026-06-14T01:00:00Z', 'en')).toBe('Jun 14, 2026, 10:00 AM')
+  })
+
+  it('returns the raw value when the input is not parseable', () => {
+    expect(formatDateTime('not-a-date', 'ja')).toBe('not-a-date')
   })
 })

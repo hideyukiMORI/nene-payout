@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { PaymentExecutionStatus } from '@/entities/payment-execution'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { formatJpy } from '@/shared/lib'
@@ -48,7 +49,12 @@ function PaymentListBody({ state }: PaymentListViewProps) {
         <ul>
           {state.payments.map((payment) => (
             <li key={payment.id} className="border-b border-border py-stack-sm">
-              <Text>{formatJpy(payment.amount, locale)}</Text>
+              <Link
+                to={`/payments/${payment.id}`}
+                className="font-sans text-body font-medium text-accent"
+              >
+                {formatJpy(payment.amount, locale)}
+              </Link>
               <Text tone="muted">
                 {t('admin.payments.field.gateway')}: {payment.gateway} ·{' '}
                 {t(STATUS_LABEL_KEY[payment.status])}

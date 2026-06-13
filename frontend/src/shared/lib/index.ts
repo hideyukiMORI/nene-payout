@@ -1,1 +1,1 @@
-export { formatJpy, formatDate } from './format'
+export { formatJpy, formatDate, formatDateTime } from './format'
