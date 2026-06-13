@@ -24,7 +24,7 @@
 All Phase 1 work is bound by `docs/explanation/payment-compliance.md` and must
 pass `docs/review/compliance.md`.
 
-- [ ] NENE2 runtime scaffold (health, OpenAPI endpoint)
+- [x] NENE2 runtime scaffold (front controller, RuntimeServiceProvider, `GET /health`, composer check green) — Issue #26
 - [ ] Multi-tenant runtime: `Organization` + tenant resolution (`OrgResolverMiddleware` + strategies) → `RequestScopedHolder`; user auth via `BearerTokenMiddleware`; `CapabilityMiddleware` (ADR 0018)
 - [ ] Vendor management CRUD (with registration_number, record & link only)
 - [ ] ReceivedInvoice CRUD (registration, PDF upload, void semantics)

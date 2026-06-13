@@ -9,3 +9,8 @@ frontend/dist/
 *.sqlite
 *.sqlite3
 .DS_Store
+
+# Tooling caches
+.phpunit.cache/
+.phpstan.cache/
+.php-cs-fixer.cache
