@@ -9,7 +9,7 @@ NeNe Payout may be used by multiple organizations on a single installation (NeNe
 
 ## Decision
 
-Every tenant-scoped table includes `organization_id`. JWT carries `org_id` claim. Roles: `superadmin` (cross-tenant) / `admin` / `operator`. Inherits NENE2 BearerAuth pattern.
+Every tenant-scoped table includes `organization_id`. JWT carries `org_id` claim. Roles: `superadmin` (cross-tenant) / `admin` / `operator`. Inherits NENE2 `BearerTokenMiddleware` + `TokenVerifierInterface` pattern (local: `LocalBearerTokenVerifier`).
 
 ## Consequences
 

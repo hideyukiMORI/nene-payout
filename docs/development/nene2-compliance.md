@@ -2,21 +2,30 @@
 
 This file is **binding**. Violations block merge.
 
-Inherits [NENE2 ADR-0014 / coding standards](https://github.com/hideyukiMORI/NENE2/blob/main/docs/development/coding-standards.md). Deviations require a local ADR.
+Inherits [NENE2 coding standards](https://github.com/hideyukiMORI/NENE2/blob/main/docs/development/coding-standards.md). Deviations require a local ADR. The full common-object catalog with exact class names and namespaces is [`nene2-runtime-reference.md`](./nene2-runtime-reference.md).
 
 ## Required framework objects (do not reinvent)
 
-| Concern | Use this | Never reinvent |
+Exact NENE2 classes (`Nene2\` namespace). See `nene2-runtime-reference.md` §1 for the full list.
+
+| Concern | Use this (exact) | Never reinvent |
 | --- | --- | --- |
-| JSON response | `JsonResponseFactory` | custom `json_encode()` responses |
-| Problem Details error | `ProblemDetailsResponseFactory` | custom error arrays |
-| Pagination | `PaginationQuery` | custom page/offset parsing |
-| Bearer auth | `BearerAuth` + `NENE2_LOCAL_JWT_SECRET` | custom JWT parsing |
-| Validation error | `ValidationException` + `ValidationError` | custom validation response |
-| Upsert | `DbUpsert::run()` | driver-specific INSERT … ON DUPLICATE KEY |
-| DB connection | `PdoConnection::getInstance()` | custom PDO wrapper |
-| Request ID | `RequestId` middleware | custom request ID header |
-| Security headers | `ResponseDecorator` | ad-hoc header setting |
+| JSON response | `JsonResponseFactory` (`Nene2\Http`) | custom `json_encode()` responses |
+| Problem Details error | `ProblemDetailsResponseFactory` (`Nene2\Error`) | custom error arrays |
+| Pagination | `PaginationQuery` / `PaginationResponse` (`Nene2\Http`) | custom page/offset parsing |
+| Bearer auth | `BearerTokenMiddleware` + `TokenVerifierInterface` (`Nene2\Auth`); local: `LocalBearerTokenVerifier` + `NENE2_LOCAL_JWT_SECRET` | custom JWT parsing |
+| Validation | `ValidationException` + `ValidationError` + `V` (`Nene2\Validation`) | custom validation response |
+| DB read/write | `DatabaseQueryExecutorInterface` (`Nene2\Database`) | raw `PDO`, custom wrapper |
+| DB connection | `DatabaseConnectionFactoryInterface` / `PdoConnectionFactory` (`Nene2\Database`) | `new PDO()`, singletons / `getInstance()` |
+| DB transaction | `DatabaseTransactionManagerInterface` (`Nene2\Database`) | manual `BEGIN`/`COMMIT` |
+| Request ID | `RequestIdMiddleware` (`Nene2\Middleware`) | custom request ID header |
+| Security headers | `SecurityHeadersMiddleware` (`Nene2\Middleware`) | ad-hoc header setting |
+| CORS | `CorsMiddleware` (`Nene2\Middleware`) | hard-coded origins |
+| Clock (now) | `ClockInterface` → `UtcClock` (`Nene2\Http`) | ambient `date()` |
+| Container / wiring | `Container` / `ContainerBuilder` / `ServiceProviderInterface` (`Nene2\DependencyInjection`) | service locator in domain code |
+
+> There is **no** `PdoConnection::getInstance()`, `DbUpsert`, `BearerAuth`, or
+> `ResponseDecorator` in NENE2. Use the classes above.
 
 ## Architecture rules (binding)
 
@@ -28,18 +37,20 @@ Inherits [NENE2 ADR-0014 / coding standards](https://github.com/hideyukiMORI/NEN
 
 ## Middleware stack order (binding)
 
-Inherits NENE2 order:
+Inherits NENE2 order (`ErrorHandlerMiddleware` wraps the whole pipeline):
 
 ```
-1. RequestId
-2. RequestLogging
-3. SecurityHeaders (ResponseDecorator)
-4. CORS
-5. ErrorHandling
-6. RequestSizeLimit
-7. BearerAuth
-8. Routing / dispatch
+1. ErrorHandlerMiddleware        (wraps everything)
+2. RequestIdMiddleware
+3. SecurityHeadersMiddleware
+4. CorsMiddleware
+5. RequestSizeLimitMiddleware
+6. BearerTokenMiddleware / ApiKeyAuthenticationMiddleware
+7. (request / OpenAPI validation, when added)
+8. Router / dispatch
 ```
+
+See [`nene2-runtime-reference.md`](./nene2-runtime-reference.md) §4.
 
 ## Money (binding)
 

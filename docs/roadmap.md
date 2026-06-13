@@ -9,6 +9,7 @@
 - [x] docs/explanation/ full set (requirements, features, pages, glossary, domain-model, product-vision, scope-contract, scope-boundary)
 - [x] docs/development/ full set (coding-standards, naming-conventions, backend-standards, nene2-compliance, commit-conventions, self-review)
 - [x] Payment/legal/tax compliance foundation (binding payment-compliance.md, ADRs 0008–0015, review/compliance.md)
+- [x] NENE2 coding conventions binding (ADR 0016, nene2-runtime-reference, database-standards, frontend-standards)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
@@ -18,7 +19,7 @@ All Phase 1 work is bound by `docs/explanation/payment-compliance.md` and must
 pass `docs/review/compliance.md`.
 
 - [ ] NENE2 runtime scaffold (health, OpenAPI endpoint)
-- [ ] Multi-tenant auth (organization + JWT, inherits NENE2 BearerAuth)
+- [ ] Multi-tenant auth (organization + JWT, NENE2 `BearerTokenMiddleware` + `TokenVerifierInterface`)
 - [ ] Vendor management CRUD (with registration_number, record & link only)
 - [ ] ReceivedInvoice CRUD (registration, PDF upload, void semantics)
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
