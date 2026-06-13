@@ -23,7 +23,7 @@ frontend/src/
   components/     reusable presentational components + __tests__/
   features/       feature screens (received-invoices, vendors, payments, settings)
   widget/         embeddable payment widget entry (script-tag build)
-  i18n/           ja / en message catalogs
+  shared/i18n/    ja / en message catalogs + I18nProvider (see i18n.md)
   test/           test setup/helpers
 ```
 
@@ -60,8 +60,15 @@ Component → typed API client (frontend/src/api) → fetch → NENE2 JSON API
 
 ## Internationalization (binding)
 
-- All user-facing strings go through i18n (`frontend/src/i18n`); **no** hardcoded
-  ja/en text in components. Runtime locale switch (ja / en).
+Full design: [`../explanation/i18n.md`](../explanation/i18n.md).
+
+- All user-facing strings go through `t(key)` from `frontend/src/shared/i18n`;
+  **no** hardcoded ja/en text anywhere (components, widget, errors, aria-labels).
+- `messages/en.ts` is the typed source of truth (`MessageCatalog`); `ja.ts` is
+  `Partial` and must be complete for release (key-parity test gate).
+- Runtime locale switch (ja / en) is instant + persisted (`localStorage`);
+  the API is not translated — UI maps stable error `code`/problem `type` to
+  catalog messages.
 
 ## Widget (binding)
 

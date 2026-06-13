@@ -58,7 +58,9 @@ Run the relevant checklist before creating a PR. Include the checklist name in t
 
 - [ ] React + TS + Vite; source in `frontend/`, build to `public_html/assets/` only
 - [ ] Files grouped by feature/role; components named after their role
-- [ ] All UI strings via i18n (no hardcoded Japanese/English)
+- [ ] All UI strings (incl. widget, errors, aria-labels) via `t(key)` from `shared/i18n`; no hardcoded ja/en (i18n.md)
+- [ ] New keys added to `messages/en.ts` (source of truth) AND `ja.ts`; key-parity test passes
+- [ ] Errors localized by mapping problem `type`/`code` to catalog messages; API responses not translated
 - [ ] API calls via typed client only (`frontend/src/api`); no direct `fetch` in components
 - [ ] Money integer end-to-end; UTC→JST conversion only at the view edge
 - [ ] No secrets / PAN in frontend code or built assets

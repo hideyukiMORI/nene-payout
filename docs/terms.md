@@ -223,3 +223,15 @@ Action format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 | `nene2.org.slug` | Resolved organization slug |
 | `nene2.auth.credential_type` | `"bearer"` (NENE2 auth) |
 | `nene2.auth.claims` | Decoded JWT claims (user id, role) |
+
+## §13 i18n (i18n.md)
+
+| Identifier | Notes |
+| --- | --- |
+| `ja` / `en` | `SupportedLocale` values (Japanese / English) |
+| `nene-payout-locale` | `localStorage` key for the persisted locale |
+| `MessageCatalog` | Type from `messages/en.ts` — source of truth for message **keys** |
+| `common.*` / `admin.{feature}.{element}` / `widget.*` | Message key namespaces; params `{{name}}` |
+
+> Message keys live in `frontend/src/shared/i18n/messages/en.ts` (the typed
+> source of truth), not in this file; `terms.md` governs code/API/DB identifiers.

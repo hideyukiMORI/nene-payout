@@ -44,6 +44,7 @@ Built on [NENE2](https://github.com/hideyukiMORI/NENE2), runs on shared hosting 
 | **Payment / legal / tax compliance (binding)** | [`docs/explanation/payment-compliance.md`](./docs/explanation/payment-compliance.md) |
 | **Multi-tenancy (binding)** | [`docs/explanation/multi-tenancy.md`](./docs/explanation/multi-tenancy.md) |
 | **Audit logging (binding)** | [`docs/explanation/audit-logging.md`](./docs/explanation/audit-logging.md) |
+| **i18n / message catalogs (binding)** | [`docs/explanation/i18n.md`](./docs/explanation/i18n.md) |
 | **Domain boundary** | [`docs/explanation/scope-boundary.md`](./docs/explanation/scope-boundary.md) |
 | **Product vision** | [`docs/explanation/product-vision.md`](./docs/explanation/product-vision.md) |
 | **Requirements** | [`docs/explanation/requirements.md`](./docs/explanation/requirements.md) |

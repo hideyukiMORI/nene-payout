@@ -19,6 +19,7 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] 用語一覧を唯一の真実として確立＋タイポ厳禁の厳守ルール化（terms.md, ADR 0017） — Issue #9
 - [x] マルチテナント設計（nene-records 方式：リクエスト解決＋RequestScopedHolder、multi-tenancy.md, ADR 0018, ADR 0004 改訂） — Issue #11
 - [x] 監査ログ設計（全操作・前後記録・アトミック、audit-logging.md, ADR 0011 格上げ） — Issue #13
+- [x] i18n 設計（ja/en メッセージ一覧・即時切替、i18n.md） — Issue #15
 
 ## Next (Phase 1)
 
