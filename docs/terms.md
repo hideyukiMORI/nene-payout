@@ -174,6 +174,7 @@ Action format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 | --- | --- |
 | `vendor.created` / `vendor.updated` / `vendor.deactivated` | Vendor mutations |
 | `received_invoice.created` / `received_invoice.updated` / `received_invoice.voided` | Invoice mutations |
+| `received_invoice.pdf_attached` | PDF added to a received invoice |
 | `payment.initiated` | Payment instruction sent to gateway |
 | `payment.succeeded` / `payment.failed` | Gateway result recorded |
 | `payment.refunded` / `payment.charged_back` | Post-settlement events (linked records) |

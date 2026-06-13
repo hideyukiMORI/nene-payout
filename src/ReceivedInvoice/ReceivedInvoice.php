@@ -23,6 +23,7 @@ final readonly class ReceivedInvoice
         public ?string $organizationId = null,
         public ?string $registrationNumber = null,
         public ?string $vaultDocumentUrl = null,
+        public ?string $pdfPath = null,
         public ?string $id = null,
         public ?string $createdAt = null,
         public ?string $updatedAt = null,

@@ -9,7 +9,7 @@ use Nene2\Http\RequestScopedHolder;
 
 final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepositoryInterface
 {
-    private const COLUMNS = 'id, organization_id, vendor_id, amount, due_date, status, registration_number, tax_breakdown, vault_document_url, created_at, updated_at';
+    private const COLUMNS = 'id, organization_id, vendor_id, amount, due_date, status, registration_number, tax_breakdown, vault_document_url, pdf_path, created_at, updated_at';
 
     /**
      * @param RequestScopedHolder<string> $orgId
@@ -58,8 +58,8 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
 
         $this->query->execute(
             'INSERT INTO received_invoices
-                (id, organization_id, vendor_id, amount, due_date, status, registration_number, tax_breakdown, vault_document_url, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (id, organization_id, vendor_id, amount, due_date, status, registration_number, tax_breakdown, vault_document_url, pdf_path, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $invoice->id,
                 $this->orgId->get(),
@@ -70,6 +70,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
                 $invoice->registrationNumber,
                 json_encode($invoice->taxBreakdown, JSON_THROW_ON_ERROR),
                 $invoice->vaultDocumentUrl,
+                $invoice->pdfPath,
                 $now,
                 $now,
             ],
@@ -94,6 +95,14 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
                 $invoice->id,
                 $this->orgId->get(),
             ],
+        );
+    }
+
+    public function attachPdf(string $id, string $pdfPath): void
+    {
+        $this->query->execute(
+            'UPDATE received_invoices SET pdf_path = ?, updated_at = ? WHERE id = ? AND organization_id = ?',
+            [$pdfPath, date('Y-m-d H:i:s'), $id, $this->orgId->get()],
         );
     }
 
@@ -144,6 +153,7 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
             organizationId: (string) $row['organization_id'],
             registrationNumber: $row['registration_number'] !== null ? (string) $row['registration_number'] : null,
             vaultDocumentUrl: $row['vault_document_url'] !== null ? (string) $row['vault_document_url'] : null,
+            pdfPath: $row['pdf_path'] !== null ? (string) $row['pdf_path'] : null,
             id: (string) $row['id'],
             createdAt: (string) $row['created_at'],
             updatedAt: (string) $row['updated_at'],

@@ -29,7 +29,7 @@ pass `docs/review/compliance.md`.
 - [x] User auth (`BearerAuthMiddleware` + `LocalBearerTokenVerifier`, login/me) + `Role`/`Capability` + `CapabilityMiddleware` (users migration) — Issue #30
 - [x] Vendor management CRUD (audited, 1-tx, soft-deactivate, registration_number record & link only) — Issue #34
 - [x] ReceivedInvoice CRUD (audited, pending-only edit, void semantics, tax breakdown record-only) — Issue #36
-- [ ] ReceivedInvoice PDF upload (multipart, local storage)
+- [x] ReceivedInvoice PDF upload (multipart, local storage, audited) — Issue #38
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
 - [ ] Stripe adapter (hosted charge + verify)
 - [ ] PaymentExecution create / status update (immutable terminal records — ADR 0013)

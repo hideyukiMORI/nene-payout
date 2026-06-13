@@ -56,6 +56,30 @@ final class InMemoryReceivedInvoiceRepository implements ReceivedInvoiceReposito
         }
     }
 
+    public function attachPdf(string $id, string $pdfPath): void
+    {
+        foreach ($this->invoices as $i => $existing) {
+            if ($existing->id === $id) {
+                $this->invoices[$i] = new ReceivedInvoice(
+                    vendorId: $existing->vendorId,
+                    amount: $existing->amount,
+                    dueDate: $existing->dueDate,
+                    status: $existing->status,
+                    taxBreakdown: $existing->taxBreakdown,
+                    organizationId: $existing->organizationId,
+                    registrationNumber: $existing->registrationNumber,
+                    vaultDocumentUrl: $existing->vaultDocumentUrl,
+                    pdfPath: $pdfPath,
+                    id: $existing->id,
+                    createdAt: $existing->createdAt,
+                    updatedAt: $existing->updatedAt,
+                );
+
+                return;
+            }
+        }
+    }
+
     /** @return list<ReceivedInvoice> */
     private function match(ReceivedInvoiceFilter $filter): array
     {
