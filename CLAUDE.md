@@ -25,6 +25,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | Frontend standards — strict FSD (binding) | `docs/development/frontend-standards.md` |
 | Frontend self-review (binding) | `docs/review/frontend.md` |
 | Local Docker ports (binding) | `docs/development/local-ports.md` |
+| API contract (OpenAPI) | `docs/openapi/openapi.yaml` (inventory: `docs/api/endpoints.md`) |
 | Current tasks | `docs/todo/current.md` |
 | Roadmap | `docs/roadmap.md` |
 

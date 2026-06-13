@@ -2,24 +2,1242 @@ openapi: 3.1.0
 info:
   title: NeNe Payout API
   version: 0.1.0
-  description: Self-hosted vendor invoice payment via credit card.
+  description: >
+    NeNe Payout API contract — self-hosted vendor invoice payment via credit
+    card for Japanese SMBs. Multi-tenant (organization-scoped; the tenant is
+    resolved from the request, not the body — ADR 0018). Money is always integer
+    minimum currency units; `amount` (vendor owed), `charge_amount` (card
+    charged), and `processing_fee` are distinct. Card PAN never reaches this API
+    (hosted gateway capture, SAQ-A — ADR 0010). All mutating operations are
+    audited with before/after (ADR 0011). Errors are RFC 9457 Problem Details.
+
+    This is the contract source of truth; Phase 1 implements it. See
+    docs/development/nene2-runtime-reference.md and docs/explanation/*.
 servers:
   - url: http://localhost:9000
-    description: Local development
+    description: Local development server (90 lane — docs/development/local-ports.md)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: System
+    description: Runtime health endpoint.
+  - name: Auth
+    description: Authentication and current-user self-service.
+  - name: Organizations
+    description: Tenant organizations (superadmin only; bypasses tenant resolution).
+  - name: Vendors
+    description: Payout-owned vendors (支払先) with bank account details.
+  - name: ReceivedInvoices
+    description: Received vendor invoices (受取請求書) registered for payment.
+  - name: Payments
+    description: Card payment execution and history (決済実行).
+  - name: GatewaySettings
+    description: Payment gateway configuration and connectivity check (疎通確認).
+  - name: Users
+    description: User accounts within an organization (admin).
+  - name: AuditLogs
+    description: Audit trail read access (admin within org / superadmin cross-tenant).
+  - name: Webhooks
+    description: Inbound gateway webhooks (signature-verified; no bearer auth).
+  - name: Widget
+    description: Embeddable payment widget endpoints (token-gated; no bearer auth).
+
 paths:
   /health:
     get:
       operationId: health
       summary: Health check
       tags: [System]
+      security: []
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
+              schema: { $ref: '#/components/schemas/HealthStatus' }
+              example: { status: ok, service: nene-payout }
+
+  /api/v1/auth/login:
+    post:
+      operationId: login
+      summary: Issue a bearer token (JWT HS256)
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+              example: { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<sig>" }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/auth/me:
+    get:
+      operationId: getCurrentUser
+      summary: Current authenticated user
+      tags: [Auth]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CurrentUser' }
+              example:
+                id: "01J9Z0VENDOR000000000USER"
+                email: admin@example.com
+                role: admin
+                organization_id: "01J9Z0ORG0000000000000001"
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/v1/organizations:
+    get:
+      operationId: listOrganizations
+      summary: List organizations (superadmin)
+      tags: [Organizations]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrganizationList' }
+              example:
+                items:
+                  - id: "01J9Z0ORG0000000000000001"
+                    slug: payout
+                    name: Example Co.
+                    custom_domain: null
+                    is_active: true
+                    created_at: "2026-06-13T00:00:00Z"
+                    updated_at: "2026-06-13T00:00:00Z"
+                limit: 20
+                offset: 0
+                total: 1
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      operationId: createOrganization
+      summary: Create organization (superadmin)
+      tags: [Organizations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateOrganizationRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Organization' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/organizations/{organization_id}:
+    parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+    get:
+      operationId: getOrganization
+      summary: Get organization (superadmin)
+      tags: [Organizations]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Organization' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateOrganization
+      summary: Update organization (superadmin)
+      tags: [Organizations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateOrganizationRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Organization' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/organizations/{organization_id}/deactivate:
+    parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+    post:
+      operationId: deactivateOrganization
+      summary: Deactivate organization (superadmin; soft — no hard delete)
+      tags: [Organizations]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Organization' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/vendors:
+    get:
+      operationId: listVendors
+      summary: List vendors
+      tags: [Vendors]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: q
+          in: query
+          required: false
+          description: Free-text filter on vendor name.
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VendorList' }
+              example:
+                items:
+                  - id: "01J9Z0VENDOR00000000000001"
+                    organization_id: "01J9Z0ORG0000000000000001"
+                    name: 仕入先株式会社
+                    bank_code: "0001"
+                    branch_code: "001"
+                    account_type: 普通
+                    account_number: "1234567"
+                    account_name: シイレサキ（カ
+                    registration_number: "T1234567890123"
+                    created_at: "2026-06-13T00:00:00Z"
+                    updated_at: "2026-06-13T00:00:00Z"
+                limit: 20
+                offset: 0
+                total: 1
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      operationId: createVendor
+      summary: Create vendor
+      tags: [Vendors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateVendorRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Vendor' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/vendors/{vendor_id}:
+    parameters:
+      - $ref: '#/components/parameters/VendorIdPath'
+    get:
+      operationId: getVendor
+      summary: Get vendor
+      tags: [Vendors]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Vendor' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateVendor
+      summary: Update vendor
+      tags: [Vendors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateVendorRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Vendor' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/vendors/{vendor_id}/deactivate:
+    parameters:
+      - $ref: '#/components/parameters/VendorIdPath'
+    post:
+      operationId: deactivateVendor
+      summary: Deactivate vendor (soft — no hard delete)
+      tags: [Vendors]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Vendor' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/received-invoices:
+    get:
+      operationId: listReceivedInvoices
+      summary: List received invoices
+      tags: [ReceivedInvoices]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: status
+          in: query
+          required: false
+          schema: { $ref: '#/components/schemas/ReceivedInvoiceStatus' }
+        - name: vendor_id
+          in: query
+          required: false
+          schema: { type: string }
+        - name: due_from
+          in: query
+          required: false
+          description: Inclusive lower bound for due_date (ISO 8601 date).
+          schema: { type: string, format: date }
+        - name: due_to
+          in: query
+          required: false
+          description: Inclusive upper bound for due_date (ISO 8601 date).
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoiceList' }
+              example:
+                items:
+                  - id: "01J9Z0INV0000000000000001"
+                    organization_id: "01J9Z0ORG0000000000000001"
+                    vendor_id: "01J9Z0VENDOR00000000000001"
+                    amount: 100000
+                    due_date: "2026-07-31"
+                    status: pending
+                    registration_number: "T1234567890123"
+                    vault_document_url: null
+                    created_at: "2026-06-13T00:00:00Z"
+                    updated_at: "2026-06-13T00:00:00Z"
+                limit: 20
+                offset: 0
+                total: 1
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      operationId: createReceivedInvoice
+      summary: Register a received invoice
+      tags: [ReceivedInvoices]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateReceivedInvoiceRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoice' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/received-invoices/{received_invoice_id}:
+    parameters:
+      - $ref: '#/components/parameters/ReceivedInvoiceIdPath'
+    get:
+      operationId: getReceivedInvoice
+      summary: Get received invoice with payment history
+      tags: [ReceivedInvoices]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoiceDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateReceivedInvoice
+      summary: Update received invoice (only while pending)
+      tags: [ReceivedInvoices]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateReceivedInvoiceRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoice' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: Not editable in the current status
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/ProblemDetails' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/received-invoices/{received_invoice_id}/void:
+    parameters:
+      - $ref: '#/components/parameters/ReceivedInvoiceIdPath'
+    post:
+      operationId: voidReceivedInvoice
+      summary: Void a received invoice (soft — no hard delete)
+      tags: [ReceivedInvoices]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoice' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /api/v1/received-invoices/{received_invoice_id}/pdf:
+    parameters:
+      - $ref: '#/components/parameters/ReceivedInvoiceIdPath'
+    post:
+      operationId: uploadReceivedInvoicePdf
+      summary: Upload the invoice PDF (stored locally; not served via API)
+      tags: [ReceivedInvoices]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required: [file]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceivedInvoice' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '413': { $ref: '#/components/responses/PayloadTooLarge' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/received-invoices/{received_invoice_id}/payments:
+    parameters:
+      - $ref: '#/components/parameters/ReceivedInvoiceIdPath'
+    post:
+      operationId: initiatePayment
+      summary: Initiate card payment for a received invoice
+      description: >
+        Creates a PaymentExecution and returns the gateway-hosted capture target
+        (redirect URL or processor-hosted iframe client token). Card PAN never
+        passes through this API (ADR 0010). The final result arrives via webhook.
+      tags: [Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InitiatePaymentRequest' }
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InitiatePaymentResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: Invoice not payable in the current status
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/ProblemDetails' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/payment-executions:
+    get:
+      operationId: listPaymentExecutions
+      summary: List payment executions (history)
+      tags: [Payments]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: status
+          in: query
+          required: false
+          schema: { $ref: '#/components/schemas/PaymentExecutionStatus' }
+        - name: received_invoice_id
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentExecutionList' }
+              example:
+                items:
+                  - id: "01J9Z0PAY0000000000000001"
+                    organization_id: "01J9Z0ORG0000000000000001"
+                    received_invoice_id: "01J9Z0INV0000000000000001"
+                    amount: 100000
+                    charge_amount: 103300
+                    processing_fee: 3300
+                    gateway: stripe
+                    gateway_reference: "pi_123"
+                    status: succeeded
+                    initiated_at: "2026-06-13T01:00:00Z"
+                    completed_at: "2026-06-13T01:00:05Z"
+                limit: 20
+                offset: 0
+                total: 1
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/payment-executions/{payment_execution_id}:
+    parameters:
+      - $ref: '#/components/parameters/PaymentExecutionIdPath'
+    get:
+      operationId: getPaymentExecution
+      summary: Get a payment execution
+      tags: [Payments]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentExecution' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/gateway-settings:
+    get:
+      operationId: getGatewaySettings
+      summary: Get gateway settings (secrets masked)
+      tags: [GatewaySettings]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GatewaySettings' }
+              example:
+                active_gateway: stripe
+                configured_gateways: [stripe]
+                has_credentials: true
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    put:
+      operationId: updateGatewaySettings
+      summary: Update gateway settings (admin)
+      tags: [GatewaySettings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateGatewaySettingsRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GatewaySettings' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /api/v1/gateway-settings/verify:
+    post:
+      operationId: verifyGatewayConnectivity
+      summary: Connectivity check (疎通確認)
+      tags: [GatewaySettings]
+      responses:
+        '200':
+          description: Result of the connectivity test
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConnectivityResult' }
+              example: { gateway: stripe, ok: true, checked_at: "2026-06-13T02:00:00Z" }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/v1/users:
+    get:
+      operationId: listUsers
+      summary: List users
+      tags: [Users]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserList' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      operationId: createUser
+      summary: Create user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateUserRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /api/v1/users/{user_id}:
+    parameters:
+      - $ref: '#/components/parameters/UserIdPath'
+    get:
+      operationId: getUser
+      summary: Get user
+      tags: [Users]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateUser
+      summary: Update user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateUserRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /api/v1/users/{user_id}/deactivate:
+    parameters:
+      - $ref: '#/components/parameters/UserIdPath'
+    post:
+      operationId: deactivateUser
+      summary: Deactivate user (soft)
+      tags: [Users]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/audit-logs:
+    get:
+      operationId: listAuditLogs
+      summary: List audit log entries
+      tags: [AuditLogs]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: entity_type
+          in: query
+          required: false
+          schema: { type: string }
+        - name: entity_id
+          in: query
+          required: false
+          schema: { type: string }
+        - name: actor_user_id
+          in: query
+          required: false
+          schema: { type: string }
+        - name: action
+          in: query
+          required: false
+          schema: { type: string }
+        - name: from
+          in: query
+          required: false
+          schema: { type: string, format: date-time }
+        - name: to
+          in: query
+          required: false
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditLogList' }
+              example:
+                items:
+                  - id: "01J9Z0AUD0000000000000001"
+                    actor_user_id: "01J9Z0USER0000000000000001"
+                    organization_id: "01J9Z0ORG0000000000000001"
+                    action: vendor.updated
+                    entity_type: vendor
+                    entity_id: "01J9Z0VENDOR00000000000001"
+                    request_id: "req_abc"
+                    created_at: "2026-06-13T03:00:00Z"
+                    actor_email: admin@example.com
+                limit: 20
+                offset: 0
+                total: 1
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/v1/webhooks/{gateway}:
+    parameters:
+      - name: gateway
+        in: path
+        required: true
+        schema: { $ref: '#/components/schemas/GatewayId' }
+    post:
+      operationId: receiveGatewayWebhook
+      summary: Receive a payment-result webhook from a gateway
+      description: >
+        Signature-verified gateway callback (no bearer auth). Updates the matching
+        PaymentExecution and ReceivedInvoice status idempotently. The raw event is
+        validated against the gateway signature before processing.
+      tags: [Webhooks]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '202':
+          description: Accepted (processed or queued)
+        '400':
+          description: Invalid signature or payload
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/ProblemDetails' }
+
+  /api/v1/widget/context:
+    get:
+      operationId: getWidgetContext
+      summary: Resolve the widget payment context from a signed token
+      tags: [Widget]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WidgetTokenHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WidgetContext' }
+              example:
+                received_invoice_id: "01J9Z0INV0000000000000001"
+                amount: 100000
+                vendor_name: 仕入先株式会社
+                locale: ja
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/v1/widget/payments:
+    post:
+      operationId: initiateWidgetPayment
+      summary: Initiate payment from the embeddable widget (token-gated)
+      tags: [Widget]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WidgetTokenHeader'
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InitiatePaymentResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409':
+          description: Invoice not payable in the current status
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/ProblemDetails' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: NENE2 BearerTokenMiddleware (HS256 via LocalBearerTokenVerifier).
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of items to return (1–100, default 20).
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    OffsetParam:
+      name: offset
+      in: query
+      required: false
+      description: Zero-based offset.
+      schema: { type: integer, minimum: 0, default: 0 }
+    OrganizationIdPath:
+      name: organization_id
+      in: path
+      required: true
+      schema: { type: string }
+    VendorIdPath:
+      name: vendor_id
+      in: path
+      required: true
+      schema: { type: string }
+    ReceivedInvoiceIdPath:
+      name: received_invoice_id
+      in: path
+      required: true
+      schema: { type: string }
+    PaymentExecutionIdPath:
+      name: payment_execution_id
+      in: path
+      required: true
+      schema: { type: string }
+    UserIdPath:
+      name: user_id
+      in: path
+      required: true
+      schema: { type: string }
+    WidgetTokenHeader:
+      name: X-Widget-Token
+      in: header
+      required: true
+      description: Signed, server-validated widget token carrying the org + invoice context.
+      schema: { type: string }
+
+  responses:
+    Unauthorized:
+      description: Authentication required or invalid.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    Forbidden:
+      description: Insufficient capability for this action.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    NotFound:
+      description: Resource not found (or not in the resolved organization).
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    Conflict:
+      description: Conflicting state (e.g. duplicate or non-permitted transition).
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    PayloadTooLarge:
+      description: Request body exceeds the configured limit.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ProblemDetails' }
+    ValidationFailed:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ValidationProblemDetails' }
+          example:
+            type: https://nene-payout.dev/problems/validation-failed
+            title: Validation Failed
+            status: 422
+            detail: The request body contains invalid values.
+            errors:
+              - field: amount
+                message: amount must be a positive integer.
+                code: out_of_range
+
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status: { type: string, example: ok }
+        service: { type: string, example: nene-payout }
+      required: [status]
+
+    ProblemDetails:
+      type: object
+      description: RFC 9457 problem details (base https://nene-payout.dev/problems/).
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+      required: [type, title, status]
+    ValidationError:
+      type: object
+      properties:
+        field: { type: string }
+        message: { type: string }
+        code: { type: string }
+      required: [field, message, code]
+    ValidationProblemDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items: { $ref: '#/components/schemas/ValidationError' }
+          required: [errors]
+
+    PageEnvelope:
+      type: object
+      description: Standard list envelope (NENE2 PaginationResponse).
+      properties:
+        items: { type: array, items: {} }
+        limit: { type: integer }
+        offset: { type: integer }
+        total: { type: integer, description: Omitted when not counted. }
+      required: [items, limit, offset]
+
+    Role:
+      type: string
+      enum: [superadmin, admin, operator]
+    AccountType:
+      type: string
+      enum: [普通, 当座]
+    GatewayId:
+      type: string
+      enum: [stripe, gmo_pg]
+    ReceivedInvoiceStatus:
+      type: string
+      enum: [pending, processing, paid, failed, voided]
+    PaymentExecutionStatus:
+      type: string
+      enum: [initiated, succeeded, failed, refunded, charged_back]
+    SupportedLocale:
+      type: string
+      enum: [ja, en]
+
+    LoginRequest:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+      required: [email, password]
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string, description: Bearer token (JWT HS256). }
+      required: [token]
+    CurrentUser:
+      type: object
+      properties:
+        id: { type: string }
+        email: { type: string, format: email }
+        role: { $ref: '#/components/schemas/Role' }
+        organization_id: { type: [string, 'null'] }
+      required: [id, email, role]
+
+    Organization:
+      type: object
+      properties:
+        id: { type: string }
+        slug: { type: string }
+        name: { type: string }
+        custom_domain: { type: [string, 'null'] }
+        is_active: { type: boolean }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id, slug, name, is_active]
+    CreateOrganizationRequest:
+      type: object
+      properties:
+        slug: { type: string }
+        name: { type: string }
+        custom_domain: { type: [string, 'null'] }
+      required: [slug, name]
+    UpdateOrganizationRequest:
+      type: object
+      properties:
+        name: { type: string }
+        custom_domain: { type: [string, 'null'] }
+    OrganizationList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Organization' }
+
+    Vendor:
+      type: object
+      properties:
+        id: { type: string }
+        organization_id: { type: string }
+        name: { type: string }
+        bank_code: { type: string, minLength: 4, maxLength: 4 }
+        branch_code: { type: string, minLength: 3, maxLength: 3 }
+        account_type: { $ref: '#/components/schemas/AccountType' }
+        account_number: { type: string, maxLength: 7 }
+        account_name: { type: string, description: 口座名義（カナ） }
+        registration_number:
+          type: [string, 'null']
+          pattern: '^T[0-9]{13}$'
+          description: 適格請求書発行事業者登録番号 (syntax-only; not proof of validity — ADR 0014).
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id, organization_id, name, bank_code, branch_code, account_type, account_number, account_name]
+    CreateVendorRequest:
+      type: object
+      properties:
+        name: { type: string }
+        bank_code: { type: string }
+        branch_code: { type: string }
+        account_type: { $ref: '#/components/schemas/AccountType' }
+        account_number: { type: string }
+        account_name: { type: string }
+        registration_number: { type: [string, 'null'], pattern: '^T[0-9]{13}$' }
+      required: [name, bank_code, branch_code, account_type, account_number, account_name]
+    UpdateVendorRequest:
+      type: object
+      properties:
+        name: { type: string }
+        bank_code: { type: string }
+        branch_code: { type: string }
+        account_type: { $ref: '#/components/schemas/AccountType' }
+        account_number: { type: string }
+        account_name: { type: string }
+        registration_number: { type: [string, 'null'], pattern: '^T[0-9]{13}$' }
+    VendorList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Vendor' }
+
+    TaxBreakdownItem:
+      type: object
+      description: Recorded copy of the invoice tax breakdown (Payout does not compute deductions — ADR 0014).
+      properties:
+        tax_rate_bps: { type: integer, enum: [1000, 800] }
+        taxable_amount: { type: integer, format: int64, description: Integer minimum currency units. }
+        tax_amount: { type: integer, format: int64 }
+      required: [tax_rate_bps, taxable_amount, tax_amount]
+    ReceivedInvoice:
+      type: object
+      properties:
+        id: { type: string }
+        organization_id: { type: string }
+        vendor_id: { type: string }
+        amount: { type: integer, format: int64, description: Vendor-owed amount in integer minimum currency units. }
+        due_date: { type: string, format: date, description: JST calendar date. }
+        status: { $ref: '#/components/schemas/ReceivedInvoiceStatus' }
+        registration_number: { type: [string, 'null'], pattern: '^T[0-9]{13}$' }
+        tax_breakdown:
+          type: array
+          items: { $ref: '#/components/schemas/TaxBreakdownItem' }
+        vault_document_url: { type: [string, 'null'], format: uri }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id, organization_id, vendor_id, amount, due_date, status]
+    ReceivedInvoiceDetail:
+      allOf:
+        - $ref: '#/components/schemas/ReceivedInvoice'
+        - type: object
+          properties:
+            payment_executions:
+              type: array
+              items: { $ref: '#/components/schemas/PaymentExecution' }
+    CreateReceivedInvoiceRequest:
+      type: object
+      properties:
+        vendor_id: { type: string }
+        amount: { type: integer, format: int64, minimum: 1 }
+        due_date: { type: string, format: date }
+        registration_number: { type: [string, 'null'], pattern: '^T[0-9]{13}$' }
+        tax_breakdown:
+          type: array
+          items: { $ref: '#/components/schemas/TaxBreakdownItem' }
+        vault_document_url: { type: [string, 'null'], format: uri }
+      required: [vendor_id, amount, due_date]
+    UpdateReceivedInvoiceRequest:
+      type: object
+      properties:
+        vendor_id: { type: string }
+        amount: { type: integer, format: int64, minimum: 1 }
+        due_date: { type: string, format: date }
+        registration_number: { type: [string, 'null'], pattern: '^T[0-9]{13}$' }
+        tax_breakdown:
+          type: array
+          items: { $ref: '#/components/schemas/TaxBreakdownItem' }
+        vault_document_url: { type: [string, 'null'], format: uri }
+    ReceivedInvoiceList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/ReceivedInvoice' }
+
+    PaymentExecution:
+      type: object
+      properties:
+        id: { type: string }
+        organization_id: { type: string }
+        received_invoice_id: { type: string }
+        amount: { type: integer, format: int64, description: Vendor-owed amount. }
+        charge_amount: { type: [integer, 'null'], format: int64, description: Amount charged to the card. }
+        processing_fee: { type: [integer, 'null'], format: int64 }
+        gateway: { $ref: '#/components/schemas/GatewayId' }
+        gateway_reference: { type: [string, 'null'] }
+        status: { $ref: '#/components/schemas/PaymentExecutionStatus' }
+        initiated_at: { type: string, format: date-time }
+        completed_at: { type: [string, 'null'], format: date-time }
+      required: [id, organization_id, received_invoice_id, amount, gateway, status, initiated_at]
+    InitiatePaymentRequest:
+      type: object
+      properties:
+        gateway: { $ref: '#/components/schemas/GatewayId' }
+        return_url: { type: string, format: uri, description: Where the gateway redirects after capture. }
+      required: [gateway]
+    InitiatePaymentResponse:
+      type: object
+      properties:
+        payment_execution: { $ref: '#/components/schemas/PaymentExecution' }
+        gateway_redirect_url: { type: [string, 'null'], format: uri, description: Hosted redirect target. }
+        client_token: { type: [string, 'null'], description: Processor-hosted iframe token (alternative to redirect). }
+      required: [payment_execution]
+    PaymentExecutionList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/PaymentExecution' }
+
+    GatewaySettings:
+      type: object
+      description: Gateway configuration; secret values are never returned.
+      properties:
+        active_gateway: { $ref: '#/components/schemas/GatewayId' }
+        configured_gateways:
+          type: array
+          items: { $ref: '#/components/schemas/GatewayId' }
+        has_credentials: { type: boolean }
+      required: [active_gateway, has_credentials]
+    UpdateGatewaySettingsRequest:
+      type: object
+      properties:
+        active_gateway: { $ref: '#/components/schemas/GatewayId' }
+        credentials:
+          type: object
+          additionalProperties: { type: string }
+          description: Gateway credentials (write-only; never echoed back).
+      required: [active_gateway]
+    ConnectivityResult:
+      type: object
+      properties:
+        gateway: { $ref: '#/components/schemas/GatewayId' }
+        ok: { type: boolean }
+        checked_at: { type: string, format: date-time }
+        detail: { type: [string, 'null'] }
+      required: [gateway, ok, checked_at]
+
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        email: { type: string, format: email }
+        role: { $ref: '#/components/schemas/Role' }
+        organization_id: { type: [string, 'null'] }
+        status: { type: string, enum: [active, invited, deactivated] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id, email, role]
+    CreateUserRequest:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        role: { $ref: '#/components/schemas/Role' }
+      required: [email, role]
+    UpdateUserRequest:
+      type: object
+      properties:
+        role: { $ref: '#/components/schemas/Role' }
+    UserList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/User' }
+
+    AuditLog:
+      type: object
+      properties:
+        id: { type: string }
+        actor_user_id: { type: [string, 'null'] }
+        organization_id: { type: [string, 'null'] }
+        action: { type: string, description: '{entity}.{verb} — terms.md §10' }
+        entity_type: { type: string }
+        entity_id: { type: [string, 'null'] }
+        before_json: { type: [object, 'null'], additionalProperties: true }
+        after_json: { type: [object, 'null'], additionalProperties: true }
+        request_id: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+        actor_email: { type: [string, 'null'], description: Resolved at read time. }
+      required: [id, action, entity_type, created_at]
+    AuditLogList:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/AuditLog' }
+
+    WidgetContext:
+      type: object
+      properties:
+        received_invoice_id: { type: string }
+        amount: { type: integer, format: int64 }
+        vendor_name: { type: string }
+        locale: { $ref: '#/components/schemas/SupportedLocale' }
+      required: [received_invoice_id, amount, locale]

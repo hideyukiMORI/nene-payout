@@ -252,3 +252,28 @@ Action format: `{entity}.{verb}` (snake_case entity, past-tense verb).
 ### File-name casing
 Components `PascalCase.tsx`; hooks `use-kebab-case.ts`; other modules `kebab-case.ts`;
 component props `{Component}Props`. Named exports only (no default exports).
+
+## §15 API pagination & envelope (NENE2; openapi.yaml)
+
+| Identifier | Notes |
+| --- | --- |
+| `limit` / `offset` | List query params (NENE2 `PaginationQueryParser`) |
+| `items` / `limit` / `offset` / `total` | List envelope fields (`PaginationResponse`); `total` optional |
+| `/api/v1` | Versioned API base path; collections plural kebab-case (`received-invoices`, `payment-executions`, `gateway-settings`, `audit-logs`) |
+
+## §16 Problem Details types (RFC 9457; base `https://nene-payout.dev/problems/`)
+
+| Slug | When |
+| --- | --- |
+| `validation-failed` | 422 — request validation (`errors[]`) |
+| `unauthorized` | 401 |
+| `forbidden` | 403 — insufficient capability |
+| `not-found` | 404 |
+| `conflict` | 409 — duplicate / non-permitted transition |
+| `payload-too-large` | 413 |
+| `internal-server-error` | 500 |
+| `org-not-resolved` / `org-not-found` / `org-inactive` | tenant resolution (ADR 0018) |
+| `invoice-not-editable` | 409 — edit attempted when not `pending` |
+| `payment-not-allowed` | 409 — invoice not payable in current status |
+| `webhook-signature-invalid` | 400 — gateway webhook signature check failed |
+| `gateway-error` | upstream gateway failure |
