@@ -278,6 +278,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                         authMiddleware: [$orgResolver, $bearerAuth, $capability],
                         healthChecks: [],
                         debug: $config->debug,
+                        requestMaxBodyBytes: 10 * 1024 * 1024, // 10 MiB — allows received-invoice PDF uploads
                         problemDetailsBaseUrl: $config->problemDetailsBaseUrl,
                     );
                 },

@@ -15,6 +15,9 @@ use Nene2\Http\JsonResponseFactory;
 use Nene2\Http\RequestScopedHolder;
 use NenePayout\ApplicationServiceProvider;
 use NenePayout\Audit\AuditServiceProvider;
+use NenePayout\Http\RuntimeServiceProvider;
+use NenePayout\ReceivedInvoice\Pdf\LocalPdfStorage;
+use NenePayout\ReceivedInvoice\Pdf\PdfStorageInterface;
 use NenePayout\Vendor\VendorRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -68,6 +71,21 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                 ),
             )
             ->set(
+                PdfStorageInterface::class,
+                static fn (ContainerInterface $c): PdfStorageInterface => new LocalPdfStorage(self::projectRoot($c) . '/var/storage'),
+            )
+            ->set(
+                AttachReceivedInvoicePdfUseCaseInterface::class,
+                static fn (ContainerInterface $c): AttachReceivedInvoicePdfUseCase => new AttachReceivedInvoicePdfUseCase(
+                    self::repository($c),
+                    self::pdfStorage($c),
+                    self::tx($c),
+                    self::invoicesFactory($c),
+                    AuditServiceProvider::recorderFactory($c),
+                    self::orgHolder($c),
+                ),
+            )
+            ->set(
                 ListReceivedInvoicesHandler::class,
                 static fn (ContainerInterface $c): ListReceivedInvoicesHandler => new ListReceivedInvoicesHandler(
                     self::listUseCase($c),
@@ -103,6 +121,13 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                 ),
             )
             ->set(
+                AttachReceivedInvoicePdfHandler::class,
+                static fn (ContainerInterface $c): AttachReceivedInvoicePdfHandler => new AttachReceivedInvoicePdfHandler(
+                    self::pdfUseCase($c),
+                    self::json($c),
+                ),
+            )
+            ->set(
                 ReceivedInvoiceNotFoundExceptionHandler::class,
                 static fn (ContainerInterface $c): ReceivedInvoiceNotFoundExceptionHandler
                     => new ReceivedInvoiceNotFoundExceptionHandler(self::problemDetails($c)),
@@ -120,6 +145,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                     self::handler($c, CreateReceivedInvoiceHandler::class),
                     self::handler($c, UpdateReceivedInvoiceHandler::class),
                     self::handler($c, VoidReceivedInvoiceHandler::class),
+                    self::handler($c, AttachReceivedInvoicePdfHandler::class),
                 ),
             );
     }
@@ -201,6 +227,39 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
         }
 
         return $repo;
+    }
+
+    private static function projectRoot(ContainerInterface $c): string
+    {
+        $root = $c->get(RuntimeServiceProvider::PROJECT_ROOT);
+
+        if (!is_string($root) || $root === '') {
+            throw new LogicException('Project root service is invalid.');
+        }
+
+        return $root;
+    }
+
+    private static function pdfStorage(ContainerInterface $c): PdfStorageInterface
+    {
+        $storage = $c->get(PdfStorageInterface::class);
+
+        if (!$storage instanceof PdfStorageInterface) {
+            throw new LogicException('PDF storage service is invalid.');
+        }
+
+        return $storage;
+    }
+
+    private static function pdfUseCase(ContainerInterface $c): AttachReceivedInvoicePdfUseCaseInterface
+    {
+        $u = $c->get(AttachReceivedInvoicePdfUseCaseInterface::class);
+
+        if (!$u instanceof AttachReceivedInvoicePdfUseCaseInterface) {
+            throw new LogicException('Attach received invoice PDF use case service is invalid.');
+        }
+
+        return $u;
     }
 
     /** @return Closure(DatabaseQueryExecutorInterface): ReceivedInvoiceRepositoryInterface */

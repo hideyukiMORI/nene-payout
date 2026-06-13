@@ -34,7 +34,8 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] スライス4: 監査基盤（Ulid, AuditRecorder, audit_logs migration, GET /api/v1/audit-logs） — Issue #32
 - [x] スライス5: Vendor CRUD（list/get/create/update/deactivate、監査付き・1トランザクション、vendors migration） — Issue #34
 - [x] スライス6: ReceivedInvoice CRUD（list/get/create/update(pending のみ)/void、監査付き、received_invoices migration） — Issue #36
-- [ ] スライス7以降: ReceivedInvoice PDF アップロード → payment gateway adapter → Stripe adapter → PaymentExecution → Webhook
+- [x] スライス7: ReceivedInvoice PDF アップロード（POST /received-invoices/{id}/pdf、ローカル保存・監査） — Issue #38
+- [ ] スライス8以降: payment gateway adapter（PaymentGatewayInterface）→ 決済開始/PaymentExecution → Stripe adapter → Webhook
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
