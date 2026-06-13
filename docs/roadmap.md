@@ -45,7 +45,8 @@ pass `docs/review/compliance.md`.
 
 ## Phase 2 — Admin UI + widget
 
-- [ ] React admin UI (FSD per frontend-standards.md / ADR 0019: received invoice list, vendor list, payment history)
+- [x] FSD scaffold + tooling (strict ESLint boundaries, shared/ui theme + API client, app providers/router, entities/vendor + manage-vendors slice with MSW tests — Issue #50)
+- [ ] React admin UI (remaining screens: received invoice list, payment history; forms via RHF + zod)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)

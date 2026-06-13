@@ -9,10 +9,20 @@ function Probe() {
   return (
     <div>
       <span data-testid="title">{t('admin.nav.dashboard')}</span>
-      <button type="button" onClick={() => setLocale('en')}>
+      <button
+        type="button"
+        onClick={() => {
+          setLocale('en')
+        }}
+      >
         to-en
       </button>
-      <button type="button" onClick={() => setLocale('ja')}>
+      <button
+        type="button"
+        onClick={() => {
+          setLocale('ja')
+        }}
+      >
         to-ja
       </button>
     </div>

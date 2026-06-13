@@ -15,13 +15,16 @@ describe('translate', () => {
   })
 
   it('interpolates a {{param}} placeholder', () => {
-    expect(translate(en, 'admin.payments.amountDue', { amount: '¥1,000' })).toBe('Amount due: ¥1,000')
+    expect(translate(en, 'admin.payments.amountDue', { amount: '¥1,000' })).toBe(
+      'Amount due: ¥1,000',
+    )
     expect(translate(ja, 'admin.payments.amountDue', { amount: '¥1,000' })).toBe('支払金額: ¥1,000')
   })
 
   it('interpolates a named param into a confirm message', () => {
-    expect(translate(en, 'admin.vendors.deactivate.confirmTitle', { name: 'Acme' }))
-      .toBe('Deactivate vendor "Acme"?')
+    expect(translate(en, 'admin.vendors.deactivate.confirmTitle', { name: 'Acme' })).toBe(
+      'Deactivate vendor "Acme"?',
+    )
   })
 
   it('leaves unmatched placeholders untouched', () => {

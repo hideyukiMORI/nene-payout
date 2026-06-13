@@ -130,7 +130,8 @@ export const en = {
   'admin.vendors.field.accountNumber': 'Account number',
   'admin.vendors.field.accountName': 'Account holder (kana)',
   'admin.vendors.deactivate.confirmTitle': 'Deactivate vendor "{{name}}"?',
-  'admin.vendors.deactivate.confirmBody': 'The vendor will be deactivated and hidden from new payments.',
+  'admin.vendors.deactivate.confirmBody':
+    'The vendor will be deactivated and hidden from new payments.',
 
   // ── Admin: payments ───────────────────────────────────────────────────────
   'admin.payments.pageTitle': 'Payment history',
