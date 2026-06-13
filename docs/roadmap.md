@@ -18,6 +18,7 @@
 - [x] API surface + OpenAPI contract (docs/api/endpoints.md, docs/openapi/openapi.yaml — full surface)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
+- [x] CI / Dependabot / secret scanning (GitHub Actions: backend composer check, frontend npm run check, gitleaks; docs/development/ci.md — Issue #62)
 
 ## Phase 1 — Core payment API
 
@@ -51,7 +52,8 @@ pass `docs/review/compliance.md`.
 - [x] Navigation/layout shell (app/layout AppLayout, switch-locale feature, sign-out, nested auth routes — Issue #56)
 - [x] Form foundation (RHF + zod) + vendor create/edit (shared/ui Input/Select/FormField, schema mirroring backend validation, create/edit forms + routes — Issue #58)
 - [x] Received invoice create/edit form (vendor select + tax-breakdown field array, schema mirroring backend, pending-only edit — Issue #60)
-- [ ] React admin UI (remaining: payment initiation flow; dashboard/settings/audit-log screens)
+- [x] Payment initiation UI (initiate-payment feature: gateway select → useInitiatePayment → gateway redirect, pending-only — Issue #69)
+- [ ] React admin UI (remaining: PDF upload, detail screens, dashboard/settings/audit-log screens)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
