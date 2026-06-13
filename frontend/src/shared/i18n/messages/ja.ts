@@ -180,6 +180,12 @@ export const ja: Partial<MessageCatalog> = {
   'admin.payments.status.chargedBack': 'チャージバック',
   'admin.payments.initiate': 'カードで支払う',
   'admin.payments.amountDue': '支払金額: {{amount}}',
+  'admin.payments.gateway.stripe': 'Stripe',
+  'admin.payments.gateway.gmoPg': 'GMO ペイメントゲートウェイ',
+  'admin.payments.pay.title': 'カードで支払う',
+  'admin.payments.pay.notPayable': 'この請求書は現在のステータスでは支払いできません。',
+  'admin.payments.pay.noRedirect': '決済を開始しました。決済画面で続行してください。',
+  'admin.payments.pay.failed': '決済を開始できませんでした。もう一度お試しください。',
 
   // ── Admin: gateway settings ───────────────────────────────────────────────
   'admin.gatewaySettings.pageTitle': '決済ゲートウェイ',

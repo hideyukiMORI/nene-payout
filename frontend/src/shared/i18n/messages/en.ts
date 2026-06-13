@@ -190,6 +190,12 @@ export const en = {
   'admin.payments.status.chargedBack': 'Charged back',
   'admin.payments.initiate': 'Pay by card',
   'admin.payments.amountDue': 'Amount due: {{amount}}',
+  'admin.payments.gateway.stripe': 'Stripe',
+  'admin.payments.gateway.gmoPg': 'GMO Payment Gateway',
+  'admin.payments.pay.title': 'Pay by card',
+  'admin.payments.pay.notPayable': 'This invoice is not payable in its current status.',
+  'admin.payments.pay.noRedirect': 'Payment initiated. Continue in the payment window.',
+  'admin.payments.pay.failed': 'Could not start the payment. Please try again.',
 
   // ── Admin: gateway settings ───────────────────────────────────────────────
   'admin.gatewaySettings.pageTitle': 'Payment gateway',
