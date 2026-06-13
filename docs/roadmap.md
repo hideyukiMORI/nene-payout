@@ -13,6 +13,7 @@
 - [x] Terminology single source of truth + zero-typo enforcement (terms.md, ADR 0017)
 - [x] Multi-tenancy design (request-based resolution + RequestScopedHolder; multi-tenancy.md, ADR 0018, ADR 0004 revised)
 - [x] Audit logging design (all ops, before/after, atomic; audit-logging.md, ADR 0011 upgraded)
+- [x] i18n design (ja/en message catalogs, instant switch; i18n.md)
 - [x] GitHub repository created and initial commit pushed
 - [x] Issue #1 created
 
@@ -44,7 +45,7 @@ pass `docs/review/compliance.md`.
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
-- [ ] ja / en UI
+- [ ] ja / en UI (message catalogs + instant switch — i18n.md)
 
 ## Phase 3 — Tier A deployment
 

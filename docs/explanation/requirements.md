@@ -59,6 +59,6 @@
 | Tax evidence | Record & link only (registration_number, per-rate breakdown); not the deduction authority (ADR 0014) |
 | Money | Integer cents only — no floats; `amount` / `charge_amount` / `processing_fee` kept distinct |
 | Data ownership | All invoice and payment records on operator's server |
-| Language | ja / en admin UI |
+| Language | ja / en, instant runtime switch; all UI text in message catalogs (i18n.md) |
 | OpenAPI | All endpoints documented in `docs/openapi/openapi.yaml` |
 | Compliance gate | Binding `docs/explanation/payment-compliance.md`; deviations need a 税理士/会計士-signed ADR (ADR 0008) |
