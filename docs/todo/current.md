@@ -13,13 +13,15 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] docs/development/ 全ファイル（coding-standards, naming-conventions, backend-standards, nene2-compliance, commit-conventions, self-review）
 - [x] OpenAPI skeleton (docs/openapi/openapi.yaml)
 - [x] GitHub Issue #1: Governance bootstrap
-- [x] nene-playbook port registry に 89 レーンを登録
+- [x] nene-playbook port registry にポートレーンを登録（→ 90 lane へ移行、Issue #17）
 - [x] 支払側コンプライアンス基盤（binding payment-compliance.md, ADR 0008–0015, review/compliance.md） — Issue #5
 - [x] NENE2 コーディング規約の binding 化（ADR 0016, nene2-runtime-reference, database-standards, frontend-standards, 既存誤記の訂正） — Issue #7
 - [x] 用語一覧を唯一の真実として確立＋タイポ厳禁の厳守ルール化（terms.md, ADR 0017） — Issue #9
 - [x] マルチテナント設計（nene-records 方式：リクエスト解決＋RequestScopedHolder、multi-tenancy.md, ADR 0018, ADR 0004 改訂） — Issue #11
 - [x] 監査ログ設計（全操作・前後記録・アトミック、audit-logging.md, ADR 0011 格上げ） — Issue #13
 - [x] i18n 設計（ja/en メッセージ一覧・即時切替、i18n.md） — Issue #15
+- [x] ローカル Docker ポートを衝突しない 90 lane に固定＋ルール化（local-ports.md） — Issue #17
+  - [ ] nene-playbook 側のレジストリも 90 lane に更新（外部リポジトリ）
 
 ## Next (Phase 1)
 
@@ -36,6 +38,6 @@ NENE2 runtime scaffold → vendor CRUD → received invoice CRUD → payment gat
 
 Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
-Port lane: 89** (API: 8900, Frontend: 5189, MySQL: 3398, phpMyAdmin: 8901)
+Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
 Last updated: 2026-06-13

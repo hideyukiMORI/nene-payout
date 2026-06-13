@@ -59,13 +59,15 @@ cp .env.example .env
 docker compose up
 ```
 
-## Local port allocation (89 lane)
+## Local port allocation (90 lane — fixed, unique)
 
 | Service | Host port | Env var |
 | --- | --- | --- |
-| PHP API | **8900** | `NENE_PAYOUT_PORT` |
-| phpMyAdmin | **8901** | `NENE_PAYOUT_PHPMYADMIN_PORT` |
-| Vite dev server | **5189** | `NENE_PAYOUT_FRONTEND_PORT` |
-| MySQL | **3398** | `NENE_PAYOUT_MYSQL_PORT` |
+| PHP API | **9000** | `NENE_PAYOUT_PORT` |
+| phpMyAdmin | **9001** | `NENE_PAYOUT_PHPMYADMIN_PORT` |
+| Vite dev server | **5190** | `NENE_PAYOUT_FRONTEND_PORT` |
+| MySQL | **3400** | `NENE_PAYOUT_MYSQL_PORT` |
 
-Do **not** reuse sibling ports. See [nene-playbook port registry](https://github.com/hideyukiMORI/nene-playbook).
+Fixed and unique to avoid collisions with sibling apps. Do **not** reuse sibling ports.
+See [`docs/development/local-ports.md`](./docs/development/local-ports.md) and the
+[nene-playbook port registry](https://github.com/hideyukiMORI/nene-playbook).

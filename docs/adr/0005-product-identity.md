@@ -13,7 +13,7 @@ Naming must be consistent across repository, namespace, package, and UI.
 - Repository: `hideyukiMORI/nene-payout`
 - PHP namespace: `NenePayout\`
 - Composer package: `hideyukimori/nene-payout`
-- Port lane: 89** (API: 8900, Frontend: 5189, MySQL: 3398, phpMyAdmin: 8901)
+- Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see `docs/development/local-ports.md`
 
 ## Consequences
 
