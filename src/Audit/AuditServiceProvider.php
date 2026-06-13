@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NenePayout\Audit;
 
+use Closure;
 use LogicException;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
@@ -95,5 +96,30 @@ final readonly class AuditServiceProvider implements ServiceProviderInterface
                     return new AuditRouteRegistrar($list);
                 },
             );
+    }
+
+    /**
+     * Builds an AuditRecorder bound to a given transaction executor, so a
+     * mutation and its audit row commit atomically (ADR 0011). Used by mutating
+     * use cases inside `DatabaseTransactionManagerInterface::transactional()`.
+     *
+     * @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface
+     */
+    public static function recorderFactory(ContainerInterface $container): Closure
+    {
+        $clock = $container->get(ClockInterface::class);
+        $orgId = $container->get(ApplicationServiceProvider::ORG_ID_HOLDER);
+
+        if (!$clock instanceof ClockInterface) {
+            throw new LogicException('Clock service is invalid.');
+        }
+
+        if (!$orgId instanceof RequestScopedHolder) {
+            throw new LogicException('Org id holder service is invalid.');
+        }
+
+        /** @var RequestScopedHolder<string> $orgId */
+        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface
+            => new AuditRecorder(new PdoAuditLogRepository($exec, $orgId), $clock);
     }
 }

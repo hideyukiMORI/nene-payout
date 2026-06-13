@@ -27,7 +27,7 @@ pass `docs/review/compliance.md`.
 - [x] NENE2 runtime scaffold (front controller, RuntimeServiceProvider, `GET /health`, composer check green) — Issue #26
 - [x] Multi-tenant runtime: `Organization` + tenant resolution (`OrgResolverMiddleware` + strategies) → `RequestScopedHolder` (ADR 0018) — Issue #28
 - [x] User auth (`BearerAuthMiddleware` + `LocalBearerTokenVerifier`, login/me) + `Role`/`Capability` + `CapabilityMiddleware` (users migration) — Issue #30
-- [ ] Vendor management CRUD (with registration_number, record & link only)
+- [x] Vendor management CRUD (audited, 1-tx, soft-deactivate, registration_number record & link only) — Issue #34
 - [ ] ReceivedInvoice CRUD (registration, PDF upload, void semantics)
 - [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
 - [ ] Stripe adapter (hosted charge + verify)
