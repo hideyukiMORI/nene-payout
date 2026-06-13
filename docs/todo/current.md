@@ -38,6 +38,11 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] スライス8: 決済ゲートウェイ抽象＋決済開始（PaymentGatewayInterface＋StubGatewayAdapter、PaymentExecution、POST /received-invoices/{id}/payments、GET /payment-executions・/{id}、payment_executions migration） — Issue #40
 - [ ] スライス9以降: Stripe 実アダプタ → Webhook（成功/失敗反映） → gateway-settings(+疎通確認) → fee/refund/CB 会計（ADR 0015・税理士サインオフ後）
 
+## Frontend
+
+- [x] i18n 基盤（frontend scaffold＋shared/i18n、ja/en カタログ一元管理、parity/切替テスト） — Issue #44
+- [ ] FSD 本実装（app/pages/features、shared/ui テーマ、API クライアント、Storybook、ESLint/Prettier 完全 CI 化）
+
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
 **すべて `docs/explanation/payment-compliance.md`（binding）に拘束され、`docs/review/compliance.md` を通すこと。**

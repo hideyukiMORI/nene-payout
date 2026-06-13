@@ -49,7 +49,7 @@ pass `docs/review/compliance.md`.
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
-- [ ] ja / en UI (message catalogs + instant switch — i18n.md)
+- [x] ja / en i18n foundation (shared/i18n catalogs, instant switch, key-parity test — Issue #44); screens pending
 
 ## Phase 3 — Tier A deployment
 
