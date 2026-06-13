@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { ReceivedInvoiceStatus } from '@/entities/received-invoice'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { formatDate, formatJpy } from '@/shared/lib'
@@ -21,7 +22,17 @@ export function InvoiceListView({ state }: InvoiceListViewProps) {
 
   return (
     <section className="px-inline-md">
-      <PageHeader title={t('admin.receivedInvoices.pageTitle')} />
+      <PageHeader
+        title={t('admin.receivedInvoices.pageTitle')}
+        actions={
+          <Link
+            to="/received-invoices/new"
+            className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+          >
+            {t('admin.receivedInvoices.actions.new')}
+          </Link>
+        }
+      />
       <InvoiceListBody state={state} />
     </section>
   )
@@ -47,12 +58,25 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
       return (
         <ul>
           {state.invoices.map((invoice) => (
-            <li key={invoice.id} className="border-b border-border py-stack-sm">
-              <Text>{formatJpy(invoice.amount, locale)}</Text>
-              <Text tone="muted">
-                {t('common.field.dueDate')}: {formatDate(invoice.dueDate, locale)} ·{' '}
-                {t(STATUS_LABEL_KEY[invoice.status])}
-              </Text>
+            <li
+              key={invoice.id}
+              className="flex items-center justify-between border-b border-border py-stack-sm"
+            >
+              <div>
+                <Text>{formatJpy(invoice.amount, locale)}</Text>
+                <Text tone="muted">
+                  {t('common.field.dueDate')}: {formatDate(invoice.dueDate, locale)} ·{' '}
+                  {t(STATUS_LABEL_KEY[invoice.status])}
+                </Text>
+              </div>
+              {invoice.status === 'pending' ? (
+                <Link
+                  to={`/received-invoices/${invoice.id}/edit`}
+                  className="font-sans text-body font-medium text-accent"
+                >
+                  {t('common.actions.edit')}
+                </Link>
+              ) : null}
             </li>
           ))}
         </ul>

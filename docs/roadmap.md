@@ -50,7 +50,8 @@ pass `docs/review/compliance.md`.
 - [x] Payment history slice (entities/payment-execution + view-payments feature, initiate mutation, MSW tests — Issue #54)
 - [x] Navigation/layout shell (app/layout AppLayout, switch-locale feature, sign-out, nested auth routes — Issue #56)
 - [x] Form foundation (RHF + zod) + vendor create/edit (shared/ui Input/Select/FormField, schema mirroring backend validation, create/edit forms + routes — Issue #58)
-- [ ] React admin UI (remaining: invoice/payment forms; payment initiation flow; dashboard/settings/audit-log screens)
+- [x] Received invoice create/edit form (vendor select + tax-breakdown field array, schema mirroring backend, pending-only edit — Issue #60)
+- [ ] React admin UI (remaining: payment initiation flow; dashboard/settings/audit-log screens)
 - [ ] Embeddable payment widget (script tag embed)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
