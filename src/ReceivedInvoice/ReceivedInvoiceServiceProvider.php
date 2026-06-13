@@ -7,42 +7,42 @@ namespace NenePayout\ReceivedInvoice;
 use Closure;
 use LogicException;
 use Nene2\Database\DatabaseQueryExecutorInterface;
-use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use Nene2\Error\ProblemDetailsResponseFactory;
-use Nene2\Http\JsonResponseFactory;
-use Nene2\Http\RequestScopedHolder;
-use NenePayout\ApplicationServiceProvider;
 use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Http\RuntimeServiceProvider;
 use NenePayout\ReceivedInvoice\Pdf\LocalPdfStorage;
 use NenePayout\ReceivedInvoice\Pdf\PdfStorageInterface;
+use NenePayout\Support\ServiceProviderSupport;
 use NenePayout\Vendor\VendorRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderInterface
 {
+    use ServiceProviderSupport;
+
     public function register(ContainerBuilder $builder): void
     {
         $builder
             ->set(
                 ReceivedInvoiceRepositoryInterface::class,
                 static fn (ContainerInterface $c): ReceivedInvoiceRepositoryInterface
-                    => new PdoReceivedInvoiceRepository(self::query($c), self::orgHolder($c)),
+                    => new PdoReceivedInvoiceRepository(self::query($c), self::orgHolder($c), self::clock($c)),
             )
             ->set(
                 ListReceivedInvoicesUseCaseInterface::class,
-                static fn (ContainerInterface $c): ListReceivedInvoicesUseCase => new ListReceivedInvoicesUseCase(self::repository($c)),
+                static fn (ContainerInterface $c): ListReceivedInvoicesUseCase
+                    => new ListReceivedInvoicesUseCase(self::service($c, ReceivedInvoiceRepositoryInterface::class)),
             )
             ->set(
                 GetReceivedInvoiceUseCaseInterface::class,
-                static fn (ContainerInterface $c): GetReceivedInvoiceUseCase => new GetReceivedInvoiceUseCase(self::repository($c)),
+                static fn (ContainerInterface $c): GetReceivedInvoiceUseCase
+                    => new GetReceivedInvoiceUseCase(self::service($c, ReceivedInvoiceRepositoryInterface::class)),
             )
             ->set(
                 CreateReceivedInvoiceUseCaseInterface::class,
                 static fn (ContainerInterface $c): CreateReceivedInvoiceUseCase => new CreateReceivedInvoiceUseCase(
-                    self::vendorRepository($c),
+                    self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
                     AuditServiceProvider::recorderFactory($c),
@@ -52,8 +52,8 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
             ->set(
                 UpdateReceivedInvoiceUseCaseInterface::class,
                 static fn (ContainerInterface $c): UpdateReceivedInvoiceUseCase => new UpdateReceivedInvoiceUseCase(
-                    self::repository($c),
-                    self::vendorRepository($c),
+                    self::service($c, ReceivedInvoiceRepositoryInterface::class),
+                    self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
                     AuditServiceProvider::recorderFactory($c),
@@ -63,7 +63,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
             ->set(
                 VoidReceivedInvoiceUseCaseInterface::class,
                 static fn (ContainerInterface $c): VoidReceivedInvoiceUseCase => new VoidReceivedInvoiceUseCase(
-                    self::repository($c),
+                    self::service($c, ReceivedInvoiceRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
                     AuditServiceProvider::recorderFactory($c),
@@ -77,8 +77,8 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
             ->set(
                 AttachReceivedInvoicePdfUseCaseInterface::class,
                 static fn (ContainerInterface $c): AttachReceivedInvoicePdfUseCase => new AttachReceivedInvoicePdfUseCase(
-                    self::repository($c),
-                    self::pdfStorage($c),
+                    self::service($c, ReceivedInvoiceRepositoryInterface::class),
+                    self::service($c, PdfStorageInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
                     AuditServiceProvider::recorderFactory($c),
@@ -87,45 +87,33 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
             )
             ->set(
                 ListReceivedInvoicesHandler::class,
-                static fn (ContainerInterface $c): ListReceivedInvoicesHandler => new ListReceivedInvoicesHandler(
-                    self::listUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): ListReceivedInvoicesHandler
+                    => new ListReceivedInvoicesHandler(self::service($c, ListReceivedInvoicesUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 GetReceivedInvoiceHandler::class,
-                static fn (ContainerInterface $c): GetReceivedInvoiceHandler => new GetReceivedInvoiceHandler(
-                    self::getUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): GetReceivedInvoiceHandler
+                    => new GetReceivedInvoiceHandler(self::service($c, GetReceivedInvoiceUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 CreateReceivedInvoiceHandler::class,
-                static fn (ContainerInterface $c): CreateReceivedInvoiceHandler => new CreateReceivedInvoiceHandler(
-                    self::createUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): CreateReceivedInvoiceHandler
+                    => new CreateReceivedInvoiceHandler(self::service($c, CreateReceivedInvoiceUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 UpdateReceivedInvoiceHandler::class,
-                static fn (ContainerInterface $c): UpdateReceivedInvoiceHandler => new UpdateReceivedInvoiceHandler(
-                    self::updateUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): UpdateReceivedInvoiceHandler
+                    => new UpdateReceivedInvoiceHandler(self::service($c, UpdateReceivedInvoiceUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 VoidReceivedInvoiceHandler::class,
-                static fn (ContainerInterface $c): VoidReceivedInvoiceHandler => new VoidReceivedInvoiceHandler(
-                    self::voidUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): VoidReceivedInvoiceHandler
+                    => new VoidReceivedInvoiceHandler(self::service($c, VoidReceivedInvoiceUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 AttachReceivedInvoicePdfHandler::class,
-                static fn (ContainerInterface $c): AttachReceivedInvoicePdfHandler => new AttachReceivedInvoicePdfHandler(
-                    self::pdfUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): AttachReceivedInvoicePdfHandler
+                    => new AttachReceivedInvoicePdfHandler(self::service($c, AttachReceivedInvoicePdfUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 ReceivedInvoiceNotFoundExceptionHandler::class,
@@ -140,93 +128,14 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
             ->set(
                 ReceivedInvoiceRouteRegistrar::class,
                 static fn (ContainerInterface $c): ReceivedInvoiceRouteRegistrar => new ReceivedInvoiceRouteRegistrar(
-                    self::handler($c, ListReceivedInvoicesHandler::class),
-                    self::handler($c, GetReceivedInvoiceHandler::class),
-                    self::handler($c, CreateReceivedInvoiceHandler::class),
-                    self::handler($c, UpdateReceivedInvoiceHandler::class),
-                    self::handler($c, VoidReceivedInvoiceHandler::class),
-                    self::handler($c, AttachReceivedInvoicePdfHandler::class),
+                    self::service($c, ListReceivedInvoicesHandler::class),
+                    self::service($c, GetReceivedInvoiceHandler::class),
+                    self::service($c, CreateReceivedInvoiceHandler::class),
+                    self::service($c, UpdateReceivedInvoiceHandler::class),
+                    self::service($c, VoidReceivedInvoiceHandler::class),
+                    self::service($c, AttachReceivedInvoicePdfHandler::class),
                 ),
             );
-    }
-
-    private static function query(ContainerInterface $c): DatabaseQueryExecutorInterface
-    {
-        $query = $c->get(DatabaseQueryExecutorInterface::class);
-
-        if (!$query instanceof DatabaseQueryExecutorInterface) {
-            throw new LogicException('Database query executor service is invalid.');
-        }
-
-        return $query;
-    }
-
-    /** @return RequestScopedHolder<string> */
-    private static function orgHolder(ContainerInterface $c): RequestScopedHolder
-    {
-        $holder = $c->get(ApplicationServiceProvider::ORG_ID_HOLDER);
-
-        if (!$holder instanceof RequestScopedHolder) {
-            throw new LogicException('Org id holder service is invalid.');
-        }
-
-        /** @var RequestScopedHolder<string> $holder */
-        return $holder;
-    }
-
-    private static function tx(ContainerInterface $c): DatabaseTransactionManagerInterface
-    {
-        $tx = $c->get(DatabaseTransactionManagerInterface::class);
-
-        if (!$tx instanceof DatabaseTransactionManagerInterface) {
-            throw new LogicException('Transaction manager service is invalid.');
-        }
-
-        return $tx;
-    }
-
-    private static function json(ContainerInterface $c): JsonResponseFactory
-    {
-        $json = $c->get(JsonResponseFactory::class);
-
-        if (!$json instanceof JsonResponseFactory) {
-            throw new LogicException('JSON response factory service is invalid.');
-        }
-
-        return $json;
-    }
-
-    private static function problemDetails(ContainerInterface $c): ProblemDetailsResponseFactory
-    {
-        $pd = $c->get(ProblemDetailsResponseFactory::class);
-
-        if (!$pd instanceof ProblemDetailsResponseFactory) {
-            throw new LogicException('Problem details factory service is invalid.');
-        }
-
-        return $pd;
-    }
-
-    private static function repository(ContainerInterface $c): ReceivedInvoiceRepositoryInterface
-    {
-        $repo = $c->get(ReceivedInvoiceRepositoryInterface::class);
-
-        if (!$repo instanceof ReceivedInvoiceRepositoryInterface) {
-            throw new LogicException('Received invoice repository service is invalid.');
-        }
-
-        return $repo;
-    }
-
-    private static function vendorRepository(ContainerInterface $c): VendorRepositoryInterface
-    {
-        $repo = $c->get(VendorRepositoryInterface::class);
-
-        if (!$repo instanceof VendorRepositoryInterface) {
-            throw new LogicException('Vendor repository service is invalid.');
-        }
-
-        return $repo;
     }
 
     private static function projectRoot(ContainerInterface $c): string
@@ -240,105 +149,13 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
         return $root;
     }
 
-    private static function pdfStorage(ContainerInterface $c): PdfStorageInterface
-    {
-        $storage = $c->get(PdfStorageInterface::class);
-
-        if (!$storage instanceof PdfStorageInterface) {
-            throw new LogicException('PDF storage service is invalid.');
-        }
-
-        return $storage;
-    }
-
-    private static function pdfUseCase(ContainerInterface $c): AttachReceivedInvoicePdfUseCaseInterface
-    {
-        $u = $c->get(AttachReceivedInvoicePdfUseCaseInterface::class);
-
-        if (!$u instanceof AttachReceivedInvoicePdfUseCaseInterface) {
-            throw new LogicException('Attach received invoice PDF use case service is invalid.');
-        }
-
-        return $u;
-    }
-
     /** @return Closure(DatabaseQueryExecutorInterface): ReceivedInvoiceRepositoryInterface */
     private static function invoicesFactory(ContainerInterface $c): Closure
     {
         $orgHolder = self::orgHolder($c);
+        $clock = self::clock($c);
 
         return static fn (DatabaseQueryExecutorInterface $exec): ReceivedInvoiceRepositoryInterface
-            => new PdoReceivedInvoiceRepository($exec, $orgHolder);
-    }
-
-    private static function listUseCase(ContainerInterface $c): ListReceivedInvoicesUseCaseInterface
-    {
-        $u = $c->get(ListReceivedInvoicesUseCaseInterface::class);
-
-        if (!$u instanceof ListReceivedInvoicesUseCaseInterface) {
-            throw new LogicException('List received invoices use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function getUseCase(ContainerInterface $c): GetReceivedInvoiceUseCaseInterface
-    {
-        $u = $c->get(GetReceivedInvoiceUseCaseInterface::class);
-
-        if (!$u instanceof GetReceivedInvoiceUseCaseInterface) {
-            throw new LogicException('Get received invoice use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function createUseCase(ContainerInterface $c): CreateReceivedInvoiceUseCaseInterface
-    {
-        $u = $c->get(CreateReceivedInvoiceUseCaseInterface::class);
-
-        if (!$u instanceof CreateReceivedInvoiceUseCaseInterface) {
-            throw new LogicException('Create received invoice use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function updateUseCase(ContainerInterface $c): UpdateReceivedInvoiceUseCaseInterface
-    {
-        $u = $c->get(UpdateReceivedInvoiceUseCaseInterface::class);
-
-        if (!$u instanceof UpdateReceivedInvoiceUseCaseInterface) {
-            throw new LogicException('Update received invoice use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function voidUseCase(ContainerInterface $c): VoidReceivedInvoiceUseCaseInterface
-    {
-        $u = $c->get(VoidReceivedInvoiceUseCaseInterface::class);
-
-        if (!$u instanceof VoidReceivedInvoiceUseCaseInterface) {
-            throw new LogicException('Void received invoice use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    /**
-     * @template T of object
-     * @param class-string<T> $class
-     * @return T
-     */
-    private static function handler(ContainerInterface $c, string $class): object
-    {
-        $handler = $c->get($class);
-
-        if (!$handler instanceof $class) {
-            throw new LogicException($class . ' service is invalid.');
-        }
-
-        return $handler;
+            => new PdoReceivedInvoiceRepository($exec, $orgHolder, $clock);
     }
 }

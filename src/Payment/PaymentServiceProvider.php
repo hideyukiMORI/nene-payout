@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace NenePayout\Payment;
 
 use Closure;
-use LogicException;
 use Nene2\Database\DatabaseQueryExecutorInterface;
-use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use Nene2\Error\ProblemDetailsResponseFactory;
-use Nene2\Http\ClockInterface;
-use Nene2\Http\JsonResponseFactory;
-use Nene2\Http\RequestScopedHolder;
-use NenePayout\ApplicationServiceProvider;
 use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Payment\Gateway\PaymentGatewayInterface;
 use NenePayout\Payment\Gateway\StubGatewayAdapter;
 use NenePayout\ReceivedInvoice\PdoReceivedInvoiceRepository;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRepositoryInterface;
+use NenePayout\Support\ServiceProviderSupport;
 use Psr\Container\ContainerInterface;
 
 final readonly class PaymentServiceProvider implements ServiceProviderInterface
 {
+    use ServiceProviderSupport;
+
     public function register(ContainerBuilder $builder): void
     {
         $builder
@@ -33,23 +29,25 @@ final readonly class PaymentServiceProvider implements ServiceProviderInterface
                     => new PdoPaymentExecutionRepository(self::query($c), self::orgHolder($c)),
             )
             ->set(
+                // Placeholder until the Stripe adapter + gateway-settings land.
                 PaymentGatewayInterface::class,
-                // Placeholder until the Stripe adapter + gateway-settings land (Issue follow-up).
                 static fn (ContainerInterface $c): PaymentGatewayInterface => new StubGatewayAdapter(),
             )
             ->set(
                 ListPaymentExecutionsUseCaseInterface::class,
-                static fn (ContainerInterface $c): ListPaymentExecutionsUseCase => new ListPaymentExecutionsUseCase(self::repository($c)),
+                static fn (ContainerInterface $c): ListPaymentExecutionsUseCase
+                    => new ListPaymentExecutionsUseCase(self::service($c, PaymentExecutionRepositoryInterface::class)),
             )
             ->set(
                 GetPaymentExecutionUseCaseInterface::class,
-                static fn (ContainerInterface $c): GetPaymentExecutionUseCase => new GetPaymentExecutionUseCase(self::repository($c)),
+                static fn (ContainerInterface $c): GetPaymentExecutionUseCase
+                    => new GetPaymentExecutionUseCase(self::service($c, PaymentExecutionRepositoryInterface::class)),
             )
             ->set(
                 InitiatePaymentUseCaseInterface::class,
                 static fn (ContainerInterface $c): InitiatePaymentUseCase => new InitiatePaymentUseCase(
-                    self::invoiceRepository($c),
-                    self::gateway($c),
+                    self::service($c, ReceivedInvoiceRepositoryInterface::class),
+                    self::service($c, PaymentGatewayInterface::class),
                     self::tx($c),
                     self::paymentsFactory($c),
                     self::invoicesFactory($c),
@@ -60,24 +58,18 @@ final readonly class PaymentServiceProvider implements ServiceProviderInterface
             )
             ->set(
                 InitiatePaymentHandler::class,
-                static fn (ContainerInterface $c): InitiatePaymentHandler => new InitiatePaymentHandler(
-                    self::initiateUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): InitiatePaymentHandler
+                    => new InitiatePaymentHandler(self::service($c, InitiatePaymentUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 ListPaymentExecutionsHandler::class,
-                static fn (ContainerInterface $c): ListPaymentExecutionsHandler => new ListPaymentExecutionsHandler(
-                    self::listUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): ListPaymentExecutionsHandler
+                    => new ListPaymentExecutionsHandler(self::service($c, ListPaymentExecutionsUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 GetPaymentExecutionHandler::class,
-                static fn (ContainerInterface $c): GetPaymentExecutionHandler => new GetPaymentExecutionHandler(
-                    self::getUseCase($c),
-                    self::json($c),
-                ),
+                static fn (ContainerInterface $c): GetPaymentExecutionHandler
+                    => new GetPaymentExecutionHandler(self::service($c, GetPaymentExecutionUseCaseInterface::class), self::json($c)),
             )
             ->set(
                 PaymentExecutionNotFoundExceptionHandler::class,
@@ -92,112 +84,11 @@ final readonly class PaymentServiceProvider implements ServiceProviderInterface
             ->set(
                 PaymentRouteRegistrar::class,
                 static fn (ContainerInterface $c): PaymentRouteRegistrar => new PaymentRouteRegistrar(
-                    self::handler($c, InitiatePaymentHandler::class),
-                    self::handler($c, ListPaymentExecutionsHandler::class),
-                    self::handler($c, GetPaymentExecutionHandler::class),
+                    self::service($c, InitiatePaymentHandler::class),
+                    self::service($c, ListPaymentExecutionsHandler::class),
+                    self::service($c, GetPaymentExecutionHandler::class),
                 ),
             );
-    }
-
-    private static function query(ContainerInterface $c): DatabaseQueryExecutorInterface
-    {
-        $query = $c->get(DatabaseQueryExecutorInterface::class);
-
-        if (!$query instanceof DatabaseQueryExecutorInterface) {
-            throw new LogicException('Database query executor service is invalid.');
-        }
-
-        return $query;
-    }
-
-    /** @return RequestScopedHolder<string> */
-    private static function orgHolder(ContainerInterface $c): RequestScopedHolder
-    {
-        $holder = $c->get(ApplicationServiceProvider::ORG_ID_HOLDER);
-
-        if (!$holder instanceof RequestScopedHolder) {
-            throw new LogicException('Org id holder service is invalid.');
-        }
-
-        /** @var RequestScopedHolder<string> $holder */
-        return $holder;
-    }
-
-    private static function tx(ContainerInterface $c): DatabaseTransactionManagerInterface
-    {
-        $tx = $c->get(DatabaseTransactionManagerInterface::class);
-
-        if (!$tx instanceof DatabaseTransactionManagerInterface) {
-            throw new LogicException('Transaction manager service is invalid.');
-        }
-
-        return $tx;
-    }
-
-    private static function clock(ContainerInterface $c): ClockInterface
-    {
-        $clock = $c->get(ClockInterface::class);
-
-        if (!$clock instanceof ClockInterface) {
-            throw new LogicException('Clock service is invalid.');
-        }
-
-        return $clock;
-    }
-
-    private static function json(ContainerInterface $c): JsonResponseFactory
-    {
-        $json = $c->get(JsonResponseFactory::class);
-
-        if (!$json instanceof JsonResponseFactory) {
-            throw new LogicException('JSON response factory service is invalid.');
-        }
-
-        return $json;
-    }
-
-    private static function problemDetails(ContainerInterface $c): ProblemDetailsResponseFactory
-    {
-        $pd = $c->get(ProblemDetailsResponseFactory::class);
-
-        if (!$pd instanceof ProblemDetailsResponseFactory) {
-            throw new LogicException('Problem details factory service is invalid.');
-        }
-
-        return $pd;
-    }
-
-    private static function repository(ContainerInterface $c): PaymentExecutionRepositoryInterface
-    {
-        $repo = $c->get(PaymentExecutionRepositoryInterface::class);
-
-        if (!$repo instanceof PaymentExecutionRepositoryInterface) {
-            throw new LogicException('Payment execution repository service is invalid.');
-        }
-
-        return $repo;
-    }
-
-    private static function invoiceRepository(ContainerInterface $c): ReceivedInvoiceRepositoryInterface
-    {
-        $repo = $c->get(ReceivedInvoiceRepositoryInterface::class);
-
-        if (!$repo instanceof ReceivedInvoiceRepositoryInterface) {
-            throw new LogicException('Received invoice repository service is invalid.');
-        }
-
-        return $repo;
-    }
-
-    private static function gateway(ContainerInterface $c): PaymentGatewayInterface
-    {
-        $gateway = $c->get(PaymentGatewayInterface::class);
-
-        if (!$gateway instanceof PaymentGatewayInterface) {
-            throw new LogicException('Payment gateway service is invalid.');
-        }
-
-        return $gateway;
     }
 
     /** @return Closure(DatabaseQueryExecutorInterface): PaymentExecutionRepositoryInterface */
@@ -213,57 +104,9 @@ final readonly class PaymentServiceProvider implements ServiceProviderInterface
     private static function invoicesFactory(ContainerInterface $c): Closure
     {
         $orgHolder = self::orgHolder($c);
+        $clock = self::clock($c);
 
         return static fn (DatabaseQueryExecutorInterface $exec): ReceivedInvoiceRepositoryInterface
-            => new PdoReceivedInvoiceRepository($exec, $orgHolder);
-    }
-
-    private static function initiateUseCase(ContainerInterface $c): InitiatePaymentUseCaseInterface
-    {
-        $u = $c->get(InitiatePaymentUseCaseInterface::class);
-
-        if (!$u instanceof InitiatePaymentUseCaseInterface) {
-            throw new LogicException('Initiate payment use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function listUseCase(ContainerInterface $c): ListPaymentExecutionsUseCaseInterface
-    {
-        $u = $c->get(ListPaymentExecutionsUseCaseInterface::class);
-
-        if (!$u instanceof ListPaymentExecutionsUseCaseInterface) {
-            throw new LogicException('List payment executions use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    private static function getUseCase(ContainerInterface $c): GetPaymentExecutionUseCaseInterface
-    {
-        $u = $c->get(GetPaymentExecutionUseCaseInterface::class);
-
-        if (!$u instanceof GetPaymentExecutionUseCaseInterface) {
-            throw new LogicException('Get payment execution use case service is invalid.');
-        }
-
-        return $u;
-    }
-
-    /**
-     * @template T of object
-     * @param class-string<T> $class
-     * @return T
-     */
-    private static function handler(ContainerInterface $c, string $class): object
-    {
-        $handler = $c->get($class);
-
-        if (!$handler instanceof $class) {
-            throw new LogicException($class . ' service is invalid.');
-        }
-
-        return $handler;
+            => new PdoReceivedInvoiceRepository($exec, $orgHolder, $clock);
     }
 }
