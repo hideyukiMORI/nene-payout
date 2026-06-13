@@ -25,7 +25,7 @@ with all payment data stored on their own server.
 - Manage full accounts payable (承認フロー, 買掛金分析) — future scope
 - Provide payroll, expense reimbursement, or tax calculation
 - Store raw credit card numbers on the operator's server (PCI DSS non-compliant)
-- Name, reference, or compare any third-party commercial services in repository docs — [ADR 0007](../adr/0007-no-third-party-product-names.md)
+- Name, reference, or compare **competitor** commercial services in repository docs (integrated payment gateway names are allowed) — [ADR 0007](../adr/0007-no-third-party-product-names.md)
 
 ## Boundary Summary
 
