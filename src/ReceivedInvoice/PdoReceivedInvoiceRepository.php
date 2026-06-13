@@ -106,6 +106,14 @@ final readonly class PdoReceivedInvoiceRepository implements ReceivedInvoiceRepo
         );
     }
 
+    public function updateStatus(string $id, string $status): void
+    {
+        $this->query->execute(
+            'UPDATE received_invoices SET status = ?, updated_at = ? WHERE id = ? AND organization_id = ?',
+            [$status, date('Y-m-d H:i:s'), $id, $this->orgId->get()],
+        );
+    }
+
     /**
      * @return array{0: string, 1: list<string>}
      */

@@ -30,9 +30,9 @@ pass `docs/review/compliance.md`.
 - [x] Vendor management CRUD (audited, 1-tx, soft-deactivate, registration_number record & link only) — Issue #34
 - [x] ReceivedInvoice CRUD (audited, pending-only edit, void semantics, tax breakdown record-only) — Issue #36
 - [x] ReceivedInvoice PDF upload (multipart, local storage, audited) — Issue #38
-- [ ] Payment gateway adapter interface (instruction only; no PAN — ADR 0009, 0010)
+- [x] Payment gateway adapter interface (`PaymentGatewayInterface` + ChargeRequest/Result, stub adapter) — Issue #40 (instruction only; no PAN — ADR 0009, 0010)
 - [ ] Stripe adapter (hosted charge + verify)
-- [ ] PaymentExecution create / status update (immutable terminal records — ADR 0013)
+- [x] PaymentExecution create + invoice→processing (initiate, audited, 1-tx) — Issue #40 (immutable terminal records — ADR 0013)
 - [x] Audit foundation (`Ulid`, `AuditRecorder`, audit_logs migration, `GET /api/v1/audit-logs`); mutation+audit transaction wiring applied per resource — ADR 0011 — Issue #32
 - [ ] UTC storage / JST display bootstrap (ADR 0012)
 - [ ] Webhook handler (payment result from gateway; signature-verified, idempotent)
