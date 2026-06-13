@@ -78,3 +78,27 @@ export function useVoidReceivedInvoice(): UseMutationResult<
     },
   })
 }
+
+export function useAttachReceivedInvoicePdf(): UseMutationResult<
+  ReceivedInvoice,
+  AppError,
+  { id: ReceivedInvoiceId; file: File }
+> {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ id, file }) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      const dto = await apiClient.postForm<ReceivedInvoiceDto>(
+        `/api/v1/received-invoices/${id}/pdf`,
+        formData,
+      )
+      return mapReceivedInvoiceDtoToModel(dto)
+    },
+    onSuccess: async (_data, variables) => {
+      await queryClient.invalidateQueries({ queryKey: receivedInvoiceKeys.lists() })
+      await queryClient.invalidateQueries({ queryKey: receivedInvoiceKeys.detail(variables.id) })
+    },
+  })
+}

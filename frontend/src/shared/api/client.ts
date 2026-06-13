@@ -7,6 +7,8 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 interface RequestOptions {
   method?: HttpMethod
   body?: unknown
+  /** multipart/form-data body. Content-Type is left to the browser (boundary). */
+  formData?: FormData
   signal?: AbortSignal
 }
 
@@ -34,7 +36,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers,
   }
 
-  if (options.body !== undefined) {
+  if (options.formData !== undefined) {
+    init.body = options.formData
+  } else if (options.body !== undefined) {
     headers['Content-Type'] = 'application/json'
     init.body = JSON.stringify(options.body)
   }
@@ -63,6 +67,9 @@ export const apiClient = {
   },
   post<T>(path: string, body: unknown): Promise<T> {
     return request<T>(path, { method: 'POST', body })
+  },
+  postForm<T>(path: string, formData: FormData): Promise<T> {
+    return request<T>(path, { method: 'POST', formData })
   },
   patch<T>(path: string, body: unknown): Promise<T> {
     return request<T>(path, { method: 'PATCH', body })

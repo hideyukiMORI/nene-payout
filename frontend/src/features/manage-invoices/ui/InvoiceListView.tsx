@@ -69,22 +69,30 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
                   {t(STATUS_LABEL_KEY[invoice.status])}
                 </Text>
               </div>
-              {invoice.status === 'pending' ? (
-                <div className="flex items-center gap-inline-md">
-                  <Link
-                    to={`/received-invoices/${invoice.id}/edit`}
-                    className="font-sans text-body font-medium text-accent"
-                  >
-                    {t('common.actions.edit')}
-                  </Link>
-                  <Link
-                    to={`/received-invoices/${invoice.id}/pay`}
-                    className="font-sans text-body font-medium text-accent"
-                  >
-                    {t('admin.payments.initiate')}
-                  </Link>
-                </div>
-              ) : null}
+              <div className="flex items-center gap-inline-md">
+                <Link
+                  to={`/received-invoices/${invoice.id}/pdf`}
+                  className="font-sans text-body font-medium text-accent"
+                >
+                  {t('admin.receivedInvoices.uploadPdf')}
+                </Link>
+                {invoice.status === 'pending' ? (
+                  <>
+                    <Link
+                      to={`/received-invoices/${invoice.id}/edit`}
+                      className="font-sans text-body font-medium text-accent"
+                    >
+                      {t('common.actions.edit')}
+                    </Link>
+                    <Link
+                      to={`/received-invoices/${invoice.id}/pay`}
+                      className="font-sans text-body font-medium text-accent"
+                    >
+                      {t('admin.payments.initiate')}
+                    </Link>
+                  </>
+                ) : null}
+              </div>
             </li>
           ))}
         </ul>

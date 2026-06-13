@@ -136,6 +136,13 @@ export const ja: Partial<MessageCatalog> = {
   'admin.receivedInvoices.status.voided': '無効',
   'admin.receivedInvoices.filter.status': 'ステータスで絞り込む',
   'admin.receivedInvoices.uploadPdf': 'PDF をアップロード',
+  'admin.receivedInvoices.pdf.selectFile': 'PDF ファイル',
+  'admin.receivedInvoices.pdf.success': 'PDF をアップロードしました。',
+  'admin.receivedInvoices.pdf.failed':
+    'PDF をアップロードできませんでした。もう一度お試しください。',
+  'admin.receivedInvoices.pdf.error.required': 'PDF ファイルを選択してください。',
+  'admin.receivedInvoices.pdf.error.type': 'ファイルは PDF 形式である必要があります。',
+  'admin.receivedInvoices.pdf.error.tooLarge': 'ファイルサイズが大きすぎます。',
   'admin.receivedInvoices.void.confirmTitle': 'この請求書を無効化しますか？',
   'admin.receivedInvoices.void.confirmBody': '請求書が無効化されます。この操作は取り消せません。',
   'admin.receivedInvoices.paymentHistory': '決済履歴',
