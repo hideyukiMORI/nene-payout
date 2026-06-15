@@ -35,7 +35,7 @@ const importZones = [
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', 'coverage', '../public_html/assets'],
+    ignores: ['dist', 'node_modules', 'coverage', '../public_html/assets', 'storybook-static'],
   },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked],
@@ -85,6 +85,13 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       // Test render helpers legitimately export both components and utilities.
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Stories export a default meta object and named story objects, not components.
+    files: ['src/**/*.stories.{ts,tsx}'],
+    rules: {
       'react-refresh/only-export-components': 'off',
     },
   },
