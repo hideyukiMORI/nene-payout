@@ -96,6 +96,9 @@ export const en = {
   'auth.login.passwordLabel': 'Password',
   'auth.login.submit': 'Sign in',
   'auth.login.failed': 'Invalid email or password.',
+  'auth.login.error.emailRequired': 'Enter your email address.',
+  'auth.login.error.emailInvalid': 'Enter a valid email address.',
+  'auth.login.error.passwordRequired': 'Enter your password.',
 
   // ── Admin navigation ──────────────────────────────────────────────────────
   'admin.nav.dashboard': 'Dashboard',

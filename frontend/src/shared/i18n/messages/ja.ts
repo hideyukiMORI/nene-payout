@@ -88,6 +88,9 @@ export const ja: Partial<MessageCatalog> = {
   'auth.login.passwordLabel': 'パスワード',
   'auth.login.submit': 'ログイン',
   'auth.login.failed': 'メールアドレスまたはパスワードが正しくありません。',
+  'auth.login.error.emailRequired': 'メールアドレスを入力してください。',
+  'auth.login.error.emailInvalid': 'メールアドレスの形式が正しくありません。',
+  'auth.login.error.passwordRequired': 'パスワードを入力してください。',
 
   // ── Admin navigation ──────────────────────────────────────────────────────
   'admin.nav.dashboard': 'ダッシュボード',
