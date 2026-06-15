@@ -10,6 +10,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  { to: '/dashboard', labelKey: 'admin.nav.dashboard' },
   { to: '/received-invoices', labelKey: 'admin.nav.receivedInvoices' },
   { to: '/vendors', labelKey: 'admin.nav.vendors' },
   { to: '/payments', labelKey: 'admin.nav.payments' },

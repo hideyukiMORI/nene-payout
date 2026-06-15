@@ -105,6 +105,10 @@ export const ja: Partial<MessageCatalog> = {
   'admin.dashboard.pageTitle': 'ダッシュボード',
   'admin.dashboard.pendingInvoices': '未払いの請求書',
   'admin.dashboard.recentPayments': '最近の決済',
+  'admin.dashboard.totalInvoices': '受取請求書',
+  'admin.dashboard.vendors': '仕入先',
+  'admin.dashboard.payments': '決済',
+  'admin.dashboard.view': '一覧へ',
 
   // ── Admin: received invoices ──────────────────────────────────────────────
   'admin.receivedInvoices.pageTitle': '受取請求書',
