@@ -5,7 +5,7 @@ import { useTranslation } from '@/shared/i18n'
 import { LoginForm } from './LoginForm'
 
 /** Where to land after a successful sign-in (the app's default authed view). */
-const HOME_PATH = '/received-invoices'
+const HOME_PATH = '/dashboard'
 
 export function SignInPanel() {
   const { t } = useTranslation()

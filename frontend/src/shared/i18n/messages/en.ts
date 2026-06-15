@@ -113,6 +113,10 @@ export const en = {
   'admin.dashboard.pageTitle': 'Dashboard',
   'admin.dashboard.pendingInvoices': 'Pending invoices',
   'admin.dashboard.recentPayments': 'Recent payments',
+  'admin.dashboard.totalInvoices': 'Received invoices',
+  'admin.dashboard.vendors': 'Vendors',
+  'admin.dashboard.payments': 'Payments',
+  'admin.dashboard.view': 'View list',
 
   // ── Admin: received invoices ──────────────────────────────────────────────
   'admin.receivedInvoices.pageTitle': 'Received invoices',
