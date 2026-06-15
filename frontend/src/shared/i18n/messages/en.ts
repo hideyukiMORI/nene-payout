@@ -67,24 +67,6 @@ export const en = {
   'common.pagination.summary': '{{from}}–{{to}} of {{total}}',
   'common.pagination.page': 'Page {{page}}',
 
-  // ── Common: invoice status labels ─────────────────────────────────────────
-  'common.invoiceStatus.pending': 'Unpaid',
-  'common.invoiceStatus.processing': 'Processing',
-  'common.invoiceStatus.paid': 'Paid',
-  'common.invoiceStatus.failed': 'Failed',
-  'common.invoiceStatus.voided': 'Voided',
-
-  // ── Common: payment status labels ─────────────────────────────────────────
-  'common.paymentStatus.initiated': 'Initiated',
-  'common.paymentStatus.succeeded': 'Succeeded',
-  'common.paymentStatus.failed': 'Failed',
-  'common.paymentStatus.refunded': 'Refunded',
-  'common.paymentStatus.charged_back': 'Charged back',
-
-  // ── Common: account types ─────────────────────────────────────────────────
-  'common.accountType.普通': 'Ordinary',
-  'common.accountType.当座': 'Current',
-
   // ── Common: roles ─────────────────────────────────────────────────────────
   'common.role.superadmin': 'Superadmin',
   'common.role.admin': 'Admin',

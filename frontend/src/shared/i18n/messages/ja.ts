@@ -59,24 +59,6 @@ export const ja: Partial<MessageCatalog> = {
   'common.pagination.summary': '{{total}}件中 {{from}}–{{to}}',
   'common.pagination.page': '{{page}} ページ',
 
-  // ── Common: invoice status labels ─────────────────────────────────────────
-  'common.invoiceStatus.pending': '未払い',
-  'common.invoiceStatus.processing': '決済中',
-  'common.invoiceStatus.paid': '支払い完了',
-  'common.invoiceStatus.failed': '失敗',
-  'common.invoiceStatus.voided': '無効',
-
-  // ── Common: payment status labels ─────────────────────────────────────────
-  'common.paymentStatus.initiated': '開始済み',
-  'common.paymentStatus.succeeded': '成功',
-  'common.paymentStatus.failed': '失敗',
-  'common.paymentStatus.refunded': '返金済み',
-  'common.paymentStatus.charged_back': 'チャージバック',
-
-  // ── Common: account types ─────────────────────────────────────────────────
-  'common.accountType.普通': '普通',
-  'common.accountType.当座': '当座',
-
   // ── Common: roles ─────────────────────────────────────────────────────────
   'common.role.superadmin': 'スーパー管理者',
   'common.role.admin': '管理者',
