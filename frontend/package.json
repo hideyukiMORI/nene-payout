@@ -18,6 +18,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "knip": "knip",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "check": "npm run type-check && npm run lint && npm run format && npm run test"
   },
   "dependencies": {
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@storybook/react-vite": "^10.4.4",
     "@tailwindcss/vite": "^4.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -50,6 +53,7 @@
     "knip": "^6.16.1",
     "msw": "^2.12.0",
     "prettier": "^3.6.0",
+    "storybook": "^10.4.4",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.59.0",

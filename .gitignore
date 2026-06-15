@@ -6,6 +6,7 @@ var/
 storage/
 public_html/assets/
 frontend/dist/
+frontend/storybook-static/
 *.sqlite
 *.sqlite3
 .DS_Store

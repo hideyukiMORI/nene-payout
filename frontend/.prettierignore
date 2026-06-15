@@ -3,3 +3,4 @@ node_modules
 coverage
 ../public_html/assets
 package-lock.json
+storybook-static
