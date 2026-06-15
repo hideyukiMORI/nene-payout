@@ -11,10 +11,10 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5190,
+    port: Number(process.env.NENE_PAYOUT_FRONTEND_PORT) || 5190,
     proxy: {
       '/api': {
-        target: 'http://localhost:9000',
+        target: process.env.NENE_PAYOUT_API_URL || 'http://localhost:9000',
         changeOrigin: true,
       },
     },
