@@ -236,6 +236,7 @@ export const en = {
   'admin.auditLogs.field.actor': 'Actor',
   'admin.auditLogs.field.action': 'Action',
   'admin.auditLogs.field.entity': 'Entity',
+  'admin.auditLogs.field.createdAt': 'Timestamp',
 
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': 'Pay invoice',

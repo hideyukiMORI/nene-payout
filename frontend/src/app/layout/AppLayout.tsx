@@ -13,6 +13,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/received-invoices', labelKey: 'admin.nav.receivedInvoices' },
   { to: '/vendors', labelKey: 'admin.nav.vendors' },
   { to: '/payments', labelKey: 'admin.nav.payments' },
+  { to: '/audit-logs', labelKey: 'admin.nav.auditLogs' },
 ]
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {

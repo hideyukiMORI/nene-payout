@@ -11,6 +11,7 @@ import { InvoicePdfPage } from '@/pages/invoices/InvoicePdfPage'
 import { InvoiceDetailPage } from '@/pages/invoices/InvoiceDetailPage'
 import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { PaymentDetailPage } from '@/pages/payments/PaymentDetailPage'
+import { AuditLogsPage } from '@/pages/audit-logs/AuditLogsPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
 import { AuthGate } from './auth-gate'
@@ -40,6 +41,7 @@ export function AppRoutes() {
         <Route path="/vendors/:vendorId/edit" element={<VendorEditPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
         <Route path="/payments/:paymentExecutionId" element={<PaymentDetailPage />} />
+        <Route path="/audit-logs" element={<AuditLogsPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/received-invoices" replace />} />
       <Route path="*" element={<Navigate to="/received-invoices" replace />} />
