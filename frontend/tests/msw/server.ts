@@ -5,6 +5,7 @@ import {
   paymentExecutionHandlers,
   paymentExecutionDetailHandlers,
 } from './handlers/payment-execution'
+import { auditLogHandlers } from './handlers/audit-log'
 
 export const mswServer = setupServer(
   ...vendorHandlers,
@@ -13,4 +14,5 @@ export const mswServer = setupServer(
   ...receivedInvoiceDetailHandlers,
   ...paymentExecutionHandlers,
   ...paymentExecutionDetailHandlers,
+  ...auditLogHandlers,
 )

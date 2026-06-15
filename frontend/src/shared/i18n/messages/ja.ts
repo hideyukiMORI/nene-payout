@@ -227,6 +227,7 @@ export const ja: Partial<MessageCatalog> = {
   'admin.auditLogs.field.actor': '操作者',
   'admin.auditLogs.field.action': '操作',
   'admin.auditLogs.field.entity': '対象',
+  'admin.auditLogs.field.createdAt': '日時',
 
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': '請求書の支払い',
