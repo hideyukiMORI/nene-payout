@@ -1,4 +1,5 @@
 import { setupServer } from 'msw/node'
+import { sessionMeHandlers } from './handlers/session'
 import { vendorHandlers, vendorDetailHandlers } from './handlers/vendor'
 import { receivedInvoiceHandlers, receivedInvoiceDetailHandlers } from './handlers/received-invoice'
 import {
@@ -8,6 +9,7 @@ import {
 import { auditLogHandlers } from './handlers/audit-log'
 
 export const mswServer = setupServer(
+  ...sessionMeHandlers,
   ...vendorHandlers,
   ...vendorDetailHandlers,
   ...receivedInvoiceHandlers,

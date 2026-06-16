@@ -1,2 +1,5 @@
-export type { Credentials } from './model'
+export type { Capability, CurrentUser, Credentials, Role } from './model'
+export { roleHasCapability } from './model'
+export { sessionKeys } from './query-keys'
+export { useCurrentUser } from './queries'
 export { useLogin } from './mutations'
