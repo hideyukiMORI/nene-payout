@@ -1,6 +1,6 @@
 import js from '@eslint/js'
 import eslintConfigPrettier from 'eslint-config-prettier'
-import importPlugin from 'eslint-plugin-import'
+import importPlugin from 'eslint-plugin-import-x'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -52,10 +52,10 @@ export default tseslint.config(
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'jsx-a11y': jsxA11y,
-      import: importPlugin,
+      'import-x': importPlugin,
     },
     settings: {
-      'import/resolver': {
+      'import-x/resolver': {
         typescript: { project: './tsconfig.json' },
       },
     },
@@ -66,7 +66,7 @@ export default tseslint.config(
       // Numbers in template literals are safe and needed for RHF typed
       // field-array paths (e.g. `taxBreakdown.${index}.taxAmount`).
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
-      'import/no-restricted-paths': ['error', { zones: importZones }],
+      'import-x/no-restricted-paths': ['error', { zones: importZones }],
       'no-restricted-syntax': [
         'error',
         {
