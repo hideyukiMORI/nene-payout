@@ -1,20 +1,27 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 import { Text } from '@/shared/ui'
+import { roleHasCapability, useCurrentUser, type Capability } from '@/entities/session'
 import { LocaleSwitcher } from '@/features/switch-locale'
 import { SignOutButton } from './sign-out-button'
 
 interface NavItem {
   to: string
   labelKey: MessageKey
+  /** Capability required to see this item; undefined means any authenticated user. */
+  capability?: Capability
 }
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/dashboard', labelKey: 'admin.nav.dashboard' },
-  { to: '/received-invoices', labelKey: 'admin.nav.receivedInvoices' },
-  { to: '/vendors', labelKey: 'admin.nav.vendors' },
-  { to: '/payments', labelKey: 'admin.nav.payments' },
-  { to: '/audit-logs', labelKey: 'admin.nav.auditLogs' },
+  {
+    to: '/received-invoices',
+    labelKey: 'admin.nav.receivedInvoices',
+    capability: 'RegisterInvoice',
+  },
+  { to: '/vendors', labelKey: 'admin.nav.vendors', capability: 'ManageVendors' },
+  { to: '/payments', labelKey: 'admin.nav.payments', capability: 'ViewPayments' },
+  { to: '/audit-logs', labelKey: 'admin.nav.auditLogs', capability: 'ManageOrganizationSettings' },
 ]
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
@@ -28,6 +35,12 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
  */
 export function AppLayout() {
   const { t } = useTranslation()
+  const { data: currentUser } = useCurrentUser()
+  const role = currentUser?.role ?? null
+
+  const navItems = NAV_ITEMS.filter(
+    (item) => item.capability === undefined || roleHasCapability(role, item.capability),
+  )
 
   return (
     <div className="min-h-screen bg-surface">
@@ -41,7 +54,7 @@ export function AppLayout() {
       <div className="flex">
         <nav aria-label={t('app.nav.label')} className="w-64 border-r border-border py-stack-md">
           <ul className="flex flex-col gap-inline-sm px-inline-sm">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to} className={navLinkClass}>
                   {t(item.labelKey)}

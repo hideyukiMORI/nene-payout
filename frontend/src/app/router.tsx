@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { VendorsPage } from '@/pages/vendors/VendorsPage'
 import { VendorCreatePage } from '@/pages/vendors/VendorCreatePage'
 import { VendorEditPage } from '@/pages/vendors/VendorEditPage'
@@ -16,6 +16,7 @@ import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
 import { AuthGate } from './auth-gate'
+import { RequireCapability } from './require-capability'
 import { AppLayout } from './layout/AppLayout'
 
 export function AppRoutes() {
@@ -37,13 +38,29 @@ export function AppRoutes() {
         <Route path="/received-invoices/:receivedInvoiceId/edit" element={<InvoiceEditPage />} />
         <Route path="/received-invoices/:receivedInvoiceId/pay" element={<InvoicePayPage />} />
         <Route path="/received-invoices/:receivedInvoiceId/pdf" element={<InvoicePdfPage />} />
-        <Route path="/vendors" element={<VendorsPage />} />
-        <Route path="/vendors/new" element={<VendorCreatePage />} />
-        <Route path="/vendors/:vendorId" element={<VendorDetailPage />} />
-        <Route path="/vendors/:vendorId/edit" element={<VendorEditPage />} />
+        <Route
+          element={
+            <RequireCapability capability="ManageVendors">
+              <Outlet />
+            </RequireCapability>
+          }
+        >
+          <Route path="/vendors" element={<VendorsPage />} />
+          <Route path="/vendors/new" element={<VendorCreatePage />} />
+          <Route path="/vendors/:vendorId" element={<VendorDetailPage />} />
+          <Route path="/vendors/:vendorId/edit" element={<VendorEditPage />} />
+        </Route>
         <Route path="/payments" element={<PaymentsPage />} />
         <Route path="/payments/:paymentExecutionId" element={<PaymentDetailPage />} />
-        <Route path="/audit-logs" element={<AuditLogsPage />} />
+        <Route
+          element={
+            <RequireCapability capability="ManageOrganizationSettings">
+              <Outlet />
+            </RequireCapability>
+          }
+        >
+          <Route path="/audit-logs" element={<AuditLogsPage />} />
+        </Route>
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

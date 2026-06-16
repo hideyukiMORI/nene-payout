@@ -8,3 +8,10 @@ export interface LoginRequestDto {
 export interface LoginResponseDto {
   token: string
 }
+
+export interface CurrentUserDto {
+  id: string | null
+  email: string | null
+  role: string | null
+  organization_id: string | null
+}
