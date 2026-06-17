@@ -22,6 +22,10 @@ use NenePayout\ReceivedInvoice\InvoiceNotEditableExceptionHandler;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundExceptionHandler;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRouteRegistrar;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceServiceProvider;
+use NenePayout\User\UserEmailConflictExceptionHandler;
+use NenePayout\User\UserNotFoundExceptionHandler;
+use NenePayout\User\UserRouteRegistrar;
+use NenePayout\User\UserServiceProvider;
 use NenePayout\Vendor\VendorNotFoundExceptionHandler;
 use NenePayout\Vendor\VendorRouteRegistrar;
 use NenePayout\Vendor\VendorServiceProvider;
@@ -56,6 +60,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
         $builder->addProvider(new VendorServiceProvider());
         $builder->addProvider(new ReceivedInvoiceServiceProvider());
         $builder->addProvider(new PaymentServiceProvider());
+        $builder->addProvider(new UserServiceProvider());
 
         $builder
             ->set(
@@ -75,6 +80,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $vendor = $container->get(VendorRouteRegistrar::class);
                     $receivedInvoice = $container->get(ReceivedInvoiceRouteRegistrar::class);
                     $payment = $container->get(PaymentRouteRegistrar::class);
+                    $user = $container->get(UserRouteRegistrar::class);
 
                     if (!$auth instanceof AuthRouteRegistrar) {
                         throw new LogicException('Auth route registrar service is invalid.');
@@ -96,7 +102,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Payment route registrar service is invalid.');
                     }
 
-                    return [$auth, $audit, $vendor, $receivedInvoice, $payment];
+                    if (!$user instanceof UserRouteRegistrar) {
+                        throw new LogicException('User route registrar service is invalid.');
+                    }
+
+                    return [$auth, $audit, $vendor, $receivedInvoice, $payment, $user];
                 },
             )
             ->set(
@@ -109,6 +119,8 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $invoiceNotEditable = $container->get(InvoiceNotEditableExceptionHandler::class);
                     $paymentNotFound = $container->get(PaymentExecutionNotFoundExceptionHandler::class);
                     $paymentNotAllowed = $container->get(PaymentNotAllowedExceptionHandler::class);
+                    $userNotFound = $container->get(UserNotFoundExceptionHandler::class);
+                    $userEmailConflict = $container->get(UserEmailConflictExceptionHandler::class);
 
                     if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
                         throw new LogicException('Invalid credentials exception handler service is invalid.');
@@ -134,7 +146,15 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Payment not allowed exception handler service is invalid.');
                     }
 
-                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed];
+                    if (!$userNotFound instanceof UserNotFoundExceptionHandler) {
+                        throw new LogicException('User not found exception handler service is invalid.');
+                    }
+
+                    if (!$userEmailConflict instanceof UserEmailConflictExceptionHandler) {
+                        throw new LogicException('User email conflict exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed, $userNotFound, $userEmailConflict];
                 },
             );
     }
