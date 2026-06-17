@@ -200,6 +200,11 @@ export const ja: Partial<MessageCatalog> = {
   'admin.organization.pageTitle': '組織設定',
   'admin.organization.field.name': '組織名',
   'admin.organization.field.slug': 'スラッグ',
+  'admin.organization.field.customDomain': 'カスタムドメイン',
+  'admin.organization.form.error.nameRequired': '組織名は必須です。',
+  'admin.organization.form.error.nameTooLong': '組織名は255文字以内で入力してください。',
+  'admin.organization.form.saveFailed': '保存に失敗しました。時間をおいて再度お試しください。',
+  'admin.organization.form.saved': '組織設定を保存しました。',
 
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'ユーザー',
