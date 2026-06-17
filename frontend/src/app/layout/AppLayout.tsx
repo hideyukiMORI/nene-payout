@@ -21,6 +21,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   { to: '/vendors', labelKey: 'admin.nav.vendors', capability: 'ManageVendors' },
   { to: '/payments', labelKey: 'admin.nav.payments', capability: 'ViewPayments' },
+  { to: '/users', labelKey: 'admin.nav.users', capability: 'ManageOrganizationSettings' },
   { to: '/audit-logs', labelKey: 'admin.nav.auditLogs', capability: 'ManageOrganizationSettings' },
 ]
 

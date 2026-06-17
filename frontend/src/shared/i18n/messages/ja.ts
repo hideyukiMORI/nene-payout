@@ -204,8 +204,23 @@ export const ja: Partial<MessageCatalog> = {
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'ユーザー',
   'admin.users.newTitle': 'ユーザーを招待',
+  'admin.users.editTitle': '権限を変更',
+  'admin.users.detailTitle': 'ユーザー詳細',
   'admin.users.empty': 'ユーザーはまだいません。',
+  'admin.users.actions.invite': 'ユーザーを招待',
+  'admin.users.field.email': 'メールアドレス',
   'admin.users.field.role': '権限',
+  'admin.users.field.status': 'ステータス',
+  'admin.users.status.active': '有効',
+  'admin.users.status.invited': '招待済み',
+  'admin.users.status.deactivated': '無効',
+  'admin.users.form.error.emailRequired': 'メールアドレスは必須です。',
+  'admin.users.form.error.emailInvalid': 'メールアドレスの形式が正しくありません。',
+  'admin.users.form.inviteFailed': '招待に失敗しました。時間をおいて再度お試しください。',
+  'admin.users.form.saveFailed': '保存に失敗しました。時間をおいて再度お試しください。',
+  'admin.users.deactivate.confirm':
+    'このユーザーを無効化しますか？無効化するとログインできなくなります。',
+  'admin.users.deactivate.failed': '無効化に失敗しました。時間をおいて再度お試しください。',
 
   // ── Admin: audit logs ─────────────────────────────────────────────────────
   'admin.auditLogs.pageTitle': '監査ログ',
