@@ -89,6 +89,7 @@ export const en = {
   'admin.nav.payments': 'Payments',
   'admin.nav.settings': 'Settings',
   'admin.nav.users': 'Users',
+  'admin.nav.organizations': 'Organizations',
   'admin.nav.auditLogs': 'Audit logs',
 
   // ── Admin: dashboard ──────────────────────────────────────────────────────
@@ -214,6 +215,32 @@ export const en = {
   'admin.organization.form.error.nameTooLong': 'Organization name must be at most 255 characters.',
   'admin.organization.form.saveFailed': 'Could not save changes. Please try again later.',
   'admin.organization.form.saved': 'Organization settings saved.',
+
+  // ── Admin: organizations (superadmin, cross-tenant) ───────────────────────
+  'admin.organizations.pageTitle': 'Organizations',
+  'admin.organizations.newTitle': 'Create organization',
+  'admin.organizations.editTitle': 'Edit organization',
+  'admin.organizations.detailTitle': 'Organization details',
+  'admin.organizations.empty': 'No organizations yet.',
+  'admin.organizations.actions.new': 'New organization',
+  'admin.organizations.field.slug': 'Slug',
+  'admin.organizations.field.name': 'Name',
+  'admin.organizations.field.customDomain': 'Custom domain',
+  'admin.organizations.field.status': 'Status',
+  'admin.organizations.status.active': 'Active',
+  'admin.organizations.status.inactive': 'Inactive',
+  'admin.organizations.form.error.slugRequired': 'Slug is required.',
+  'admin.organizations.form.error.slug':
+    'Slug must be lowercase letters, digits, and hyphens (max 100).',
+  'admin.organizations.form.error.nameRequired': 'Name is required.',
+  'admin.organizations.form.error.nameTooLong': 'Name must be at most 255 characters.',
+  'admin.organizations.form.error.customDomain': 'Enter a valid hostname.',
+  'admin.organizations.form.conflict': 'That slug or custom domain is already in use.',
+  'admin.organizations.form.saveFailed': 'Could not save the organization. Please try again.',
+  'admin.organizations.deactivate.confirm':
+    'Deactivate this organization? Its users will no longer be able to sign in.',
+  'admin.organizations.deactivate.failed':
+    'Could not deactivate the organization. Please try again.',
 
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'Users',
