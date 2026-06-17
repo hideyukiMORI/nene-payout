@@ -213,8 +213,22 @@ export const en = {
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'Users',
   'admin.users.newTitle': 'Invite user',
+  'admin.users.editTitle': 'Change role',
+  'admin.users.detailTitle': 'User details',
   'admin.users.empty': 'No users yet.',
+  'admin.users.actions.invite': 'Invite user',
+  'admin.users.field.email': 'Email',
   'admin.users.field.role': 'Role',
+  'admin.users.field.status': 'Status',
+  'admin.users.status.active': 'Active',
+  'admin.users.status.invited': 'Invited',
+  'admin.users.status.deactivated': 'Deactivated',
+  'admin.users.form.error.emailRequired': 'Email is required.',
+  'admin.users.form.error.emailInvalid': 'Enter a valid email address.',
+  'admin.users.form.inviteFailed': 'Could not send the invite. Please try again later.',
+  'admin.users.form.saveFailed': 'Could not save changes. Please try again later.',
+  'admin.users.deactivate.confirm': 'Deactivate this user? They will no longer be able to sign in.',
+  'admin.users.deactivate.failed': 'Could not deactivate the user. Please try again later.',
 
   // ── Admin: audit logs ─────────────────────────────────────────────────────
   'admin.auditLogs.pageTitle': 'Audit logs',
