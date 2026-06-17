@@ -2,7 +2,10 @@
 
 ## Status
 
-Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to start.
+Phase 0（ガバナンス）完了。Phase 1（コア API）— Vendor / ReceivedInvoice / Payment(stub) /
+User / Organization 設定の各スライスと、認証・監査・マルチテナント基盤が完了。フロントは
+管理 UI（一覧/詳細/フォーム/ダッシュボード/監査ログ/設定/ユーザー管理）が一通り揃い、
+Storybook・knip・i18n 整理まで完了。残るコア作業は決済の実ゲートウェイ（スライス9以降）。
 
 ## Now (Phase 0) — ✅ Complete
 
@@ -36,12 +39,18 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] スライス6: ReceivedInvoice CRUD（list/get/create/update(pending のみ)/void、監査付き、received_invoices migration） — Issue #36
 - [x] スライス7: ReceivedInvoice PDF アップロード（POST /received-invoices/{id}/pdf、ローカル保存・監査） — Issue #38
 - [x] スライス8: 決済ゲートウェイ抽象＋決済開始（PaymentGatewayInterface＋StubGatewayAdapter、PaymentExecution、POST /received-invoices/{id}/payments、GET /payment-executions・/{id}、payment_executions migration） — Issue #40
+- [x] ユーザー管理 API（list/get/create(招待)/update(role)/deactivate、ManageOrganizationSettings・自組織スコープ、監査付き・1トランザクション、password_hash 非露出） — Issue #106
+- [x] 自組織設定 API（GET/PATCH /api/v1/organization、admin・自テナント、name のみ更新、監査 organization.updated・1トランザクション） — Issue #110
 - [ ] スライス9以降: Stripe 実アダプタ → Webhook（成功/失敗反映） → gateway-settings(+疎通確認) → fee/refund/CB 会計（ADR 0015・税理士サインオフ後）
+- [ ] superadmin 横断の組織管理（/api/v1/organizations 複数：list/get/create/update/deactivate。現状 OpenAPI 契約のみ・ハンドラ未実装）
 
 ## テスト
 
 - [x] バックエンド UT を全機能・境界値重視で拡充（InputMapper／CapabilityResolver／Ulid／Audit filter／Query UseCase、151 tests） — Issue #46
 - [x] ハンドラ層の検証・AuthContext を境界値で網羅（gateway enum／PDF 種別／login 必須／claims、168 tests） — Issue #48
+
+現状の件数（`main`）: バックエンド `composer check` 199 tests / フロント `npm run check` 155 tests。
+各スライスで mapper／usecase／handler 境界の UT を同 PR に同梱。
 
 ## Frontend
 
@@ -56,7 +65,14 @@ Phase 0 — Governance bootstrap complete. Phase 1 (core payment API) ready to s
 - [x] 決済開始 UI（features/initiate-payment＝gateway Select フォーム＋PayInvoicePanel、pending 請求書 → useInitiatePayment → gateway_redirect_url へ遷移、/received-invoices/:id/pay、一覧 pending 行に導線、ゲートウェイ名/決済開始 i18n、schema＋form テスト、check green 81 tests） — Issue #69
 - [x] PDF アップロード UI（shared/api postForm＝multipart、entities useAttachReceivedInvoicePdf、features/upload-invoice-pdf＝pdf-file 検証（application/pdf・soft cap）＋UploadInvoicePdfForm/Panel、/received-invoices/:id/pdf、一覧の全行に導線、pdf.* i18n、検証＋form テスト、check green 88 tests） — Issue #76
 - [x] 詳細画面（shared/ui DetailList＋shared/lib formatDateTime（JST 表示）、VendorDetailView／InvoiceDetailView（仕入先名を子で解決・税区分表示）／PaymentDetailView、/vendors/:id・/received-invoices/:id・/payments/:id、一覧から詳細リンク、詳細タイトル/フィールド i18n、各詳細の MSW happy-path テスト、check green 94 tests） — Issue #78
-- [ ] FSD 横展開の続き（ダッシュボード/設定/監査ログ画面、i18n 未使用キー整理、Storybook、knip）
+- [x] ログイン画面と認証フロー（entities/session、login/me、AuthGate、トークン保持） — Issue #86
+- [x] 監査ログ画面（features/view-audit-logs、/audit-logs、ManageOrganizationSettings ガード） — Issue #90
+- [x] ダッシュボード画面（features/view-dashboard、/dashboard、各リソースへの導線） — Issue #92
+- [x] ロールベースのナビ／ルート出し分け（roleHasCapability、RequireCapability、AppLayout ナビ capability フィルタ、/forbidden） — Issue #104
+- [x] ユーザー管理 UI（entities/user、features/manage-users＝招待/一覧/詳細/ロール変更/無効化、/users、ManageOrganizationSettings ガード） — Issue #108
+- [x] 組織設定（設定）画面（entities/organization、features/manage-organization-settings＝組織名の表示・編集、/settings、ManageOrganizationSettings ガード） — Issue #112
+- [x] FSD 横展開の続き＝完了（ダッシュボード/設定/監査ログ画面、i18n 未使用キー整理 #96、Storybook #98、knip #94）
+- [x] ツール更新: ESLint v10（#100）／Vite v8（#102）
 
 各スライスで該当エンティティのマイグレーション＋OpenAPI＋テストをセットで追加。
 
@@ -73,4 +89,7 @@ Repository: `hideyukiMORI/nene-payout`
 Local path: `/home/xi/docker/nene-payout`
 Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — fixed/unique, see docs/development/local-ports.md
 
-Last updated: 2026-06-14 (resource detail screens)
+次の焦点: 決済の実ゲートウェイ（スライス9＝Stripe アダプタ → Webhook → gateway-settings →
+会計モデルは ADR 0015 ゲート後）。フロントの管理 UI 横展開は一巡済み。
+
+Last updated: 2026-06-17 (棚卸し: User/Organization の API+UI、ダッシュボード/監査ログ/設定/ログイン画面、Storybook/knip/i18n 整理を反映 — Issue #114)
