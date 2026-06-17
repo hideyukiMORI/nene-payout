@@ -53,4 +53,15 @@ final class InMemoryOrganizationRepository implements OrganizationRepositoryInte
 
         return null;
     }
+
+    public function update(Organization $organization): void
+    {
+        foreach ($this->organizations as $i => $existing) {
+            if ($existing->id === $organization->id) {
+                $this->organizations[$i] = $organization;
+
+                return;
+            }
+        }
+    }
 }

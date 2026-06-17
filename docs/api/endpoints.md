@@ -29,6 +29,8 @@ Phase 1; endpoints are added per `docs/development/endpoint-scaffold` discipline
 | `GET /api/v1/organizations/{id}` | getOrganization | bearer / cross-tenant | ManageOrganizations | superadmin |
 | `PATCH /api/v1/organizations/{id}` | updateOrganization | bearer / cross-tenant | ManageOrganizations | superadmin |
 | `POST /api/v1/organizations/{id}/deactivate` | deactivateOrganization | bearer / cross-tenant | ManageOrganizations | soft |
+| `GET /api/v1/organization` | getOrganizationSettings | bearer / org | ManageOrganizationSettings | admin (self org) |
+| `PATCH /api/v1/organization` | updateOrganizationSettings | bearer / org | ManageOrganizationSettings | admin; name only |
 | `GET /api/v1/vendors` | listVendors | bearer / org | ManageVendors (read: admin/operator) | filter `q` |
 | `POST /api/v1/vendors` | createVendor | bearer / org | ManageVendors | admin |
 | `GET /api/v1/vendors/{id}` | getVendor | bearer / org | — | |
