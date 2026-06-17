@@ -14,3 +14,22 @@ export interface Organization {
 export interface UpdateOrganizationNameInput {
   name: string
 }
+
+/** Cross-tenant management (superadmin; /api/v1/organizations). */
+export interface OrganizationList {
+  items: Organization[]
+  limit: number
+  offset: number
+  total: number | null
+}
+
+export interface CreateOrganizationInput {
+  slug: string
+  name: string
+  customDomain: string | null
+}
+
+export interface UpdateOrganizationInput {
+  name: string
+  customDomain: string | null
+}

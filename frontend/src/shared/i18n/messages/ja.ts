@@ -81,6 +81,7 @@ export const ja: Partial<MessageCatalog> = {
   'admin.nav.payments': '決済',
   'admin.nav.settings': '設定',
   'admin.nav.users': 'ユーザー',
+  'admin.nav.organizations': '組織管理',
   'admin.nav.auditLogs': '監査ログ',
 
   // ── Admin: dashboard ──────────────────────────────────────────────────────
@@ -205,6 +206,31 @@ export const ja: Partial<MessageCatalog> = {
   'admin.organization.form.error.nameTooLong': '組織名は255文字以内で入力してください。',
   'admin.organization.form.saveFailed': '保存に失敗しました。時間をおいて再度お試しください。',
   'admin.organization.form.saved': '組織設定を保存しました。',
+
+  // ── Admin: organizations (superadmin, cross-tenant) ───────────────────────
+  'admin.organizations.pageTitle': '組織管理',
+  'admin.organizations.newTitle': '組織を作成',
+  'admin.organizations.editTitle': '組織を編集',
+  'admin.organizations.detailTitle': '組織詳細',
+  'admin.organizations.empty': '組織はまだありません。',
+  'admin.organizations.actions.new': '組織を新規作成',
+  'admin.organizations.field.slug': 'スラッグ',
+  'admin.organizations.field.name': '組織名',
+  'admin.organizations.field.customDomain': 'カスタムドメイン',
+  'admin.organizations.field.status': 'ステータス',
+  'admin.organizations.status.active': '有効',
+  'admin.organizations.status.inactive': '無効',
+  'admin.organizations.form.error.slugRequired': 'スラッグは必須です。',
+  'admin.organizations.form.error.slug':
+    'スラッグは英小文字・数字・ハイフンで入力してください（100文字以内）。',
+  'admin.organizations.form.error.nameRequired': '組織名は必須です。',
+  'admin.organizations.form.error.nameTooLong': '組織名は255文字以内で入力してください。',
+  'admin.organizations.form.error.customDomain': '有効なホスト名を入力してください。',
+  'admin.organizations.form.conflict': 'そのスラッグまたはカスタムドメインは既に使用されています。',
+  'admin.organizations.form.saveFailed': '組織を保存できませんでした。もう一度お試しください。',
+  'admin.organizations.deactivate.confirm':
+    'この組織を無効化しますか？所属ユーザーはログインできなくなります。',
+  'admin.organizations.deactivate.failed': '組織を無効化できませんでした。もう一度お試しください。',
 
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'ユーザー',

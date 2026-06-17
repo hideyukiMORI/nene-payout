@@ -13,6 +13,10 @@ import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { PaymentDetailPage } from '@/pages/payments/PaymentDetailPage'
 import { AuditLogsPage } from '@/pages/audit-logs/AuditLogsPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
+import { OrganizationsPage } from '@/pages/organizations/OrganizationsPage'
+import { OrganizationCreatePage } from '@/pages/organizations/OrganizationCreatePage'
+import { OrganizationDetailPage } from '@/pages/organizations/OrganizationDetailPage'
+import { OrganizationEditPage } from '@/pages/organizations/OrganizationEditPage'
 import { UsersPage } from '@/pages/users/UsersPage'
 import { UserInvitePage } from '@/pages/users/UserInvitePage'
 import { UserDetailPage } from '@/pages/users/UserDetailPage'
@@ -70,6 +74,18 @@ export function AppRoutes() {
           <Route path="/users/:userId" element={<UserDetailPage />} />
           <Route path="/users/:userId/edit" element={<UserEditPage />} />
           <Route path="/audit-logs" element={<AuditLogsPage />} />
+        </Route>
+        <Route
+          element={
+            <RequireCapability capability="ManageOrganizations">
+              <Outlet />
+            </RequireCapability>
+          }
+        >
+          <Route path="/organizations" element={<OrganizationsPage />} />
+          <Route path="/organizations/new" element={<OrganizationCreatePage />} />
+          <Route path="/organizations/:organizationId" element={<OrganizationDetailPage />} />
+          <Route path="/organizations/:organizationId/edit" element={<OrganizationEditPage />} />
         </Route>
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

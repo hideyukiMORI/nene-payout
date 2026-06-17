@@ -1,5 +1,17 @@
-import type { OrganizationDto, UpdateOrganizationDto } from './api-types'
-import type { Organization, UpdateOrganizationNameInput } from './model'
+import type {
+  CreateOrganizationDto,
+  OrganizationDto,
+  OrganizationListDto,
+  UpdateOrganizationDto,
+  UpdateOrganizationManagementDto,
+} from './api-types'
+import type {
+  CreateOrganizationInput,
+  Organization,
+  OrganizationList,
+  UpdateOrganizationInput,
+  UpdateOrganizationNameInput,
+} from './model'
 
 export function mapOrganizationDtoToModel(dto: OrganizationDto): Organization {
   return {
@@ -16,5 +28,33 @@ export function mapUpdateOrganizationNameInputToDto(
 ): UpdateOrganizationDto {
   return {
     name: input.name,
+  }
+}
+
+export function mapOrganizationListDtoToModel(dto: OrganizationListDto): OrganizationList {
+  return {
+    items: dto.items.map(mapOrganizationDtoToModel),
+    limit: dto.limit,
+    offset: dto.offset,
+    total: dto.total ?? null,
+  }
+}
+
+export function mapCreateOrganizationInputToDto(
+  input: CreateOrganizationInput,
+): CreateOrganizationDto {
+  return {
+    slug: input.slug,
+    name: input.name,
+    custom_domain: input.customDomain,
+  }
+}
+
+export function mapUpdateOrganizationInputToDto(
+  input: UpdateOrganizationInput,
+): UpdateOrganizationManagementDto {
+  return {
+    name: input.name,
+    custom_domain: input.customDomain,
   }
 }

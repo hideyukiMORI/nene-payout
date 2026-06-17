@@ -1,4 +1,20 @@
-export type { Organization, UpdateOrganizationNameInput } from './model'
+export type {
+  CreateOrganizationInput,
+  Organization,
+  OrganizationList,
+  UpdateOrganizationInput,
+  UpdateOrganizationNameInput,
+} from './model'
 export { organizationKeys } from './query-keys'
-export { useOrganizationSettings } from './queries'
-export { useUpdateOrganizationName } from './mutations'
+export {
+  useOrganizationSettings,
+  useOrganizationList,
+  useOrganizationById,
+  type OrganizationListParams,
+} from './queries'
+export {
+  useUpdateOrganizationName,
+  useCreateOrganization,
+  useUpdateOrganization,
+  useDeactivateOrganization,
+} from './mutations'

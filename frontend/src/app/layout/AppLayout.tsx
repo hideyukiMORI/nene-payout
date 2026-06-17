@@ -24,6 +24,11 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/users', labelKey: 'admin.nav.users', capability: 'ManageOrganizationSettings' },
   { to: '/settings', labelKey: 'admin.nav.settings', capability: 'ManageOrganizationSettings' },
   { to: '/audit-logs', labelKey: 'admin.nav.auditLogs', capability: 'ManageOrganizationSettings' },
+  {
+    to: '/organizations',
+    labelKey: 'admin.nav.organizations',
+    capability: 'ManageOrganizations',
+  },
 ]
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
