@@ -101,6 +101,13 @@ or other variants in docs/UI.
 | `refunded` | 返金（新規リンクレコード — ADR 0013, 0015） |
 | `charged_back` | チャージバック（新規リンクレコード — ADR 0013, 0015） |
 
+### User.status
+| Value | Meaning |
+| --- | --- |
+| `active` | 有効（ログイン可能） |
+| `invited` | 招待済み・未アクティベート（パスワード未設定 — ログイン不可） |
+| `deactivated` | 無効化（論理削除 — ADR 0013） |
+
 ## §5 Account type values
 
 | Value | Meaning |
