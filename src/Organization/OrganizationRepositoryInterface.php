@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace NenePayout\Organization;
 
 /**
- * Read access to organizations used by tenant resolution, plus the self-service
- * settings update (name only). Cross-tenant superadmin CRUD is added with the
- * /organizations endpoints in a later slice.
+ * Read access to organizations used by tenant resolution and self-service
+ * settings, plus the cross-tenant superadmin management (list/create/update/
+ * deactivate; /api/v1/organizations).
  */
 interface OrganizationRepositoryInterface
 {
@@ -17,6 +17,23 @@ interface OrganizationRepositoryInterface
 
     public function findByCustomDomain(string $domain): ?Organization;
 
-    /** Persists mutable settings (currently `name`) for an existing organization. */
+    /**
+     * Cross-tenant list (superadmin).
+     *
+     * @return list<Organization>
+     */
+    public function findAll(int $limit, int $offset): array;
+
+    /** Cross-tenant count (superadmin). */
+    public function count(): int;
+
+    public function existsBySlug(string $slug): bool;
+
+    public function existsByCustomDomain(string $domain): bool;
+
+    /** Inserts a new organization (superadmin). */
+    public function save(Organization $organization): void;
+
+    /** Persists mutable columns (name, custom_domain, is_active) for an existing organization. */
     public function update(Organization $organization): void;
 }

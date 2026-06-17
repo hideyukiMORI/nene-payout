@@ -54,6 +54,44 @@ final class InMemoryOrganizationRepository implements OrganizationRepositoryInte
         return null;
     }
 
+    /** @return list<Organization> */
+    public function findAll(int $limit, int $offset): array
+    {
+        return array_slice($this->organizations, $offset, $limit);
+    }
+
+    public function count(): int
+    {
+        return count($this->organizations);
+    }
+
+    public function existsBySlug(string $slug): bool
+    {
+        foreach ($this->organizations as $org) {
+            if ($org->slug === $slug) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function existsByCustomDomain(string $domain): bool
+    {
+        foreach ($this->organizations as $org) {
+            if ($org->customDomain === $domain) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function save(Organization $organization): void
+    {
+        $this->organizations[] = $organization;
+    }
+
     public function update(Organization $organization): void
     {
         foreach ($this->organizations as $i => $existing) {

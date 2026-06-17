@@ -47,15 +47,68 @@ final readonly class PdoOrganizationRepository implements OrganizationRepository
         return $row !== null ? $this->mapRow($row) : null;
     }
 
+    /** @return list<Organization> */
+    public function findAll(int $limit, int $offset): array
+    {
+        $rows = $this->query->fetchAll(
+            'SELECT ' . self::COLUMNS . ' FROM organizations ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?',
+            [$limit, $offset],
+        );
+
+        return array_map(fn (array $row): Organization => $this->mapRow($row), $rows);
+    }
+
+    public function count(): int
+    {
+        $row = $this->query->fetchOne('SELECT COUNT(*) AS cnt FROM organizations', []);
+
+        return $row !== null ? (int) $row['cnt'] : 0;
+    }
+
+    public function existsBySlug(string $slug): bool
+    {
+        return $this->query->fetchOne('SELECT 1 AS hit FROM organizations WHERE slug = ?', [$slug]) !== null;
+    }
+
+    public function existsByCustomDomain(string $domain): bool
+    {
+        return $this->query->fetchOne('SELECT 1 AS hit FROM organizations WHERE custom_domain = ?', [$domain]) !== null;
+    }
+
+    public function save(Organization $organization): void
+    {
+        $now = $this->clock->now()->format('Y-m-d H:i:s');
+
+        $this->query->execute(
+            'INSERT INTO organizations
+                (id, slug, name, custom_domain, is_active, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+                $organization->id,
+                $organization->slug,
+                $organization->name,
+                $organization->customDomain,
+                $organization->isActive ? 1 : 0,
+                $now,
+                $now,
+            ],
+        );
+    }
+
     public function update(Organization $organization): void
     {
         $now = $this->clock->now()->format('Y-m-d H:i:s');
 
-        // Only `name` is mutable through self-service settings; slug/custom_domain
-        // drive tenant resolution and are managed by superadmin endpoints.
+        // Mutable columns only; `slug` is immutable (drives tenant resolution).
         $this->query->execute(
-            'UPDATE organizations SET name = ?, updated_at = ? WHERE id = ?',
-            [$organization->name, $now, $organization->id],
+            'UPDATE organizations SET name = ?, custom_domain = ?, is_active = ?, updated_at = ? WHERE id = ?',
+            [
+                $organization->name,
+                $organization->customDomain,
+                $organization->isActive ? 1 : 0,
+                $now,
+                $organization->id,
+            ],
         );
     }
 
