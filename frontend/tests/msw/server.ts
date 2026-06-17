@@ -8,6 +8,7 @@ import {
 } from './handlers/payment-execution'
 import { auditLogHandlers } from './handlers/audit-log'
 import { userHandlers, userDetailHandlers } from './handlers/user'
+import { organizationHandlers } from './handlers/organization'
 
 export const mswServer = setupServer(
   ...sessionMeHandlers,
@@ -20,4 +21,5 @@ export const mswServer = setupServer(
   ...auditLogHandlers,
   ...userHandlers,
   ...userDetailHandlers,
+  ...organizationHandlers,
 )

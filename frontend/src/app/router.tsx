@@ -12,6 +12,7 @@ import { InvoiceDetailPage } from '@/pages/invoices/InvoiceDetailPage'
 import { PaymentsPage } from '@/pages/payments/PaymentsPage'
 import { PaymentDetailPage } from '@/pages/payments/PaymentDetailPage'
 import { AuditLogsPage } from '@/pages/audit-logs/AuditLogsPage'
+import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { UsersPage } from '@/pages/users/UsersPage'
 import { UserInvitePage } from '@/pages/users/UserInvitePage'
 import { UserDetailPage } from '@/pages/users/UserDetailPage'
@@ -63,6 +64,7 @@ export function AppRoutes() {
             </RequireCapability>
           }
         >
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/users/new" element={<UserInvitePage />} />
           <Route path="/users/:userId" element={<UserDetailPage />} />

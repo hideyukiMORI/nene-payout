@@ -209,6 +209,11 @@ export const en = {
   'admin.organization.pageTitle': 'Organization settings',
   'admin.organization.field.name': 'Organization name',
   'admin.organization.field.slug': 'Slug',
+  'admin.organization.field.customDomain': 'Custom domain',
+  'admin.organization.form.error.nameRequired': 'Organization name is required.',
+  'admin.organization.form.error.nameTooLong': 'Organization name must be at most 255 characters.',
+  'admin.organization.form.saveFailed': 'Could not save changes. Please try again later.',
+  'admin.organization.form.saved': 'Organization settings saved.',
 
   // ── Admin: users ──────────────────────────────────────────────────────────
   'admin.users.pageTitle': 'Users',
