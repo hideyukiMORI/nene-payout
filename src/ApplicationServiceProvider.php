@@ -13,6 +13,9 @@ use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Auth\AuthRouteRegistrar;
 use NenePayout\Auth\AuthServiceProvider;
 use NenePayout\Auth\InvalidCredentialsExceptionHandler;
+use NenePayout\Organization\Management\OrganizationManagementServiceProvider;
+use NenePayout\Organization\Management\OrganizationSlugConflictExceptionHandler;
+use NenePayout\Organization\Management\OrganizationsRouteRegistrar;
 use NenePayout\Organization\OrganizationNotFoundExceptionHandler;
 use NenePayout\Organization\OrganizationRouteRegistrar;
 use NenePayout\Organization\OrganizationServiceProvider;
@@ -57,6 +60,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
     public function register(ContainerBuilder $builder): void
     {
         $builder->addProvider(new OrganizationServiceProvider());
+        $builder->addProvider(new OrganizationManagementServiceProvider());
         $builder->addProvider(new AuthServiceProvider());
         $builder->addProvider(new AuditServiceProvider());
         $builder->addProvider(new VendorServiceProvider());
@@ -80,6 +84,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $auth = $container->get(AuthRouteRegistrar::class);
                     $audit = $container->get(AuditRouteRegistrar::class);
                     $organization = $container->get(OrganizationRouteRegistrar::class);
+                    $organizations = $container->get(OrganizationsRouteRegistrar::class);
                     $vendor = $container->get(VendorRouteRegistrar::class);
                     $receivedInvoice = $container->get(ReceivedInvoiceRouteRegistrar::class);
                     $payment = $container->get(PaymentRouteRegistrar::class);
@@ -91,6 +96,10 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
 
                     if (!$organization instanceof OrganizationRouteRegistrar) {
                         throw new LogicException('Organization route registrar service is invalid.');
+                    }
+
+                    if (!$organizations instanceof OrganizationsRouteRegistrar) {
+                        throw new LogicException('Organizations route registrar service is invalid.');
                     }
 
                     if (!$audit instanceof AuditRouteRegistrar) {
@@ -113,7 +122,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('User route registrar service is invalid.');
                     }
 
-                    return [$auth, $audit, $organization, $vendor, $receivedInvoice, $payment, $user];
+                    return [$auth, $audit, $organization, $organizations, $vendor, $receivedInvoice, $payment, $user];
                 },
             )
             ->set(
@@ -129,6 +138,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $userNotFound = $container->get(UserNotFoundExceptionHandler::class);
                     $userEmailConflict = $container->get(UserEmailConflictExceptionHandler::class);
                     $organizationNotFound = $container->get(OrganizationNotFoundExceptionHandler::class);
+                    $organizationSlugConflict = $container->get(OrganizationSlugConflictExceptionHandler::class);
 
                     if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
                         throw new LogicException('Invalid credentials exception handler service is invalid.');
@@ -166,7 +176,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Organization not found exception handler service is invalid.');
                     }
 
-                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed, $userNotFound, $userEmailConflict, $organizationNotFound];
+                    if (!$organizationSlugConflict instanceof OrganizationSlugConflictExceptionHandler) {
+                        throw new LogicException('Organization slug conflict exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed, $userNotFound, $userEmailConflict, $organizationNotFound, $organizationSlugConflict];
                 },
             );
     }
