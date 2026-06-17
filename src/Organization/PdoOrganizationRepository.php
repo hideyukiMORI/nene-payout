@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NenePayout\Organization;
 
 use Nene2\Database\DatabaseQueryExecutorInterface;
+use Nene2\Http\ClockInterface;
 
 final readonly class PdoOrganizationRepository implements OrganizationRepositoryInterface
 {
@@ -12,6 +13,7 @@ final readonly class PdoOrganizationRepository implements OrganizationRepository
 
     public function __construct(
         private DatabaseQueryExecutorInterface $query,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -43,6 +45,18 @@ final readonly class PdoOrganizationRepository implements OrganizationRepository
         );
 
         return $row !== null ? $this->mapRow($row) : null;
+    }
+
+    public function update(Organization $organization): void
+    {
+        $now = $this->clock->now()->format('Y-m-d H:i:s');
+
+        // Only `name` is mutable through self-service settings; slug/custom_domain
+        // drive tenant resolution and are managed by superadmin endpoints.
+        $this->query->execute(
+            'UPDATE organizations SET name = ?, updated_at = ? WHERE id = ?',
+            [$organization->name, $now, $organization->id],
+        );
     }
 
     /**

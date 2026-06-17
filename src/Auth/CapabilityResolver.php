@@ -18,6 +18,12 @@ final class CapabilityResolver
             return Capability::ManageOrganizations;
         }
 
+        // Singular self-service settings for the current tenant (admin, own org).
+        // Must follow the plural check above so it never shadows /organizations.
+        if (str_starts_with($path, '/api/v1/organization')) {
+            return Capability::ManageOrganizationSettings;
+        }
+
         if (str_starts_with($path, '/api/v1/gateway-settings')) {
             return Capability::ManageGatewaySettings;
         }
