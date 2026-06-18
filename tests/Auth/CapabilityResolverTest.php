@@ -31,6 +31,13 @@ final class CapabilityResolverTest extends TestCase
         yield 'users POST' => ['/api/v1/users', 'POST', Capability::ManageOrganizationSettings];
         yield 'audit GET' => ['/api/v1/audit-logs', 'GET', Capability::ManageOrganizationSettings];
 
+        // Widget embed-code generation requires admin (ManageOrganizationSettings);
+        // the token-gated widget runtime under /api/v1/widget/ is not capability-gated.
+        yield 'widget-tokens POST' => ['/api/v1/widget-tokens', 'POST', Capability::ManageOrganizationSettings];
+        yield 'widget runtime list' => ['/api/v1/widget/received-invoices', 'GET', null];
+        yield 'widget runtime create' => ['/api/v1/widget/received-invoices', 'POST', null];
+        yield 'widget runtime vendors' => ['/api/v1/widget/vendors', 'POST', null];
+
         // Vendors — reads open, mutations require ManageVendors.
         yield 'vendors GET' => ['/api/v1/vendors', 'GET', null];
         yield 'vendor GET by id' => ['/api/v1/vendors/01V', 'GET', null];
