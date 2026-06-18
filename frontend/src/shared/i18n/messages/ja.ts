@@ -266,6 +266,10 @@ export const ja: Partial<MessageCatalog> = {
   'widget.pay.amount': '金額: {{amount}}',
   'widget.pay.submit': '支払う',
   'widget.pay.processing': '決済処理中…',
+  'widget.pay.payee': '振込先',
+  'widget.pay.redirecting': '決済画面へ移動します…',
   'widget.complete.success': '支払いが完了しました。',
   'widget.complete.failure': '支払いに失敗しました。',
+  'widget.manage.title': '請求書の支払い',
+  'widget.manage.empty': '支払い対象の請求書はありません。',
 }

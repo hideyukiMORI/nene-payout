@@ -275,8 +275,12 @@ export const en = {
   'widget.pay.amount': 'Amount: {{amount}}',
   'widget.pay.submit': 'Pay',
   'widget.pay.processing': 'Processing payment…',
+  'widget.pay.payee': 'Payee',
+  'widget.pay.redirecting': 'Redirecting to the payment page…',
   'widget.complete.success': 'Payment complete.',
   'widget.complete.failure': 'Payment failed.',
+  'widget.manage.title': 'Pay invoices',
+  'widget.manage.empty': 'No invoices to pay.',
 }
 
 /** Message key set is fixed by `en`; values are plain strings per locale. */
