@@ -10,10 +10,20 @@
  *           data-payout-token="<JWT>" data-payout-mode="modal" async></script>
  *
  * Host integration:
- *   NenePayout.payInvoice({ amount, due_date, vendor: {...}, gateway })  // Mode A
- *   NenePayout.open()                                                     // Mode B
+ *   // Mode A — host passes the invoice + full payee bank account, then pays:
+ *   NenePayout.payInvoice({ amount, due_date, vendor: { name, bank_code, branch_code,
+ *                           account_type, account_number, account_name } })
+ *   // or, when the payee is already a registered vendor:
+ *   NenePayout.payInvoice({ amount, due_date, vendor_id })
+ *   // Pay an invoice already registered in Payout, by id (account is on record):
+ *   NenePayout.payRegisteredInvoice('01ABC…')
+ *   // Mode B — open the embedded management list:
+ *   NenePayout.open()
  *   NenePayout.on('success', (detail) => { ... })
- *   <button data-payout-pay-invoice="01ABC…">この請求書を支払う</button>
+ *
+ * Declarative triggers on the host page:
+ *   <button data-payout-open>請求書管理を開く</button>
+ *   <button data-payout-invoice="01ABC…">この請求書を支払う</button>
  */
 
 type PayoutEvent = 'success' | 'failure' | 'close'
@@ -22,6 +32,7 @@ type PayoutPayload = Record<string, unknown>
 interface PayoutApi {
   open(): void
   payInvoice(payload: PayoutPayload): void
+  payRegisteredInvoice(invoiceId: string): void
   close(): void
   on(event: PayoutEvent, callback: (detail: unknown) => void): void
 }
@@ -46,10 +57,12 @@ interface FrameMessage {
   let frame: HTMLIFrameElement | null = null
   let pendingPayload: PayoutPayload | null = null
 
-  function widgetUrl(mode: string): string {
+  function widgetUrl(params: Record<string, string>): string {
     const url = new URL(`${origin}/widget`)
     url.searchParams.set('token', token)
-    url.searchParams.set('mode', mode)
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value)
+    }
     return url.toString()
   }
 
@@ -68,7 +81,7 @@ interface FrameMessage {
     }
   }
 
-  function openFrame(mode: string, payload: PayoutPayload | null): void {
+  function openFrame(params: Record<string, string>, payload: PayoutPayload | null): void {
     close()
     pendingPayload = payload
 
@@ -84,7 +97,7 @@ interface FrameMessage {
     })
 
     frame = document.createElement('iframe')
-    frame.src = widgetUrl(mode)
+    frame.src = widgetUrl(params)
     frame.setAttribute('title', 'NeNe Payout')
     frame.setAttribute(
       'style',
@@ -123,10 +136,13 @@ interface FrameMessage {
 
   const api: PayoutApi = {
     open(): void {
-      openFrame('manage', null)
+      openFrame({ mode: 'manage' }, null)
     },
     payInvoice(payload: PayoutPayload): void {
-      openFrame('quickpay', payload)
+      openFrame({ mode: 'quickpay' }, payload)
+    },
+    payRegisteredInvoice(invoiceId: string): void {
+      openFrame({ mode: 'pay', invoice: invoiceId }, null)
     },
     close,
     on(event: PayoutEvent, callback: (detail: unknown) => void): void {
@@ -142,16 +158,16 @@ interface FrameMessage {
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null
     const trigger = target?.closest(
-      '[data-payout-open],[data-payout-pay-invoice]',
+      '[data-payout-open],[data-payout-invoice]',
     ) as HTMLElement | null
     if (trigger === null) {
       return
     }
 
     event.preventDefault()
-    const invoiceNumber = trigger.getAttribute('data-payout-pay-invoice')
-    if (invoiceNumber !== null && invoiceNumber !== '') {
-      api.payInvoice({ invoice_number: invoiceNumber })
+    const invoiceId = trigger.getAttribute('data-payout-invoice')
+    if (invoiceId !== null && invoiceId !== '') {
+      api.payRegisteredInvoice(invoiceId)
     } else {
       api.open()
     }

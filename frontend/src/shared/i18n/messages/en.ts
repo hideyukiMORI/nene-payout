@@ -292,6 +292,7 @@ export const en = {
   'widget.pay.submit': 'Pay',
   'widget.pay.processing': 'Processing payment…',
   'widget.pay.payee': 'Payee',
+  'widget.pay.account': 'Payee account',
   'widget.pay.redirecting': 'Redirecting to the payment page…',
   'widget.complete.success': 'Payment complete.',
   'widget.complete.failure': 'Payment failed.',

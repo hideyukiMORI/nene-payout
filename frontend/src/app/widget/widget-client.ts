@@ -26,6 +26,16 @@ export interface WidgetInvoiceList {
   total?: number
 }
 
+export interface WidgetVendor {
+  id: string
+  name: string
+  bank_code: string
+  branch_code: string
+  account_type: string
+  account_number: string
+  account_name: string
+}
+
 export interface QuickPayResult {
   received_invoice: WidgetInvoice
   gateway_redirect_url: string | null
@@ -75,10 +85,20 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
 export const widgetApi = {
   getContext: (): Promise<WidgetContext> => call('GET', '/context'),
   listInvoices: (): Promise<WidgetInvoiceList> => call('GET', '/received-invoices?limit=50'),
+  getInvoice: (id: string): Promise<WidgetInvoice> => call('GET', `/received-invoices/${id}`),
+  getVendor: (id: string): Promise<WidgetVendor> => call('GET', `/vendors/${id}`),
   quickPay: (payload: Record<string, unknown>): Promise<QuickPayResult> =>
     call('POST', '/quick-payments', payload),
   payInvoice: (id: string): Promise<PaymentResult> =>
     call('POST', `/received-invoices/${id}/payments`, { gateway: 'stripe' }),
+}
+
+/** Masks a payee bank account for confirmation display (e.g. 0001-001 普通 ***4567 / ヤマダ). */
+export function maskAccount(vendor: WidgetVendor): string {
+  const number = vendor.account_number
+  const last4 = number.slice(-4)
+  const masked = `${'*'.repeat(Math.max(0, number.length - last4.length))}${last4}`
+  return `${vendor.bank_code}-${vendor.branch_code} ${vendor.account_type} ${masked} / ${vendor.account_name}`
 }
 
 /** Formats integer minimum-currency-units as JPY (e.g. 330000 → ¥330,000). */
