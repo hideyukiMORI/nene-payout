@@ -270,6 +270,15 @@ export const en = {
   'admin.auditLogs.field.entity': 'Entity',
   'admin.auditLogs.field.createdAt': 'Timestamp',
 
+  // ── Admin: embeddable widget (settings) ───────────────────────────────────
+  'admin.widget.title': 'Embeddable widget',
+  'admin.widget.description':
+    'Paste this snippet into your own system to accept card payments. Keep the token private — anyone with it can manage this organization’s invoices.',
+  'admin.widget.generate': 'Generate embed code',
+  'admin.widget.copy': 'Copy',
+  'admin.widget.copied': 'Copied',
+  'admin.widget.generateFailed': 'Could not generate the embed code. Please try again.',
+
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': 'Pay invoice',
   'widget.pay.amount': 'Amount: {{amount}}',
