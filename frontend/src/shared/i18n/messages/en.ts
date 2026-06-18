@@ -270,13 +270,34 @@ export const en = {
   'admin.auditLogs.field.entity': 'Entity',
   'admin.auditLogs.field.createdAt': 'Timestamp',
 
+  // ── Admin: embeddable widget (settings) ───────────────────────────────────
+  'admin.widget.title': 'Embeddable widget',
+  'admin.widget.description':
+    'Paste this snippet into your own system to accept card payments. Keep the token private — anyone with it can manage this organization’s invoices.',
+  'admin.widget.generate': 'Generate embed code',
+  'admin.widget.copy': 'Copy',
+  'admin.widget.copied': 'Copied',
+  'admin.widget.generateFailed': 'Could not generate the embed code. Please try again.',
+  'admin.widget.demoLink': 'Open sample page (dev)',
+  'admin.widget.demo.title': 'Sample host system (demo)',
+  'admin.widget.demo.description':
+    'A development-only page simulating an operator system with the widget embedded.',
+  'admin.widget.demo.pay': 'Pay an invoice by card (Mode A)',
+  'admin.widget.demo.manage': 'Open invoice management (Mode B)',
+  'admin.widget.demo.noToken': 'Missing token. Open this page from the settings link.',
+
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': 'Pay invoice',
   'widget.pay.amount': 'Amount: {{amount}}',
   'widget.pay.submit': 'Pay',
   'widget.pay.processing': 'Processing payment…',
+  'widget.pay.payee': 'Payee',
+  'widget.pay.account': 'Payee account',
+  'widget.pay.redirecting': 'Redirecting to the payment page…',
   'widget.complete.success': 'Payment complete.',
   'widget.complete.failure': 'Payment failed.',
+  'widget.manage.title': 'Pay invoices',
+  'widget.manage.empty': 'No invoices to pay.',
 }
 
 /** Message key set is fixed by `en`; values are plain strings per locale. */

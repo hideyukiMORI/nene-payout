@@ -80,6 +80,9 @@ or other variants in docs/UI.
 | `Vendor` | Entity | 支払先の仕入先・外注先 |
 | `PaymentExecution` | Entity | 決済実行記録 |
 | `AuditLog` | Entity | 監査ログ（`audit_logs` テーブル） — ADR 0011 |
+| 埋め込みウィジェット | Embeddable widget | `<script>` ワンライナーでホストに埋め込む決済ウィジェット — ADR 0021 |
+| ウィジェットトークン | Widget token | 組織スコープの署名トークン（`X-Widget-Token`, `scope=widget`） — ADR 0021 |
+| 埋め込みコード | Embed snippet | `POST /api/v1/widget-tokens` が返す貼り付け用 `<script>` タグ — ADR 0021 |
 
 ## §4 Status values
 

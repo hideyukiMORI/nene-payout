@@ -261,11 +261,32 @@ export const ja: Partial<MessageCatalog> = {
   'admin.auditLogs.field.entity': '対象',
   'admin.auditLogs.field.createdAt': '日時',
 
+  // ── Admin: embeddable widget (settings) ───────────────────────────────────
+  'admin.widget.title': '埋め込みウィジェット',
+  'admin.widget.description':
+    'このコードを自社システムに貼り付けるとカード払いを受け付けられます。トークンは秘密にしてください（持っている人は当組織の請求書を操作できます）。',
+  'admin.widget.generate': '埋め込みコードを生成',
+  'admin.widget.copy': 'コピー',
+  'admin.widget.copied': 'コピーしました',
+  'admin.widget.generateFailed': '埋め込みコードを生成できませんでした。もう一度お試しください。',
+  'admin.widget.demoLink': 'サンプルページを開く（開発用）',
+  'admin.widget.demo.title': 'サンプル自社システム（デモ）',
+  'admin.widget.demo.description':
+    'ウィジェットを埋め込んだ自社システムを模した、開発専用の動作確認ページです。',
+  'admin.widget.demo.pay': '請求書をカードで支払う（モードA）',
+  'admin.widget.demo.manage': '請求書管理を開く（モードB）',
+  'admin.widget.demo.noToken': 'token がありません。設定画面のリンクから開いてください。',
+
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': '請求書の支払い',
   'widget.pay.amount': '金額: {{amount}}',
   'widget.pay.submit': '支払う',
   'widget.pay.processing': '決済処理中…',
+  'widget.pay.payee': '振込先',
+  'widget.pay.account': '振込先口座',
+  'widget.pay.redirecting': '決済画面へ移動します…',
   'widget.complete.success': '支払いが完了しました。',
   'widget.complete.failure': '支払いに失敗しました。',
+  'widget.manage.title': '請求書の支払い',
+  'widget.manage.empty': '支払い対象の請求書はありません。',
 }

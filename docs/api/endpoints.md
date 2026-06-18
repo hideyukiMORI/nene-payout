@@ -55,8 +55,10 @@ Phase 1; endpoints are added per `docs/development/endpoint-scaffold` discipline
 | `POST /api/v1/users/{id}/deactivate` | deactivateUser | bearer / org | ManageOrganizationSettings | soft |
 | `GET /api/v1/audit-logs` | listAuditLogs | bearer / org (superadmin cross) | — (admin) | filter entity/actor/action/date |
 | `POST /api/v1/webhooks/{gateway}` | receiveGatewayWebhook | signature | — | idempotent; updates payment + invoice |
-| `GET /api/v1/widget/context` | getWidgetContext | widget token | — | invoice summary + locale |
-| `POST /api/v1/widget/payments` | initiateWidgetPayment | widget token | — | initiate from widget |
+| `POST /api/v1/widget-tokens` | generateWidgetToken | bearer / org | ManageOrganizationSettings | issue org-scoped token + embed snippet |
+| `GET /api/v1/widget/context` | getWidgetContext | widget token | — | org name + locale + capabilities |
+| `POST /api/v1/widget/quick-payments` | initiateWidgetQuickPayment | widget token | — | Mode A: record host-passed invoice + payee, then pay |
+| `… /api/v1/widget/{received-invoices,vendors,payment-executions}…` | (reuses admin handlers) | widget token | — | Mode B: management surface mirrors admin endpoints under `/widget/` |
 
 ## Out of scope (by design)
 

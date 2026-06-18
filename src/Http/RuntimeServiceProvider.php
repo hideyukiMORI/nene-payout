@@ -35,6 +35,7 @@ use NenePayout\Organization\Resolution\OrgResolutionStrategyInterface;
 use NenePayout\Organization\Resolution\OrgResolverMiddleware;
 use NenePayout\Organization\Resolution\PathPrefixResolutionStrategy;
 use NenePayout\Organization\Resolution\SubdomainResolutionStrategy;
+use NenePayout\Widget\WidgetAuthMiddleware;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -258,6 +259,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
 
                     $bearerAuth = $container->get(BearerAuthMiddleware::class);
                     $capability = $container->get(CapabilityMiddleware::class);
+                    $widgetAuth = $container->get(WidgetAuthMiddleware::class);
 
                     if (!$bearerAuth instanceof BearerAuthMiddleware) {
                         throw new LogicException('Bearer auth middleware service is invalid.');
@@ -265,6 +267,10 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
 
                     if (!$capability instanceof CapabilityMiddleware) {
                         throw new LogicException('Capability middleware service is invalid.');
+                    }
+
+                    if (!$widgetAuth instanceof WidgetAuthMiddleware) {
+                        throw new LogicException('Widget auth middleware service is invalid.');
                     }
 
                     return new RuntimeApplicationFactory(
@@ -275,7 +281,7 @@ final readonly class RuntimeServiceProvider implements ServiceProviderInterface
                         domainExceptionHandlers: $exceptionHandlers,
                         requestIdHolder: $requestIdHolder,
                         routeRegistrars: $routeRegistrars,
-                        authMiddleware: [$orgResolver, $bearerAuth, $capability],
+                        authMiddleware: [$orgResolver, $bearerAuth, $capability, $widgetAuth],
                         healthChecks: [],
                         debug: $config->debug,
                         requestMaxBodyBytes: 10 * 1024 * 1024, // 10 MiB — allows received-invoice PDF uploads
