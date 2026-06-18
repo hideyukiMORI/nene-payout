@@ -780,10 +780,28 @@ paths:
             application/problem+json:
               schema: { $ref: '#/components/schemas/ProblemDetails' }
 
+  /api/v1/widget-tokens:
+    post:
+      operationId: generateWidgetToken
+      summary: Issue an organization-scoped widget token and embed snippet (admin)
+      description: >-
+        Protected by the normal auth + org + capability pipeline
+        (ManageOrganizationSettings). Returns a signed widget token and the
+        ready-to-paste `<script>` embed code (ADR 0021).
+      tags: [Widget]
+      responses:
+        '201':
+          description: Token issued
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WidgetTokenResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
   /api/v1/widget/context:
     get:
       operationId: getWidgetContext
-      summary: Resolve the widget payment context from a signed token
+      summary: Resolve the organization context from a signed widget token
       tags: [Widget]
       security: []
       parameters:
@@ -795,33 +813,37 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/WidgetContext' }
               example:
-                received_invoice_id: "01J9Z0INV0000000000000001"
-                amount: 100000
-                vendor_name: 仕入先株式会社
+                organization_id: "01J9Z0ORG0000000000000001"
+                organization_name: 取引先株式会社
                 locale: ja
+                capabilities: [manage_invoices, manage_vendors, initiate_payment, view_payments]
         '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
 
-  /api/v1/widget/payments:
+  /api/v1/widget/quick-payments:
     post:
-      operationId: initiateWidgetPayment
-      summary: Initiate payment from the embeddable widget (token-gated)
+      operationId: initiateWidgetQuickPayment
+      summary: Mode A — record the host-passed invoice + payee, then pay by card
+      description: >-
+        The host passes the payee (振込先) and amount; Payout records a received
+        invoice and vendor on the operator's own server, then initiates the
+        gateway-hosted card payment (ADR 0021, 0010, 0013).
       tags: [Widget]
       security: []
       parameters:
         - $ref: '#/components/parameters/WidgetTokenHeader'
       responses:
         '201':
-          description: Payment initiated
+          description: Invoice recorded and payment initiated
           content:
             application/json:
               schema: { $ref: '#/components/schemas/InitiatePaymentResponse' }
         '401': { $ref: '#/components/responses/Unauthorized' }
-        '409':
-          description: Invoice not payable in the current status
-          content:
-            application/problem+json:
-              schema: { $ref: '#/components/schemas/ProblemDetails' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  # Mode B management surface mirrors the admin endpoints under the /api/v1/widget/
+  # prefix (token-gated, no bearer): received-invoices (list/create/get/patch/void/
+  # pdf/payments), vendors (list/create/get/patch/deactivate), payment-executions
+  # (list/get). Shapes are identical to their admin counterparts (ADR 0021).
 
 components:
   securitySchemes:
@@ -873,7 +895,7 @@ components:
       name: X-Widget-Token
       in: header
       required: true
-      description: Signed, server-validated widget token carrying the org + invoice context.
+      description: Signed, server-validated organization-scoped widget token (ADR 0021).
       schema: { type: string }
 
   responses:
@@ -1272,9 +1294,21 @@ components:
 
     WidgetContext:
       type: object
+      description: Bootstrap context for the embedded widget shell (org-scoped token).
       properties:
-        received_invoice_id: { type: string }
-        amount: { type: integer, format: int64 }
-        vendor_name: { type: string }
+        organization_id: { type: string }
+        organization_name: { type: string, nullable: true }
         locale: { $ref: '#/components/schemas/SupportedLocale' }
-      required: [received_invoice_id, amount, locale]
+        capabilities:
+          type: array
+          items: { type: string }
+      required: [organization_id, locale, capabilities]
+
+    WidgetTokenResponse:
+      type: object
+      description: An issued widget token plus the ready-to-paste embed snippet.
+      properties:
+        token: { type: string }
+        expires_at: { type: string, format: date-time }
+        embed_snippet: { type: string }
+      required: [token, expires_at, embed_snippet]

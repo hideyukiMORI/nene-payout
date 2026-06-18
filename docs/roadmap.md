@@ -56,7 +56,7 @@ pass `docs/review/compliance.md`.
 - [x] Invoice PDF upload UI (multipart postForm, upload-invoice-pdf feature, client type/size validation — Issue #76)
 - [x] Detail screens (DetailList + formatDateTime; vendor/invoice/payment detail views with list links — Issue #78)
 - [ ] React admin UI (remaining: dashboard/settings/audit-log screens)
-- [ ] Embeddable payment widget (script tag embed)
+- [x] Embeddable payment widget (script tag embed) — two modes (host-passed pay + embedded management), org-scoped token, host JS API (ADR 0021, Issue #122)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
 - [x] ja / en i18n foundation (shared/i18n catalogs, instant switch, key-parity test — Issue #44); screens pending
