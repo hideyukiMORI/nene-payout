@@ -24,6 +24,7 @@ import { UserEditPage } from '@/pages/users/UserEditPage'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ForbiddenPage } from '@/pages/forbidden/ForbiddenPage'
+import { WidgetDemoPage } from '@/pages/widget-demo/WidgetDemoPage'
 import { AuthGate } from './auth-gate'
 import { RequireCapability } from './require-capability'
 import { AppLayout } from './layout/AppLayout'
@@ -33,6 +34,8 @@ export function AppRoutes() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forbidden" element={<ForbiddenPage />} />
+      {/* Dev-only host-page demo for trying the embedded widget; linked from settings in dev. */}
+      <Route path="/widget-demo" element={<WidgetDemoPage />} />
       <Route
         element={
           <AuthGate>

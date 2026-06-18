@@ -67,6 +67,17 @@ export function GenerateWidgetEmbed() {
                 {copied ? t('admin.widget.copied') : t('admin.widget.copy')}
               </Button>
             </div>
+
+            {import.meta.env.DEV && (
+              <a
+                href={`/widget-demo?token=${encodeURIComponent(generate.data?.token ?? '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="font-sans text-body text-accent underline"
+              >
+                {t('admin.widget.demoLink')}
+              </a>
+            )}
           </div>
         )}
       </div>

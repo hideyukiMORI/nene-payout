@@ -269,6 +269,13 @@ export const ja: Partial<MessageCatalog> = {
   'admin.widget.copy': 'コピー',
   'admin.widget.copied': 'コピーしました',
   'admin.widget.generateFailed': '埋め込みコードを生成できませんでした。もう一度お試しください。',
+  'admin.widget.demoLink': 'サンプルページを開く（開発用）',
+  'admin.widget.demo.title': 'サンプル自社システム（デモ）',
+  'admin.widget.demo.description':
+    'ウィジェットを埋め込んだ自社システムを模した、開発専用の動作確認ページです。',
+  'admin.widget.demo.pay': '請求書をカードで支払う（モードA）',
+  'admin.widget.demo.manage': '請求書管理を開く（モードB）',
+  'admin.widget.demo.noToken': 'token がありません。設定画面のリンクから開いてください。',
 
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': '請求書の支払い',

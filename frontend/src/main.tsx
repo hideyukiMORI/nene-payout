@@ -11,7 +11,8 @@ if (root === null) {
 }
 
 // The embeddable widget is a separate, standalone surface served at /widget
-// (loaded by widget.js in an iframe); every other path is the admin app.
-const isWidget = window.location.pathname.startsWith('/widget')
+// (loaded by widget.js in an iframe); every other path — including the dev-only
+// /widget-demo host page — is the admin app.
+const isWidget = window.location.pathname === '/widget'
 
 createRoot(root).render(<StrictMode>{isWidget ? <WidgetApp /> : <App />}</StrictMode>)
