@@ -74,7 +74,7 @@
             "dist": {
                 "type": "path",
                 "url": "../NENE2",
-                "reference": "e141e341e9b0118fa52a401716c690445c78b551"
+                "reference": "a20a052aeb4601d997bbc9903847bce759ea72bc"
             },
             "require": {
                 "monolog/monolog": "^3.0",
@@ -1944,16 +1944,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.6",
+            "version": "v3.95.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "804e6c9488a836ccb4a34984c6415ac56dc6554c"
+                "reference": "93e1ab3e1f153024bd3ab23c8a349556063c6f17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/804e6c9488a836ccb4a34984c6415ac56dc6554c",
-                "reference": "804e6c9488a836ccb4a34984c6415ac56dc6554c",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/93e1ab3e1f153024bd3ab23c8a349556063c6f17",
+                "reference": "93e1ab3e1f153024bd3ab23c8a349556063c6f17",
                 "shasum": ""
             },
             "require": {
@@ -2037,7 +2037,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.6"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.10"
             },
             "funding": [
                 {
@@ -2045,7 +2045,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-13T13:24:51+00:00"
+            "time": "2026-06-19T14:45:22+00:00"
         },
         {
             "name": "league/container",
