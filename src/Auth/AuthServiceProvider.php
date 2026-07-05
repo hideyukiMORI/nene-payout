@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace NenePayout\Auth;
 
 use LogicException;
+use Nene2\Auth\GuardedJwtSecretResolver;
 use Nene2\Auth\LocalBearerTokenVerifier;
 use Nene2\Auth\TokenIssuerInterface;
 use Nene2\Auth\TokenVerifierInterface;
 use Nene2\Config\AppConfig;
-use Nene2\Config\AppEnvironment;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
@@ -22,8 +22,9 @@ final readonly class AuthServiceProvider implements ServiceProviderInterface
 {
     /**
      * Development-only fallback secret, used **only** in local/test when
-     * NENE2_LOCAL_JWT_SECRET is unset. Production must set its own secret —
-     * see {@see self::resolveJwtSecret()}. This value is not secret, so signing
+     * NENE2_LOCAL_JWT_SECRET is unset and the operator opts in via
+     * NENE2_ALLOW_DEV_SECRET. Production ignores this value entirely — see
+     * {@see GuardedJwtSecretResolver}. This value is not secret, so signing
      * real tokens with it would be a full authentication bypass.
      */
     private const DEFAULT_DEV_SECRET = 'nene-payout-dev-secret';
@@ -40,7 +41,9 @@ final readonly class AuthServiceProvider implements ServiceProviderInterface
                         throw new LogicException('Application config service is invalid.');
                     }
 
-                    return new LocalBearerTokenVerifier(self::resolveJwtSecret($config));
+                    return new LocalBearerTokenVerifier(
+                        GuardedJwtSecretResolver::fromConfig($config, self::DEFAULT_DEV_SECRET),
+                    );
                 },
             )
             ->set(
@@ -188,32 +191,5 @@ final readonly class AuthServiceProvider implements ServiceProviderInterface
                     return new CapabilityMiddleware($problemDetails);
                 },
             );
-    }
-
-    /**
-     * Resolves the HMAC secret for local bearer tokens, failing closed.
-     *
-     * The same secret signs operator and service tokens, so a predictable value
-     * is a full authentication bypass (a forged superadmin token). In production
-     * the secret is therefore mandatory: if NENE2_LOCAL_JWT_SECRET is unset (or
-     * empty) we refuse to boot rather than silently fall back to the public dev
-     * constant. Local/test may use the dev fallback for convenience.
-     */
-    private static function resolveJwtSecret(AppConfig $config): string
-    {
-        $secret = $config->localJwtSecret;
-
-        if ($secret !== null && $secret !== '') {
-            return $secret;
-        }
-
-        if ($config->environment === AppEnvironment::Production) {
-            throw new LogicException(
-                'NENE2_LOCAL_JWT_SECRET must be set in production. '
-                . 'Generate one with: php -r "echo bin2hex(random_bytes(32));"',
-            );
-        }
-
-        return self::DEFAULT_DEV_SECRET;
     }
 }
