@@ -6,10 +6,10 @@ namespace NenePayout\ReceivedInvoice;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Http\RuntimeServiceProvider;
 use NenePayout\ReceivedInvoice\Pdf\LocalPdfStorage;
 use NenePayout\ReceivedInvoice\Pdf\PdfStorageInterface;
@@ -45,7 +45,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                     self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )
@@ -56,7 +56,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                     self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )
@@ -66,7 +66,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                     self::service($c, ReceivedInvoiceRepositoryInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )
@@ -81,7 +81,7 @@ final readonly class ReceivedInvoiceServiceProvider implements ServiceProviderIn
                     self::service($c, PdfStorageInterface::class),
                     self::tx($c),
                     self::invoicesFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )

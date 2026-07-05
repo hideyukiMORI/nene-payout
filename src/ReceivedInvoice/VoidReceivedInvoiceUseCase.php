@@ -5,23 +5,24 @@ declare(strict_types=1);
 namespace NenePayout\ReceivedInvoice;
 
 use Closure;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
+use NenePayout\Support\Ulid;
 
 final readonly class VoidReceivedInvoiceUseCase implements VoidReceivedInvoiceUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): ReceivedInvoiceRepositoryInterface $invoicesFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
         private ReceivedInvoiceRepositoryInterface $invoices,
         private DatabaseTransactionManagerInterface $tx,
         private Closure $invoicesFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -59,15 +60,16 @@ final readonly class VoidReceivedInvoiceUseCase implements VoidReceivedInvoiceUs
             $invoices->update($voided);
 
             // Soft void: `after` is null (ADR 0011).
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'received_invoice.voided',
-                'received_invoice',
-                $id,
-                ReceivedInvoiceResponse::toArray($existing),
-                null,
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'received_invoice.voided',
+                entityType: 'received_invoice',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: ReceivedInvoiceResponse::toArray($existing),
+                after: null,
+                id: Ulid::generate(),
+            ));
 
             return $voided;
         });

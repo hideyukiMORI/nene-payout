@@ -34,7 +34,7 @@ final readonly class ListAuditLogsHandler
         $result = $this->useCase->execute($filter, $pagination->limit, $pagination->offset);
 
         return $this->response->create((new PaginationResponse(
-            items: array_map(static fn (AuditLog $log): array => AuditLogResponse::toArray($log), $result->items),
+            items: array_map(static fn (AuditLogView $view): array => AuditLogResponse::toArray($view), $result->items),
             limit: $pagination->limit,
             offset: $pagination->offset,
             total: $result->total,

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace NenePayout\Payment;
 
 use Closure;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\ClockInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Payment\Gateway\ChargeRequest;
 use NenePayout\Payment\Gateway\PaymentGatewayInterface;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundException;
@@ -22,7 +23,6 @@ final readonly class InitiatePaymentUseCase implements InitiatePaymentUseCaseInt
     /**
      * @param Closure(DatabaseQueryExecutorInterface): PaymentExecutionRepositoryInterface $paymentsFactory
      * @param Closure(DatabaseQueryExecutorInterface): ReceivedInvoiceRepositoryInterface $invoicesFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
@@ -31,7 +31,7 @@ final readonly class InitiatePaymentUseCase implements InitiatePaymentUseCaseInt
         private DatabaseTransactionManagerInterface $tx,
         private Closure $paymentsFactory,
         private Closure $invoicesFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
         private ClockInterface $clock,
     ) {
@@ -77,15 +77,16 @@ final readonly class InitiatePaymentUseCase implements InitiatePaymentUseCaseInt
             ($this->paymentsFactory)($exec)->save($payment);
             ($this->invoicesFactory)($exec)->updateStatus($input->receivedInvoiceId, ReceivedInvoiceStatus::Processing->value);
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'payment.initiated',
-                'payment_execution',
-                $payment->id,
-                null,
-                PaymentExecutionResponse::toArray($payment),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'payment.initiated',
+                entityType: 'payment_execution',
+                entityId: $payment->id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: null,
+                after: PaymentExecutionResponse::toArray($payment),
+                id: Ulid::generate(),
+            ));
         });
 
         return new InitiatePaymentOutput(

@@ -7,7 +7,7 @@ namespace NenePayout\Audit;
 final readonly class ListAuditLogsUseCase implements ListAuditLogsUseCaseInterface
 {
     public function __construct(
-        private AuditLogRepositoryInterface $repository,
+        private AuditReadRepositoryInterface $repository,
     ) {
     }
 

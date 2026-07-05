@@ -6,19 +6,20 @@ namespace NenePayout\ReceivedInvoice;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
 use Nene2\Validation\ValidationError;
 use Nene2\Validation\ValidationException;
-use NenePayout\Audit\AuditRecorderInterface;
+use NenePayout\Support\Ulid;
 use NenePayout\Vendor\VendorRepositoryInterface;
 
 final readonly class UpdateReceivedInvoiceUseCase implements UpdateReceivedInvoiceUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): ReceivedInvoiceRepositoryInterface $invoicesFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
@@ -26,7 +27,7 @@ final readonly class UpdateReceivedInvoiceUseCase implements UpdateReceivedInvoi
         private VendorRepositoryInterface $vendors,
         private DatabaseTransactionManagerInterface $tx,
         private Closure $invoicesFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -71,15 +72,16 @@ final readonly class UpdateReceivedInvoiceUseCase implements UpdateReceivedInvoi
                 throw new LogicException('Received invoice disappeared immediately after update.');
             }
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'received_invoice.updated',
-                'received_invoice',
-                $id,
-                ReceivedInvoiceResponse::toArray($existing),
-                ReceivedInvoiceResponse::toArray($updated),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'received_invoice.updated',
+                entityType: 'received_invoice',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: ReceivedInvoiceResponse::toArray($existing),
+                after: ReceivedInvoiceResponse::toArray($updated),
+                id: Ulid::generate(),
+            ));
 
             return $updated;
         });

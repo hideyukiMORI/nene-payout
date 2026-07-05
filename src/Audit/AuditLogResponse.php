@@ -9,20 +9,24 @@ final class AuditLogResponse
     /**
      * @return array<string, mixed>
      */
-    public static function toArray(AuditLog $log): array
+    public static function toArray(AuditLogView $view): array
     {
+        $event = $view->event;
+
         return [
-            'id'              => $log->id,
-            'actor_user_id'   => $log->actorUserId,
-            'organization_id' => $log->organizationId,
-            'action'          => $log->action,
-            'entity_type'     => $log->entityType,
-            'entity_id'       => $log->entityId,
-            'before_json'     => $log->before,
-            'after_json'      => $log->after,
-            'request_id'      => $log->requestId,
-            'created_at'      => $log->createdAt,
-            'actor_email'     => $log->actorEmail,
+            'id'              => $event->id,
+            'actor_user_id'   => $event->actorId,
+            'organization_id' => $event->organizationId,
+            'action'          => $event->action,
+            'entity_type'     => $event->entityType,
+            'entity_id'       => $event->entityId,
+            'before_json'     => $event->before,
+            'after_json'      => $event->after,
+            // request_id lives in the framework `metadata` receptacle, mapped to
+            // the physical `request_id` column via AuditTableConfig (ADR 0014).
+            'request_id'      => $event->metadata['request_id'] ?? null,
+            'created_at'      => $event->occurredAt,
+            'actor_email'     => $view->actorEmail,
         ];
     }
 }

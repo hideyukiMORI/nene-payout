@@ -6,10 +6,11 @@ namespace NenePayout\User;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Auth\User;
 use NenePayout\Support\Ulid;
 
@@ -17,13 +18,12 @@ final readonly class CreateUserUseCase implements CreateUserUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): UserRepositoryInterface $usersFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
         private DatabaseTransactionManagerInterface $tx,
         private Closure $usersFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -56,15 +56,16 @@ final readonly class CreateUserUseCase implements CreateUserUseCaseInterface
                 throw new LogicException('User disappeared immediately after creation.');
             }
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'user.created',
-                'user',
-                $id,
-                null,
-                UserResponse::toArray($created),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'user.created',
+                entityType: 'user',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: null,
+                after: UserResponse::toArray($created),
+                id: Ulid::generate(),
+            ));
 
             return $created;
         });
