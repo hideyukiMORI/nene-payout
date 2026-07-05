@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Tests\ReceivedInvoice;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
 use Nene2\Validation\ValidationException;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\ReceivedInvoice\CreateReceivedInvoiceInput;
 use NenePayout\ReceivedInvoice\CreateReceivedInvoiceUseCase;
 use NenePayout\ReceivedInvoice\InvoiceNotEditableException;
@@ -17,7 +16,7 @@ use NenePayout\ReceivedInvoice\ReceivedInvoice;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRepositoryInterface;
 use NenePayout\ReceivedInvoice\UpdateReceivedInvoiceInput;
 use NenePayout\ReceivedInvoice\UpdateReceivedInvoiceUseCase;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
 use NenePayout\Tests\Vendor\InMemoryVendorRepository;
@@ -26,14 +25,14 @@ use PHPUnit\Framework\TestCase;
 
 final class ReceivedInvoiceUseCaseTest extends TestCase
 {
-    private InMemoryAuditLogRepository $auditRepo;
+    private InMemoryAuditRecorderFactory $auditRepo;
 
     /** @var RequestScopedHolder<string> */
     private RequestScopedHolder $orgId;
 
     protected function setUp(): void
     {
-        $this->auditRepo = new InMemoryAuditLogRepository();
+        $this->auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
         $holder->set('01ORG00000000000000000001');
@@ -46,12 +45,9 @@ final class ReceivedInvoiceUseCaseTest extends TestCase
         return static fn (DatabaseQueryExecutorInterface $exec): ReceivedInvoiceRepositoryInterface => $repo;
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(): Closure
+    private function auditFactory(): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($this->auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $this->auditRepo;
     }
 
     private function vendors(): InMemoryVendorRepository

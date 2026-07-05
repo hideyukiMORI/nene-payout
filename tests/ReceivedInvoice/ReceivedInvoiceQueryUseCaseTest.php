@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace NenePayout\Tests\ReceivedInvoice;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\ReceivedInvoice\GetReceivedInvoiceUseCase;
 use NenePayout\ReceivedInvoice\InvoiceNotEditableException;
 use NenePayout\ReceivedInvoice\ListReceivedInvoicesUseCase;
@@ -17,7 +16,7 @@ use NenePayout\ReceivedInvoice\ReceivedInvoiceFilter;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundException;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRepositoryInterface;
 use NenePayout\ReceivedInvoice\VoidReceivedInvoiceUseCase;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
 use PHPUnit\Framework\TestCase;
@@ -88,15 +87,12 @@ final class ReceivedInvoiceQueryUseCaseTest extends TestCase
         return static fn (DatabaseQueryExecutorInterface $exec): ReceivedInvoiceRepositoryInterface => $repo;
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(InMemoryAuditLogRepository $auditRepo): Closure
+    private function auditFactory(InMemoryAuditRecorderFactory $auditRepo): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $auditRepo;
     }
 
-    private function voidUseCase(InMemoryReceivedInvoiceRepository $repo, InMemoryAuditLogRepository $auditRepo): VoidReceivedInvoiceUseCase
+    private function voidUseCase(InMemoryReceivedInvoiceRepository $repo, InMemoryAuditRecorderFactory $auditRepo): VoidReceivedInvoiceUseCase
     {
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
@@ -114,7 +110,7 @@ final class ReceivedInvoiceQueryUseCaseTest extends TestCase
     public function test_void_pending_invoice_records_audit_with_null_after(): void
     {
         $repo = new InMemoryReceivedInvoiceRepository($this->invoice('01A', 'pending'));
-        $auditRepo = new InMemoryAuditLogRepository();
+        $auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
 
         $voided = $this->voidUseCase($repo, $auditRepo)->execute('01USER', '01A');
 
@@ -127,7 +123,7 @@ final class ReceivedInvoiceQueryUseCaseTest extends TestCase
     public function test_void_rejected_when_not_pending(): void
     {
         $repo = new InMemoryReceivedInvoiceRepository($this->invoice('01A', 'processing'));
-        $auditRepo = new InMemoryAuditLogRepository();
+        $auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
 
         $this->expectException(InvoiceNotEditableException::class);
         $this->voidUseCase($repo, $auditRepo)->execute('01USER', '01A');
@@ -136,7 +132,7 @@ final class ReceivedInvoiceQueryUseCaseTest extends TestCase
     public function test_void_missing_invoice_throws_not_found(): void
     {
         $repo = new InMemoryReceivedInvoiceRepository();
-        $auditRepo = new InMemoryAuditLogRepository();
+        $auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
 
         $this->expectException(ReceivedInvoiceNotFoundException::class);
         $this->voidUseCase($repo, $auditRepo)->execute('01USER', 'missing');

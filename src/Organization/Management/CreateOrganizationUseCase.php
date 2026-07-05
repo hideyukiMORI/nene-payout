@@ -6,9 +6,10 @@ namespace NenePayout\Organization\Management;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Organization\Organization;
 use NenePayout\Organization\OrganizationRepositoryInterface;
 use NenePayout\Organization\OrganizationResponse;
@@ -18,12 +19,11 @@ final readonly class CreateOrganizationUseCase implements CreateOrganizationUseC
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): OrganizationRepositoryInterface $organizationsFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      */
     public function __construct(
         private DatabaseTransactionManagerInterface $tx,
         private Closure $organizationsFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
     ) {
     }
 
@@ -57,15 +57,16 @@ final readonly class CreateOrganizationUseCase implements CreateOrganizationUseC
             }
 
             // Audit is scoped to the target organization (the one created).
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $id,
-                'organization.created',
-                'organization',
-                $id,
-                null,
-                OrganizationResponse::toArray($created),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'organization.created',
+                entityType: 'organization',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $id,
+                before: null,
+                after: OrganizationResponse::toArray($created),
+                id: Ulid::generate(),
+            ));
 
             return $created;
         });

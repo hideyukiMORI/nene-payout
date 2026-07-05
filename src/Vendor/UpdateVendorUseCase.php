@@ -6,23 +6,24 @@ namespace NenePayout\Vendor;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
+use NenePayout\Support\Ulid;
 
 final readonly class UpdateVendorUseCase implements UpdateVendorUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): VendorRepositoryInterface $vendorsFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
         private VendorRepositoryInterface $vendors,
         private DatabaseTransactionManagerInterface $tx,
         private Closure $vendorsFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -59,15 +60,16 @@ final readonly class UpdateVendorUseCase implements UpdateVendorUseCaseInterface
                 throw new LogicException('Vendor disappeared immediately after update.');
             }
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'vendor.updated',
-                'vendor',
-                $id,
-                VendorResponse::toArray($existing),
-                VendorResponse::toArray($updated),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'vendor.updated',
+                entityType: 'vendor',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: VendorResponse::toArray($existing),
+                after: VendorResponse::toArray($updated),
+                id: Ulid::generate(),
+            ));
 
             return $updated;
         });

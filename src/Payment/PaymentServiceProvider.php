@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Payment;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Payment\Gateway\PaymentGatewayInterface;
 use NenePayout\Payment\Gateway\StubGatewayAdapter;
 use NenePayout\ReceivedInvoice\PdoReceivedInvoiceRepository;
@@ -51,7 +51,7 @@ final readonly class PaymentServiceProvider implements ServiceProviderInterface
                     self::tx($c),
                     self::paymentsFactory($c),
                     self::invoicesFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                     self::clock($c),
                 ),

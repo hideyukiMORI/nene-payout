@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Organization\Management;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Organization\OrganizationRepositoryInterface;
 use NenePayout\Organization\PdoOrganizationRepository;
 use NenePayout\Support\ServiceProviderSupport;
@@ -40,7 +40,7 @@ final readonly class OrganizationManagementServiceProvider implements ServicePro
                 static fn (ContainerInterface $c): CreateOrganizationUseCase => new CreateOrganizationUseCase(
                     self::tx($c),
                     self::organizationsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                 ),
             )
             ->set(
@@ -49,7 +49,7 @@ final readonly class OrganizationManagementServiceProvider implements ServicePro
                     self::service($c, OrganizationRepositoryInterface::class),
                     self::tx($c),
                     self::organizationsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                 ),
             )
             ->set(
@@ -58,7 +58,7 @@ final readonly class OrganizationManagementServiceProvider implements ServicePro
                     self::service($c, OrganizationRepositoryInterface::class),
                     self::tx($c),
                     self::organizationsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                 ),
             )
             ->set(

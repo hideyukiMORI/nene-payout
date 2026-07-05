@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace NenePayout\Tests\ReceivedInvoice;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\ReceivedInvoice\AttachReceivedInvoicePdfUseCase;
 use NenePayout\ReceivedInvoice\Pdf\PdfStorageInterface;
 use NenePayout\ReceivedInvoice\ReceivedInvoice;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundException;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRepositoryInterface;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -23,14 +22,14 @@ use Psr\Http\Message\UploadedFileInterface;
 
 final class AttachReceivedInvoicePdfUseCaseTest extends TestCase
 {
-    private InMemoryAuditLogRepository $auditRepo;
+    private InMemoryAuditRecorderFactory $auditRepo;
 
     /** @var RequestScopedHolder<string> */
     private RequestScopedHolder $orgId;
 
     protected function setUp(): void
     {
-        $this->auditRepo = new InMemoryAuditLogRepository();
+        $this->auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
         $holder->set('01ORG00000000000000000001');
@@ -43,12 +42,9 @@ final class AttachReceivedInvoicePdfUseCaseTest extends TestCase
         return static fn (DatabaseQueryExecutorInterface $exec): ReceivedInvoiceRepositoryInterface => $repo;
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(): Closure
+    private function auditFactory(): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($this->auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $this->auditRepo;
     }
 
     private function storage(): PdfStorageInterface
