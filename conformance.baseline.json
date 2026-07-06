@@ -1,0 +1,11 @@
+{
+    "version": 1,
+    "allow": [
+        {
+            "rule": "D4",
+            "file": "src/Support/Ulid.php",
+            "reason": "Ulid::generate() is the ID primitive; its 48-bit millisecond prefix IS the wall clock by definition (same category as a ClockInterface implementation, which D4 excludes). generate(?int $timeMs) already accepts an injected timestamp for test determinism, so no ClockInterface dependency is warranted."
+        }
+    ],
+    "ignore": []
+}
