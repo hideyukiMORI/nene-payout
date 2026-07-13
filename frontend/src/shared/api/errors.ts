@@ -39,16 +39,3 @@ export class AppError extends Error {
     return this.status >= 500 || this.status === 429
   }
 }
-
-export async function parseProblemDetails(response: Response): Promise<AppError> {
-  try {
-    const body = (await response.json()) as ProblemDetails
-    return new AppError({ ...body, status: body.status })
-  } catch {
-    return new AppError({
-      type: 'about:blank',
-      title: response.statusText !== '' ? response.statusText : 'Request failed',
-      status: response.status,
-    })
-  }
-}
