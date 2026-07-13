@@ -71,3 +71,7 @@ docker compose up
 Fixed and unique to avoid collisions with sibling apps. Do **not** reuse sibling ports.
 See [`docs/development/local-ports.md`](./docs/development/local-ports.md) and the
 [nene-playbook port registry](https://github.com/hideyukiMORI/nene-playbook).
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
