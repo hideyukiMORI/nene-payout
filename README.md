@@ -2,7 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php)](https://www.php.net/)
-[![Status: Phase 1](https://img.shields.io/badge/status-phase%201-yellowgreen)]()
 
 **Pay vendor invoices by credit card — self-hosted on NENE2.**
 
@@ -35,6 +34,22 @@ Built on [NENE2](https://github.com/hideyukiMORI/NENE2), runs on shared hosting 
 - **Self-hosted OSS** — MIT; Tier A shared hosting or Tier B Docker/VPS
 - **Full data ownership** — all invoice and payment data stays on your server
 - **Optional links** — HTTP reference to Invoice/Clear entities; **no shared DB**
+
+## Status
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| 0 | Governance + product docs | ✅ |
+| 1 | Core payment API — auth, multi-tenancy, vendors, received invoices, payment execution (stub gateway), user & organization management | 🔄 In progress |
+| 2 | Admin UI (React) — vendors/invoices/payments/users/org settings, dashboard, audit log, ja/en | 🔄 In progress |
+| 3 | Tier A shared hosting — installer, release ZIP, operator guide | 🔲 |
+| 4 | Extended gateways + ecosystem integration (nene-vault link, nene-invoice vendor cross-reference) | 🔲 |
+
+Remaining Phase 1 work: Stripe adapter → webhook (payment result) → gateway-settings admin
+panel, then fee/refund/chargeback accounting (gated on 税理士/会計士 sign-off, ADR 0015), and
+superadmin cross-organization management (`/api/v1/organizations`, contract-only so far).
+Remaining Phase 2 work: embeddable payment widget, CSS variable customization, gateway
+configuration + connectivity-check panel. Details: [`docs/todo/current.md`](./docs/todo/current.md).
 
 ## Documentation (read first)
 
