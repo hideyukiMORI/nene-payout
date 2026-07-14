@@ -15,7 +15,7 @@ export function Button({ variant = 'primary', children, type = 'button', ...rest
   return (
     <button
       type={type}
-      className={`rounded-x-md px-x-inline-md py-x-stack-sm font-sans text-body font-medium ${VARIANT_CLASS[variant]}`}
+      className={`rounded-x-md px-x-inline-md py-x-stack-sm font-sans font-medium ${VARIANT_CLASS[variant]}`}
       {...rest}
     >
       {children}

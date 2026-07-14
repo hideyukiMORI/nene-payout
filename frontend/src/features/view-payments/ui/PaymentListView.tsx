@@ -49,10 +49,7 @@ function PaymentListBody({ state }: PaymentListViewProps) {
         <ul>
           {state.payments.map((payment) => (
             <li key={payment.id} className="border-b border-border py-x-stack-sm">
-              <Link
-                to={`/payments/${payment.id}`}
-                className="font-sans text-body font-medium text-accent"
-              >
+              <Link to={`/payments/${payment.id}`} className="font-sans font-medium text-accent">
                 {formatJpy(payment.amount, locale)}
               </Link>
               <Text tone="muted">

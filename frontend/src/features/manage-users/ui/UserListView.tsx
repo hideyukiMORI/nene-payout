@@ -18,7 +18,7 @@ export function UserListView({ state }: UserListViewProps) {
         actions={
           <Link
             to="/users/new"
-            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
           >
             {t('admin.users.actions.invite')}
           </Link>
@@ -54,20 +54,14 @@ function UserListBody({ state }: UserListViewProps) {
               className="flex items-center justify-between border-b border-border py-x-stack-sm"
             >
               <div>
-                <Link
-                  to={`/users/${user.id}`}
-                  className="font-sans text-body font-medium text-accent"
-                >
+                <Link to={`/users/${user.id}`} className="font-sans font-medium text-accent">
                   {user.email}
                 </Link>
                 <Text tone="muted">
                   {t(ROLE_LABEL_KEY[user.role])} · {t(STATUS_LABEL_KEY[user.status])}
                 </Text>
               </div>
-              <Link
-                to={`/users/${user.id}/edit`}
-                className="font-sans text-body font-medium text-accent"
-              >
+              <Link to={`/users/${user.id}/edit`} className="font-sans font-medium text-accent">
                 {t('common.actions.edit')}
               </Link>
             </li>

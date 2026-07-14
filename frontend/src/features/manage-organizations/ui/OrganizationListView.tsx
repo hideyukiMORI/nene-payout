@@ -18,7 +18,7 @@ export function OrganizationListView({ state }: OrganizationListViewProps) {
         actions={
           <Link
             to="/organizations/new"
-            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
           >
             {t('admin.organizations.actions.new')}
           </Link>
@@ -56,7 +56,7 @@ function OrganizationListBody({ state }: OrganizationListViewProps) {
               <div>
                 <Link
                   to={`/organizations/${organization.id}`}
-                  className="font-sans text-body font-medium text-accent"
+                  className="font-sans font-medium text-accent"
                 >
                   {organization.name}
                 </Link>
@@ -66,7 +66,7 @@ function OrganizationListBody({ state }: OrganizationListViewProps) {
               </div>
               <Link
                 to={`/organizations/${organization.id}/edit`}
-                className="font-sans text-body font-medium text-accent"
+                className="font-sans font-medium text-accent"
               >
                 {t('common.actions.edit')}
               </Link>

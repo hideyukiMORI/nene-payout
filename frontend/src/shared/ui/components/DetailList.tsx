@@ -21,8 +21,8 @@ export function DetailList({ rows }: DetailListProps) {
           key={row.label}
           className="flex flex-col gap-x-inline-sm border-b border-border py-x-stack-sm"
         >
-          <dt className="font-sans text-body font-medium text-text-muted">{row.label}</dt>
-          <dd className="font-sans text-body text-text-primary">{row.value}</dd>
+          <dt className="font-sans font-medium text-text-muted">{row.label}</dt>
+          <dd className="font-sans text-text-primary">{row.value}</dd>
         </div>
       ))}
     </dl>
