@@ -27,7 +27,7 @@ export function InvoiceListView({ state }: InvoiceListViewProps) {
         actions={
           <Link
             to="/received-invoices/new"
-            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
           >
             {t('admin.receivedInvoices.actions.new')}
           </Link>
@@ -65,7 +65,7 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
               <div>
                 <Link
                   to={`/received-invoices/${invoice.id}`}
-                  className="font-sans text-body font-medium text-accent"
+                  className="font-sans font-medium text-accent"
                 >
                   {formatJpy(invoice.amount, locale)}
                 </Link>
@@ -77,7 +77,7 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
               <div className="flex items-center gap-x-inline-md">
                 <Link
                   to={`/received-invoices/${invoice.id}/pdf`}
-                  className="font-sans text-body font-medium text-accent"
+                  className="font-sans font-medium text-accent"
                 >
                   {t('admin.receivedInvoices.uploadPdf')}
                 </Link>
@@ -85,13 +85,13 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
                   <>
                     <Link
                       to={`/received-invoices/${invoice.id}/edit`}
-                      className="font-sans text-body font-medium text-accent"
+                      className="font-sans font-medium text-accent"
                     >
                       {t('common.actions.edit')}
                     </Link>
                     <Link
                       to={`/received-invoices/${invoice.id}/pay`}
-                      className="font-sans text-body font-medium text-accent"
+                      className="font-sans font-medium text-accent"
                     >
                       {t('admin.payments.initiate')}
                     </Link>

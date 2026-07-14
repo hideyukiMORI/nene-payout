@@ -17,7 +17,7 @@ export function VendorListView({ state }: VendorListViewProps) {
         actions={
           <Link
             to="/vendors/new"
-            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
           >
             {t('admin.vendors.actions.new')}
           </Link>
@@ -53,20 +53,14 @@ function VendorListBody({ state }: VendorListViewProps) {
               className="flex items-center justify-between border-b border-border py-x-stack-sm"
             >
               <div>
-                <Link
-                  to={`/vendors/${vendor.id}`}
-                  className="font-sans text-body font-medium text-accent"
-                >
+                <Link to={`/vendors/${vendor.id}`} className="font-sans font-medium text-accent">
                   {vendor.name}
                 </Link>
                 <Text tone="muted">
                   {vendor.bankCode}-{vendor.branchCode} {vendor.accountNumber}
                 </Text>
               </div>
-              <Link
-                to={`/vendors/${vendor.id}/edit`}
-                className="font-sans text-body font-medium text-accent"
-              >
+              <Link to={`/vendors/${vendor.id}/edit`} className="font-sans font-medium text-accent">
                 {t('common.actions.edit')}
               </Link>
             </li>
