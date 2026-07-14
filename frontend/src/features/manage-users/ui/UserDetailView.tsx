@@ -18,14 +18,14 @@ export function UserDetailView({ userId }: UserDetailViewProps) {
   const deactivate = useDeactivateUser()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.users.detailTitle')}
         actions={
           query.isSuccess ? (
             <Link
               to={`/users/${userId}/edit`}
-              className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>
@@ -43,7 +43,7 @@ export function UserDetailView({ userId }: UserDetailViewProps) {
           }}
         />
       ) : (
-        <div className="flex flex-col gap-stack-md">
+        <div className="flex flex-col gap-x-stack-md">
           <DetailList
             rows={[
               { label: t('admin.users.field.email'), value: query.data.email },

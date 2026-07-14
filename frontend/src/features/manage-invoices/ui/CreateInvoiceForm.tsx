@@ -14,7 +14,7 @@ export function CreateInvoiceForm() {
   const mutation = useCreateReceivedInvoice()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.receivedInvoices.newTitle')} />
       {vendorsQuery.isPending ? (
         <Spinner label={t('common.state.loading')} />

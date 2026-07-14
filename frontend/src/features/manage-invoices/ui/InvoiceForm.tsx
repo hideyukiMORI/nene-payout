@@ -58,7 +58,7 @@ export function InvoiceForm({
           onSubmit(formValuesToCreateInput(values))
         })(event)
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField
         id="invoice-vendor"
@@ -122,13 +122,13 @@ export function InvoiceForm({
         <Input id="invoice-vault-url" {...register('vaultDocumentUrl')} />
       </FormField>
 
-      <fieldset className="flex flex-col gap-stack-sm border-t border-border py-stack-sm">
+      <fieldset className="flex flex-col gap-x-stack-sm border-t border-border py-x-stack-sm">
         <legend className="font-sans text-body font-medium text-primary">
           {t('admin.receivedInvoices.taxBreakdown.title')}
         </legend>
 
         {taxLines.fields.map((field, index) => (
-          <div key={field.id} className="flex items-end gap-inline-sm">
+          <div key={field.id} className="flex items-end gap-x-inline-sm">
             <FormField
               id={`tax-rate-${index}`}
               label={t('admin.receivedInvoices.field.taxRate')}
@@ -213,7 +213,7 @@ export function InvoiceForm({
         </Text>
       ) : null}
 
-      <div className="flex gap-inline-sm">
+      <div className="flex gap-x-inline-sm">
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.actions.saving') : submitLabel}
         </Button>

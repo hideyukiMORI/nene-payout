@@ -18,14 +18,14 @@ export function OrganizationDetailView({ organizationId }: OrganizationDetailVie
   const deactivate = useDeactivateOrganization()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.organizations.detailTitle')}
         actions={
           query.isSuccess ? (
             <Link
               to={`/organizations/${organizationId}/edit`}
-              className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>
@@ -43,7 +43,7 @@ export function OrganizationDetailView({ organizationId }: OrganizationDetailVie
           }}
         />
       ) : (
-        <div className="flex flex-col gap-stack-md">
+        <div className="flex flex-col gap-x-stack-md">
           <DetailList
             rows={[
               { label: t('admin.organizations.field.slug'), value: query.data.slug },
