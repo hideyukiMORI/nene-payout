@@ -33,7 +33,7 @@ const NAV_ITEMS: NavItem[] = [
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
   const base = 'block rounded-md px-inline-md py-stack-sm font-sans text-body'
-  return isActive ? `${base} bg-surface-raised font-medium text-accent` : `${base} text-muted`
+  return isActive ? `${base} bg-surface-raised font-medium text-accent` : `${base} text-text-muted`
 }
 
 /**

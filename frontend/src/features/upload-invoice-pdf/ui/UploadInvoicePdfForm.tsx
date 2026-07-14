@@ -51,7 +51,7 @@ export function UploadInvoicePdfForm({
             setFile(event.target.files?.[0] ?? null)
             setValidationError(null)
           }}
-          className="font-sans text-body text-primary"
+          className="font-sans text-body text-text-primary"
         />
       </FormField>
 

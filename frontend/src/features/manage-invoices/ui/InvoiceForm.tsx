@@ -123,7 +123,7 @@ export function InvoiceForm({
       </FormField>
 
       <fieldset className="flex flex-col gap-stack-sm border-t border-border py-stack-sm">
-        <legend className="font-sans text-body font-medium text-primary">
+        <legend className="font-sans text-body font-medium text-text-primary">
           {t('admin.receivedInvoices.taxBreakdown.title')}
         </legend>
 

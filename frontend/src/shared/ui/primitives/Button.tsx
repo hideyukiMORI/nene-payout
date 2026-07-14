@@ -7,7 +7,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANT_CLASS: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-accent text-accent-contrast',
-  secondary: 'bg-surface-raised text-primary border border-border',
+  secondary: 'bg-surface-raised text-text-primary border border-border',
   danger: 'bg-danger text-accent-contrast',
 }
 

@@ -42,7 +42,7 @@ function DashboardBody({ state }: DashboardViewProps) {
                 className="flex flex-col gap-stack-sm rounded-md border border-border bg-surface-raised px-inline-md py-stack-md"
               >
                 <Text tone="muted">{t(card.labelKey)}</Text>
-                <span className="font-sans text-heading font-medium text-primary">
+                <span className="font-sans text-heading font-medium text-text-primary">
                   {card.count ?? '—'}
                 </span>
                 <Text tone="muted">{t('admin.dashboard.view')}</Text>
