@@ -14,7 +14,7 @@ export function LocaleSwitcher() {
       onChange={(event) => {
         setLocale(resolveLocale(event.target.value))
       }}
-      className="rounded-md border border-border bg-surface-raised px-inline-sm py-stack-sm font-sans text-body text-primary"
+      className="rounded-x-md border border-border bg-surface-raised px-x-inline-sm py-x-stack-sm font-sans text-body text-text-primary"
     >
       {SUPPORTED_LOCALE_IDS.map((id) => (
         <option key={id} value={id}>

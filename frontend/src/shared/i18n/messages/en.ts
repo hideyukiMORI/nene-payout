@@ -1,18 +1,23 @@
+import type { MessageCatalog, MessageKey } from './ja'
+
 /**
- * English message catalog — the source of truth for all UI text.
+ * English message catalog — the reference locale and runtime fallback.
+ *
+ * Authority note (規約 04 I18N-8): the message key set is owned by `ja.ts`
+ * (`MessageKey = keyof typeof ja`). This catalog is typed `MessageCatalog`
+ * (= `Record<MessageKey, string>`), so it must mirror `ja` exactly — a key
+ * added to or removed from `ja` becomes a compile error here.
  *
  * Key naming: `common.*` | `auth.*` | `admin.{feature}.{element}` | `widget.*`.
  * Param interpolation: `{{paramName}}`.
  *
- * Every other locale is `Partial<MessageCatalog>` and falls back to these values.
- * `ja.ts` must define every key here — the parity test (`locales.test.ts`) fails
- * the build otherwise, so language switching never shows a gap.
+ * Every locale falls back to these English values at runtime (see `translate`).
  *
  * Only static UI text lives here. Data fetched from the API (vendor names,
  * amounts, etc.) is never translated.
  */
 
-export const en = {
+export const en: MessageCatalog = {
   // ── App shell ─────────────────────────────────────────────────────────────
   'app.name': 'NeNe Payout',
   'app.nav.label': 'Primary',
@@ -279,5 +284,6 @@ export const en = {
   'widget.complete.failure': 'Payment failed.',
 }
 
-/** Message key set is fixed by `en`; values are plain strings per locale. */
-export type MessageCatalog = typeof en
+// `MessageCatalog`/`MessageKey` authority now lives in `ja.ts` (規約 04 I18N-8).
+// Re-exported here so existing `./en` type imports keep resolving unchanged.
+export type { MessageCatalog, MessageKey }

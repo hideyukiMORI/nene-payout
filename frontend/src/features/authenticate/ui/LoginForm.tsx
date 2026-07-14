@@ -38,7 +38,7 @@ export function LoginForm({ submitting, submitError, onSubmit }: LoginFormProps)
           onSubmit(formValuesToCredentials(values))
         })(event)
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField
         id="login-email"

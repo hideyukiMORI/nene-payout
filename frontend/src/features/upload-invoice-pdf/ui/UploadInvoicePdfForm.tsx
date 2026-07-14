@@ -35,7 +35,7 @@ export function UploadInvoicePdfForm({
           onSubmit(file)
         }
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField
         id="invoice-pdf"
@@ -51,7 +51,7 @@ export function UploadInvoicePdfForm({
             setFile(event.target.files?.[0] ?? null)
             setValidationError(null)
           }}
-          className="font-sans text-body text-primary"
+          className="font-sans text-body text-text-primary"
         />
       </FormField>
 
@@ -63,7 +63,7 @@ export function UploadInvoicePdfForm({
         </Text>
       ) : null}
 
-      <div className="flex gap-inline-sm">
+      <div className="flex gap-x-inline-sm">
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.actions.saving') : t('common.actions.upload')}
         </Button>

@@ -30,7 +30,7 @@ export function CreateOrganizationForm() {
     message !== undefined ? t(message as MessageKey) : null
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.organizations.newTitle')} />
       <form
         noValidate
@@ -43,7 +43,7 @@ export function CreateOrganizationForm() {
             })
           })(event)
         }}
-        className="flex flex-col gap-stack-md"
+        className="flex flex-col gap-x-stack-md"
       >
         <FormField
           id="organization-slug"
@@ -91,7 +91,7 @@ export function CreateOrganizationForm() {
           </Text>
         ) : null}
 
-        <div className="flex gap-inline-sm">
+        <div className="flex gap-x-inline-sm">
           <Button type="submit" disabled={mutation.isPending}>
             {mutation.isPending ? t('common.actions.saving') : t('common.actions.create')}
           </Button>

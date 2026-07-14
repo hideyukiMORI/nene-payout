@@ -32,8 +32,8 @@ const NAV_ITEMS: NavItem[] = [
 ]
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
-  const base = 'block rounded-md px-inline-md py-stack-sm font-sans text-body'
-  return isActive ? `${base} bg-surface-raised font-medium text-accent` : `${base} text-muted`
+  const base = 'block rounded-x-md px-x-inline-md py-x-stack-sm font-sans text-body'
+  return isActive ? `${base} bg-surface-raised font-medium text-accent` : `${base} text-text-muted`
 }
 
 /**
@@ -51,16 +51,16 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <header className="flex items-center justify-between border-b border-border px-inline-md py-stack-sm">
+      <header className="flex items-center justify-between border-b border-border px-x-inline-md py-x-stack-sm">
         <Text>{t('app.name')}</Text>
-        <div className="flex items-center gap-inline-sm">
+        <div className="flex items-center gap-x-inline-sm">
           <LocaleSwitcher />
           <SignOutButton />
         </div>
       </header>
       <div className="flex">
-        <nav aria-label={t('app.nav.label')} className="w-64 border-r border-border py-stack-md">
-          <ul className="flex flex-col gap-inline-sm px-inline-sm">
+        <nav aria-label={t('app.nav.label')} className="w-64 border-r border-border py-x-stack-md">
+          <ul className="flex flex-col gap-x-inline-sm px-x-inline-sm">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to} className={navLinkClass}>
@@ -70,7 +70,7 @@ export function AppLayout() {
             ))}
           </ul>
         </nav>
-        <main className="flex-1 py-stack-md">
+        <main className="flex-1 py-x-stack-md">
           <Outlet />
         </main>
       </div>
