@@ -25,7 +25,7 @@ export function UserDetailView({ userId }: UserDetailViewProps) {
           query.isSuccess ? (
             <Link
               to={`/users/${userId}/edit`}
-              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>

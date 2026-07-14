@@ -41,7 +41,7 @@ export function InvoiceDetailView({ receivedInvoiceId }: InvoiceDetailViewProps)
           query.isSuccess && query.data.status === 'pending' ? (
             <Link
               to={`/received-invoices/${receivedInvoiceId}/edit`}
-              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>

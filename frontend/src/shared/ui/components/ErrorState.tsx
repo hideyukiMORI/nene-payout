@@ -9,7 +9,7 @@ export interface ErrorStateProps {
 export function ErrorState({ message, retryLabel, onRetry }: ErrorStateProps) {
   return (
     <div className="py-x-stack-lg" role="alert">
-      <p className="font-sans text-body text-danger">{message}</p>
+      <p className="font-sans text-danger">{message}</p>
       <div className="py-x-stack-sm">
         <Button variant="secondary" onClick={onRetry}>
           {retryLabel}

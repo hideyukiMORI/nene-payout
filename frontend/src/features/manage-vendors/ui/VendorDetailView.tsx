@@ -21,7 +21,7 @@ export function VendorDetailView({ vendorId }: VendorDetailViewProps) {
           query.isSuccess ? (
             <Link
               to={`/vendors/${vendorId}/edit`}
-              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>
