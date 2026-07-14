@@ -6,16 +6,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANT_CLASS: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'bg-accent text-accent-contrast',
+  primary: 'bg-accent text-on-accent',
   secondary: 'bg-surface-raised text-text-primary border border-border',
-  danger: 'bg-danger text-accent-contrast',
+  danger: 'bg-danger text-on-accent',
 }
 
 export function Button({ variant = 'primary', children, type = 'button', ...rest }: ButtonProps) {
   return (
     <button
       type={type}
-      className={`rounded-md px-inline-md py-stack-sm font-sans text-body font-medium ${VARIANT_CLASS[variant]}`}
+      className={`rounded-x-md px-x-inline-md py-x-stack-sm font-sans text-body font-medium ${VARIANT_CLASS[variant]}`}
       {...rest}
     >
       {children}

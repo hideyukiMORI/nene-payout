@@ -12,13 +12,13 @@ export function OrganizationListView({ state }: OrganizationListViewProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.organizations.pageTitle')}
         actions={
           <Link
             to="/organizations/new"
-            className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
           >
             {t('admin.organizations.actions.new')}
           </Link>
@@ -51,7 +51,7 @@ function OrganizationListBody({ state }: OrganizationListViewProps) {
           {state.organizations.map((organization) => (
             <li
               key={organization.id}
-              className="flex items-center justify-between border-b border-border py-stack-sm"
+              className="flex items-center justify-between border-b border-border py-x-stack-sm"
             >
               <div>
                 <Link

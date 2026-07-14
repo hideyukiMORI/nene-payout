@@ -25,7 +25,7 @@ export function EditInvoiceForm({ receivedInvoiceId }: EditInvoiceFormProps) {
   const mutation = useUpdateReceivedInvoice()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.receivedInvoices.editTitle')} />
       {renderBody()}
     </section>

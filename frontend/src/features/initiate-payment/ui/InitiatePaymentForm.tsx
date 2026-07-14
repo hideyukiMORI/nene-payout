@@ -44,7 +44,7 @@ export function InitiatePaymentForm({
           onSubmit(formValuesToInitiateInput(values, returnUrl))
         })(event)
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField id="payment-gateway" label={t('admin.payments.field.gateway')}>
         <Select id="payment-gateway" {...register('gateway')}>
@@ -64,7 +64,7 @@ export function InitiatePaymentForm({
         </Text>
       ) : null}
 
-      <div className="flex gap-inline-sm">
+      <div className="flex gap-x-inline-sm">
         <Button type="submit" disabled={submitting}>
           {submitting ? t('common.actions.saving') : t('admin.payments.initiate')}
         </Button>

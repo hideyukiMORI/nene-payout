@@ -26,7 +26,7 @@ export function EditOrganizationForm({ organizationId }: EditOrganizationFormPro
   const query = useOrganizationById(organizationId)
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.organizations.editTitle')} />
       {query.isPending ? (
         <Spinner label={t('common.state.loading')} />
@@ -76,7 +76,7 @@ function EditOrganizationFields({ organization }: { organization: Organization }
           )
         })(event)
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField id="organization-slug" label={t('admin.organizations.field.slug')}>
         <Input id="organization-slug" value={organization.slug} disabled readOnly />
@@ -116,7 +116,7 @@ function EditOrganizationFields({ organization }: { organization: Organization }
         </Text>
       ) : null}
 
-      <div className="flex gap-inline-sm">
+      <div className="flex gap-x-inline-sm">
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? t('common.actions.saving') : t('common.actions.save')}
         </Button>

@@ -17,7 +17,7 @@ export function FormField({ id, label, error = null, children }: FormFieldProps)
   const errorId = `${id}-error`
 
   return (
-    <div className="flex flex-col gap-inline-sm">
+    <div className="flex flex-col gap-x-inline-sm">
       <label htmlFor={id} className="font-sans text-body font-medium text-text-primary">
         {label}
       </label>

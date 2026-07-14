@@ -11,7 +11,7 @@ export function AuditLogListView({ state }: AuditLogListViewProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.auditLogs.pageTitle')} />
       <AuditLogListBody state={state} />
     </section>
@@ -38,7 +38,7 @@ function AuditLogListBody({ state }: AuditLogListViewProps) {
       return (
         <ul>
           {state.logs.map((log) => (
-            <li key={log.id} className="border-b border-border py-stack-sm">
+            <li key={log.id} className="border-b border-border py-x-stack-sm">
               <Text>
                 <span className="font-medium text-text-primary">{log.action}</span>
               </Text>

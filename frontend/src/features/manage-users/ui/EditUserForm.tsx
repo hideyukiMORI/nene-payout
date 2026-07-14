@@ -24,7 +24,7 @@ export function EditUserForm({ userId }: EditUserFormProps) {
   const query = useUser(id)
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.users.editTitle')} />
       {query.isPending ? (
         <Spinner label={t('common.state.loading')} />
@@ -80,7 +80,7 @@ function EditUserRoleFields({
           )
         })(event)
       }}
-      className="flex flex-col gap-stack-md"
+      className="flex flex-col gap-x-stack-md"
     >
       <FormField
         id="user-role"
@@ -104,7 +104,7 @@ function EditUserRoleFields({
         </Text>
       ) : null}
 
-      <div className="flex gap-inline-sm">
+      <div className="flex gap-x-inline-sm">
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? t('common.actions.saving') : t('common.actions.save')}
         </Button>

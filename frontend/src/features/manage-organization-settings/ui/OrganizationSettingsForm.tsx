@@ -30,7 +30,7 @@ export function OrganizationSettingsForm() {
   const query = useOrganizationSettings()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.organization.pageTitle')} />
       {query.isPending ? (
         <Spinner label={t('common.state.loading')} />
@@ -65,7 +65,7 @@ function OrganizationSettingsFields({ organization }: { organization: Organizati
     message !== undefined ? t(message as MessageKey) : null
 
   return (
-    <div className="flex flex-col gap-stack-md">
+    <div className="flex flex-col gap-x-stack-md">
       <DetailList
         rows={[
           { label: t('admin.organization.field.slug'), value: organization.slug },
@@ -82,7 +82,7 @@ function OrganizationSettingsFields({ organization }: { organization: Organizati
             mutation.mutate(formValuesToUpdateInput(values))
           })(event)
         }}
-        className="flex flex-col gap-stack-md"
+        className="flex flex-col gap-x-stack-md"
       >
         <FormField
           id="organization-name"
