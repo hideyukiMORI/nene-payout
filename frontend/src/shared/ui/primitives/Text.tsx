@@ -7,7 +7,7 @@ export interface TextProps {
 }
 
 export function Text({ as = 'p', tone = 'primary', children }: TextProps) {
-  const toneClass = tone === 'muted' ? 'text-muted' : 'text-primary'
+  const toneClass = tone === 'muted' ? 'text-text-muted' : 'text-text-primary'
   const className = `font-sans text-body ${toneClass}`
 
   return as === 'span' ? (

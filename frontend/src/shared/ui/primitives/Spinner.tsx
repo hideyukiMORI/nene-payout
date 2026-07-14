@@ -4,7 +4,7 @@ export interface SpinnerProps {
 
 export function Spinner({ label }: SpinnerProps) {
   return (
-    <output className="font-sans text-body text-muted" aria-live="polite">
+    <output className="font-sans text-body text-text-muted" aria-live="polite">
       {label}
     </output>
   )

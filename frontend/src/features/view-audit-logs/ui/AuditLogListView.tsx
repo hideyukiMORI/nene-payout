@@ -40,7 +40,7 @@ function AuditLogListBody({ state }: AuditLogListViewProps) {
           {state.logs.map((log) => (
             <li key={log.id} className="border-b border-border py-x-stack-sm">
               <Text>
-                <span className="font-medium text-primary">{log.action}</span>
+                <span className="font-medium text-text-primary">{log.action}</span>
               </Text>
               <Text tone="muted">
                 {t('admin.auditLogs.field.createdAt')}: {formatDateTime(log.createdAt, locale)} ·{' '}

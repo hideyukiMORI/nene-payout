@@ -18,7 +18,7 @@ export function FormField({ id, label, error = null, children }: FormFieldProps)
 
   return (
     <div className="flex flex-col gap-x-inline-sm">
-      <label htmlFor={id} className="font-sans text-body font-medium text-primary">
+      <label htmlFor={id} className="font-sans text-body font-medium text-text-primary">
         {label}
       </label>
       {children}
