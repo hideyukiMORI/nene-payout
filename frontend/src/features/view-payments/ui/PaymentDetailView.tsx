@@ -26,7 +26,7 @@ export function PaymentDetailView({ paymentExecutionId }: PaymentDetailViewProps
   const query = usePaymentExecution(toPaymentExecutionId(paymentExecutionId))
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.payments.detailTitle')} />
       {renderBody()}
     </section>

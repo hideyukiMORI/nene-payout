@@ -31,7 +31,7 @@ export function InviteUserForm() {
     message !== undefined ? t(message as MessageKey) : null
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.users.newTitle')} />
       <form
         noValidate
@@ -44,7 +44,7 @@ export function InviteUserForm() {
             })
           })(event)
         }}
-        className="flex flex-col gap-stack-md"
+        className="flex flex-col gap-x-stack-md"
       >
         <FormField
           id="user-email"
@@ -82,7 +82,7 @@ export function InviteUserForm() {
           </Text>
         ) : null}
 
-        <div className="flex gap-inline-sm">
+        <div className="flex gap-x-inline-sm">
           <Button type="submit" disabled={mutation.isPending}>
             {mutation.isPending ? t('common.actions.saving') : t('admin.users.actions.invite')}
           </Button>

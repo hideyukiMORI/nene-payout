@@ -19,7 +19,7 @@ export function EditVendorForm({ vendorId }: EditVendorFormProps) {
   const mutation = useUpdateVendor()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.vendors.editTitle')} />
       {query.isPending ? (
         <Spinner label={t('common.state.loading')} />

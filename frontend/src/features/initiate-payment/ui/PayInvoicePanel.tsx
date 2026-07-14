@@ -22,7 +22,7 @@ export function PayInvoicePanel({ receivedInvoiceId }: PayInvoicePanelProps) {
   const returnUrl = `${window.location.origin}${INVOICES_PATH}`
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.payments.pay.title')} />
       {renderBody()}
     </section>
@@ -51,7 +51,7 @@ export function PayInvoicePanel({ receivedInvoiceId }: PayInvoicePanelProps) {
     }
 
     return (
-      <div className="flex flex-col gap-stack-md">
+      <div className="flex flex-col gap-x-stack-md">
         <Text tone="muted">
           {t('admin.payments.amountDue', { amount: formatJpy(query.data.amount, locale) })}
         </Text>

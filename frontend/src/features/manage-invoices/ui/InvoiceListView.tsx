@@ -21,13 +21,13 @@ export function InvoiceListView({ state }: InvoiceListViewProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.receivedInvoices.pageTitle')}
         actions={
           <Link
             to="/received-invoices/new"
-            className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans text-body font-medium text-on-accent"
           >
             {t('admin.receivedInvoices.actions.new')}
           </Link>
@@ -60,7 +60,7 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
           {state.invoices.map((invoice) => (
             <li
               key={invoice.id}
-              className="flex items-center justify-between border-b border-border py-stack-sm"
+              className="flex items-center justify-between border-b border-border py-x-stack-sm"
             >
               <div>
                 <Link
@@ -74,7 +74,7 @@ function InvoiceListBody({ state }: InvoiceListViewProps) {
                   {t(STATUS_LABEL_KEY[invoice.status])}
                 </Text>
               </div>
-              <div className="flex items-center gap-inline-md">
+              <div className="flex items-center gap-x-inline-md">
                 <Link
                   to={`/received-invoices/${invoice.id}/pdf`}
                   className="font-sans text-body font-medium text-accent"
