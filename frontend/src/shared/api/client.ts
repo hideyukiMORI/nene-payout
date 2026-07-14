@@ -1,81 +1,87 @@
+import {
+  createNene2Transport,
+  isNene2ClientError,
+  isValidationProblemDetails,
+  type Nene2ClientError,
+} from '@hideyukimori/nene2-client'
 import { env } from '@/shared/config/env'
-import { AppError, parseProblemDetails } from '@/shared/api/errors'
-import { authToken } from '@/shared/api/auth-token'
+import { AppError, type ProblemDetails } from '@/shared/api/errors'
+import { tokenStore } from '@/shared/api/auth-token'
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-
-interface RequestOptions {
-  method?: HttpMethod
-  body?: unknown
-  /** multipart/form-data body. Content-Type is left to the browser (boundary). */
-  formData?: FormData
-  signal?: AbortSignal
-}
-
-function authHeaders(): Record<string, string> {
-  const token = authToken.get()
-  return token !== null ? { Authorization: `Bearer ${token}` } : {}
-}
-
-function handleErrorResponse(response: Response, path: string): void {
-  if (response.status === 401 && !path.includes('/auth/login')) {
-    authToken.clear()
+/**
+ * Fleet-standard transport (`@hideyukimori/nene2-client`, issue #102): every
+ * request mirrors the bearer token onto `Authorization` *and*
+ * `X-Authorization` so shared-hosting proxies that strip the standard header
+ * still authenticate. `apiClient` below is a thin adapter that keeps this
+ * product's existing surface (`get/post/postForm/patch/delete`) verbatim so
+ * call sites did not need to change.
+ */
+const transport = createNene2Transport({
+  baseUrl: env.apiBaseUrl,
+  tokenStore,
+  // Look up `fetch` at call time (not bind it once at module load): tests
+  // patch `globalThis.fetch` via msw's `server.listen()`, which can run
+  // after this module is first imported.
+  fetch: (input, init) => globalThis.fetch(input, init),
+  onUnauthorized: () => {
     window.location.href = '/login'
-  }
-  if (response.status === 403) {
+  },
+  onForbidden: () => {
     window.location.href = '/forbidden'
+  },
+})
+
+/** Maps the package's `Nene2ClientError` to this product's `AppError` (unchanged shape/behavior for callers). */
+function toAppError(error: Nene2ClientError): AppError {
+  const problem = error.problem
+  if (problem === undefined) {
+    return new AppError({ type: 'about:blank', title: 'Request failed', status: error.status })
   }
+
+  const mapped: ProblemDetails = {
+    type: problem.type,
+    title: problem.title,
+    status: problem.status,
+  }
+  if (problem.instance !== undefined) {
+    mapped.instance = problem.instance
+  }
+  if (problem.detail !== undefined) {
+    mapped.detail = problem.detail
+  }
+  if (isValidationProblemDetails(problem)) {
+    mapped.errors = problem.errors
+  }
+  return new AppError(mapped)
 }
 
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const base = env.apiBaseUrl.replace(/\/$/, '')
-  const headers: Record<string, string> = { ...authHeaders() }
-
-  const init: RequestInit = {
-    method: options.method ?? 'GET',
-    headers,
+async function unwrap<T>(promise: Promise<T>): Promise<T> {
+  try {
+    return await promise
+  } catch (error) {
+    if (isNene2ClientError(error)) {
+      throw toAppError(error)
+    }
+    throw error
   }
-
-  if (options.formData !== undefined) {
-    init.body = options.formData
-  } else if (options.body !== undefined) {
-    headers['Content-Type'] = 'application/json'
-    init.body = JSON.stringify(options.body)
-  }
-
-  if (options.signal !== undefined) {
-    init.signal = options.signal
-  }
-
-  const response = await fetch(`${base}${path}`, init)
-
-  if (!response.ok) {
-    handleErrorResponse(response, path)
-    throw await parseProblemDetails(response)
-  }
-
-  if (response.status === 204) {
-    return undefined as T
-  }
-
-  return (await response.json()) as T
 }
 
 export const apiClient = {
   get<T>(path: string, signal?: AbortSignal): Promise<T> {
-    return request<T>(path, signal !== undefined ? { signal } : {})
+    return unwrap(transport.get<T>(path, signal !== undefined ? { signal } : {}))
   },
   post<T>(path: string, body: unknown): Promise<T> {
-    return request<T>(path, { method: 'POST', body })
+    return unwrap(transport.post<T>(path, body))
   },
+  /** multipart/form-data upload; `Content-Type` (with boundary) is left to the browser. */
   postForm<T>(path: string, formData: FormData): Promise<T> {
-    return request<T>(path, { method: 'POST', formData })
+    return unwrap(transport.upload<T>(path, formData))
   },
   patch<T>(path: string, body: unknown): Promise<T> {
-    return request<T>(path, { method: 'PATCH', body })
+    return unwrap(transport.patch<T>(path, body))
   },
   delete(path: string): Promise<undefined> {
-    return request<undefined>(path, { method: 'DELETE' })
+    return unwrap(transport.delete<undefined>(path))
   },
 }
 
