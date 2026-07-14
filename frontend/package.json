@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@hideyukimori/nene2-standards": "^1.0.1",
     "@storybook/react-vite": "^10.4.4",
     "@tailwindcss/vite": "^4.1.0",
     "@testing-library/jest-dom": "^6.6.3",
