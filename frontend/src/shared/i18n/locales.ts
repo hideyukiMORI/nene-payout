@@ -1,7 +1,9 @@
 /**
  * Supported locales for NeNe Payout. Bilingual ja / en (ADR 0006, i18n.md).
- * English is the typed source of truth and the runtime fallback; Japanese is the
- * primary audience and the default when no locale is detected.
+ * Japanese is the typed source of truth (#162), the primary audience, and the
+ * default when no locale is detected. English is still the runtime fallback in
+ * `translate.ts` — pointing that at the authority catalog instead is W1 work
+ * (fleet i18n I18N-22; see the I18N-6/20/22 exemplar note in that standard).
  */
 
 export type SupportedLocale = 'ja' | 'en'
