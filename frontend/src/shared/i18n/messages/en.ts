@@ -4,9 +4,9 @@ import type { MessageCatalog, MessageKey } from './ja'
  * English message catalog — the reference locale and runtime fallback.
  *
  * Authority note (規約 04 I18N-8): the message key set is owned by `ja.ts`
- * (`MessageKey = keyof typeof ja`). This catalog is typed `MessageCatalog`
- * (= `Record<MessageKey, string>`), so it must mirror `ja` exactly — a key
- * added to or removed from `ja` becomes a compile error here.
+ * (`MessageKey = keyof typeof ja`). This catalog is checked against
+ * `Record<MessageKey, string>` (規約 04 I18N-9), so it must mirror `ja`
+ * exactly — a key added to or removed from `ja` becomes a compile error here.
  *
  * Key naming: `common.*` | `auth.*` | `admin.{feature}.{element}` | `widget.*`.
  * Param interpolation: `{{paramName}}`.
@@ -17,7 +17,7 @@ import type { MessageCatalog, MessageKey } from './ja'
  * amounts, etc.) is never translated.
  */
 
-export const en: MessageCatalog = {
+export const en = {
   // ── App shell ─────────────────────────────────────────────────────────────
   'app.name': 'NeNe Payout',
   'app.nav.label': 'Primary',
@@ -282,7 +282,7 @@ export const en: MessageCatalog = {
   'widget.pay.processing': 'Processing payment…',
   'widget.complete.success': 'Payment complete.',
   'widget.complete.failure': 'Payment failed.',
-}
+} satisfies Record<MessageKey, string>
 
 // `MessageCatalog`/`MessageKey` authority now lives in `ja.ts` (規約 04 I18N-8).
 // Re-exported here so existing `./en` type imports keep resolving unchanged.
