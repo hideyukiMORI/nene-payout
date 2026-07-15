@@ -9,7 +9,7 @@ import {
 } from '../../../../tests/msw/handlers/session'
 import { SignInPanel } from './SignInPanel'
 
-const TOKEN_KEY = 'nene-payout-token'
+const TOKEN_KEY = 'nene_payout_token'
 
 function fillAndSubmit() {
   fireEvent.change(screen.getByLabelText('Email address'), {
