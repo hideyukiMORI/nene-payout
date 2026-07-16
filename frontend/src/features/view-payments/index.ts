@@ -1,5 +1,5 @@
-export { usePaymentsPage } from './hooks/use-payments-page'
-export type { PaymentsPageState } from './hooks/use-payments-page'
+export { usePaymentsPage } from './model/use-payments-page'
+export type { PaymentsPageState } from './model/use-payments-page'
 export { PaymentListView } from './ui/PaymentListView'
 export type { PaymentListViewProps } from './ui/PaymentListView'
 export { PaymentDetailView } from './ui/PaymentDetailView'

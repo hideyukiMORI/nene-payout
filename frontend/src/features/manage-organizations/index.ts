@@ -1,5 +1,5 @@
-export { useOrganizationsPage } from './hooks/use-organizations-page'
-export type { OrganizationsPageState } from './hooks/use-organizations-page'
+export { useOrganizationsPage } from './model/use-organizations-page'
+export type { OrganizationsPageState } from './model/use-organizations-page'
 export { OrganizationListView } from './ui/OrganizationListView'
 export type { OrganizationListViewProps } from './ui/OrganizationListView'
 export { OrganizationDetailView } from './ui/OrganizationDetailView'

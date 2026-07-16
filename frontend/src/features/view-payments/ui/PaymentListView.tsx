@@ -3,7 +3,7 @@ import type { PaymentExecutionStatus } from '@/entities/payment-execution'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { formatJpy } from '@/shared/lib'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
-import type { PaymentsPageState } from '../hooks/use-payments-page'
+import type { PaymentsPageState } from '../model/use-payments-page'
 
 const STATUS_LABEL_KEY: Record<PaymentExecutionStatus, MessageKey> = {
   initiated: 'admin.payments.status.initiated',

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { useTranslation } from '@/shared/i18n'
 import { ROLE_LABEL_KEY, STATUS_LABEL_KEY } from '../model/labels'
-import type { UsersPageState } from '../hooks/use-users-page'
+import type { UsersPageState } from '../model/use-users-page'
 
 export interface UserListViewProps {
   state: UsersPageState

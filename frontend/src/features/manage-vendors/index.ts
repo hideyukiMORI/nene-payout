@@ -1,5 +1,5 @@
-export { useVendorsPage } from './hooks/use-vendors-page'
-export type { VendorsPageState } from './hooks/use-vendors-page'
+export { useVendorsPage } from './model/use-vendors-page'
+export type { VendorsPageState } from './model/use-vendors-page'
 export { VendorListView } from './ui/VendorListView'
 export type { VendorListViewProps } from './ui/VendorListView'
 export { VendorDetailView } from './ui/VendorDetailView'
