@@ -20,12 +20,12 @@ jobs:
       # NENE2 is consumed via a Composer path repository (`../NENE2`), so it must
       # sit as a sibling of this repo on the runner. Both repos are public.
       - name: Checkout nene-payout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: nene-payout
 
       - name: Checkout NENE2 (path dependency)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: hideyukiMORI/NENE2
           ref: main
@@ -40,7 +40,7 @@ jobs:
           tools: composer:v2
 
       - name: Cache Composer packages
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: nene-payout/vendor
           key: composer-${{ runner.os }}-${{ hashFiles('nene-payout/composer.json') }}
@@ -62,7 +62,7 @@ jobs:
         working-directory: frontend
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
