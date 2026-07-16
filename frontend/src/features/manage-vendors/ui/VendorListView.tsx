@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { useTranslation } from '@/shared/i18n'
-import type { VendorsPageState } from '../hooks/use-vendors-page'
+import type { VendorsPageState } from '../model/use-vendors-page'
 
 export interface VendorListViewProps {
   state: VendorsPageState

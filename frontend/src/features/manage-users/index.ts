@@ -1,5 +1,5 @@
-export { useUsersPage } from './hooks/use-users-page'
-export type { UsersPageState } from './hooks/use-users-page'
+export { useUsersPage } from './model/use-users-page'
+export type { UsersPageState } from './model/use-users-page'
 export { UserListView } from './ui/UserListView'
 export type { UserListViewProps } from './ui/UserListView'
 export { UserDetailView } from './ui/UserDetailView'

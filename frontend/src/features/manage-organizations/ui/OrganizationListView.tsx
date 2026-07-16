@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { useTranslation } from '@/shared/i18n'
 import { statusLabelKey } from '../model/labels'
-import type { OrganizationsPageState } from '../hooks/use-organizations-page'
+import type { OrganizationsPageState } from '../model/use-organizations-page'
 
 export interface OrganizationListViewProps {
   state: OrganizationsPageState

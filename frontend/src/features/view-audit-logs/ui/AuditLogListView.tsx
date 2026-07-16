@@ -1,7 +1,7 @@
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { formatDateTime } from '@/shared/lib'
 import { useTranslation } from '@/shared/i18n'
-import type { AuditLogsPageState } from '../hooks/use-audit-logs-page'
+import type { AuditLogsPageState } from '../model/use-audit-logs-page'
 
 export interface AuditLogListViewProps {
   state: AuditLogsPageState

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { useTranslation } from '@/shared/i18n'
-import type { DashboardState } from '../hooks/use-dashboard'
+import type { DashboardState } from '../model/use-dashboard'
 
 export interface DashboardViewProps {
   state: DashboardState

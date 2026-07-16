@@ -3,7 +3,7 @@ import type { ReceivedInvoiceStatus } from '@/entities/received-invoice'
 import { EmptyState, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
 import { formatDate, formatJpy } from '@/shared/lib'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
-import type { InvoicesPageState } from '../hooks/use-invoices-page'
+import type { InvoicesPageState } from '../model/use-invoices-page'
 
 const STATUS_LABEL_KEY: Record<ReceivedInvoiceStatus, MessageKey> = {
   pending: 'admin.receivedInvoices.status.pending',

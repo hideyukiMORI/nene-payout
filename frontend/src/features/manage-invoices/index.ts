@@ -1,5 +1,5 @@
-export { useInvoicesPage } from './hooks/use-invoices-page'
-export type { InvoicesPageState } from './hooks/use-invoices-page'
+export { useInvoicesPage } from './model/use-invoices-page'
+export type { InvoicesPageState } from './model/use-invoices-page'
 export { InvoiceListView } from './ui/InvoiceListView'
 export type { InvoiceListViewProps } from './ui/InvoiceListView'
 export { InvoiceDetailView } from './ui/InvoiceDetailView'
