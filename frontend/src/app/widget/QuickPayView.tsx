@@ -124,39 +124,39 @@ export function QuickPayView() {
   const payeeName = vendor?.name ?? readString(payload, 'payee_name')
 
   return (
-    <div className="min-h-screen bg-surface p-inline-md">
-      <div className="mx-auto flex max-w-md flex-col gap-stack-md rounded-md border border-border bg-surface-raised p-inline-md shadow-sm">
-        <h2 className="font-sans text-heading font-medium text-primary">{t('widget.pay.title')}</h2>
+    <div className="min-h-screen bg-surface p-x-inline-md">
+      <div className="mx-auto flex max-w-md flex-col gap-x-stack-md rounded-md border border-border bg-surface-raised p-x-inline-md shadow-sm">
+        <h2 className="font-sans font-medium text-text-primary">{t('widget.pay.title')}</h2>
 
-        <dl className="flex flex-col gap-stack-sm">
+        <dl className="flex flex-col gap-x-stack-sm">
           {amount !== null && (
-            <div className="flex justify-between gap-inline-md">
-              <dt className="text-muted">{t('common.field.amount')}</dt>
+            <div className="flex justify-between gap-x-inline-md">
+              <dt className="text-text-muted">{t('common.field.amount')}</dt>
               <dd className="font-medium">{formatJpy(amount)}</dd>
             </div>
           )}
           {payeeName !== null && (
-            <div className="flex justify-between gap-inline-md">
-              <dt className="text-muted">{t('widget.pay.payee')}</dt>
+            <div className="flex justify-between gap-x-inline-md">
+              <dt className="text-text-muted">{t('widget.pay.payee')}</dt>
               <dd className="font-medium">{payeeName}</dd>
             </div>
           )}
           {vendor !== null && (
-            <div className="flex justify-between gap-inline-md">
-              <dt className="shrink-0 text-muted">{t('widget.pay.account')}</dt>
+            <div className="flex justify-between gap-x-inline-md">
+              <dt className="shrink-0 text-text-muted">{t('widget.pay.account')}</dt>
               <dd className="text-right font-medium">{maskAccount(vendor)}</dd>
             </div>
           )}
           {dueDate !== null && (
-            <div className="flex justify-between gap-inline-md">
-              <dt className="text-muted">{t('common.field.dueDate')}</dt>
+            <div className="flex justify-between gap-x-inline-md">
+              <dt className="text-text-muted">{t('common.field.dueDate')}</dt>
               <dd className="font-medium">{dueDate}</dd>
             </div>
           )}
         </dl>
 
         {payMutation.isError && (
-          <p className="font-sans text-body text-danger">
+          <p className="font-sans text-danger">
             {payMutation.error instanceof Error
               ? payMutation.error.message
               : t('widget.complete.failure')}

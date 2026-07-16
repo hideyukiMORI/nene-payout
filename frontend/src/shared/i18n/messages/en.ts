@@ -283,13 +283,6 @@ export const en = {
   'admin.widget.copy': 'Copy',
   'admin.widget.copied': 'Copied',
   'admin.widget.generateFailed': 'Could not generate the embed code. Please try again.',
-  'admin.widget.demoLink': 'Open sample page (dev)',
-  'admin.widget.demo.title': 'Sample host system (demo)',
-  'admin.widget.demo.description':
-    'A development-only page simulating an operator system with the widget embedded.',
-  'admin.widget.demo.pay': 'Pay an invoice by card (Mode A)',
-  'admin.widget.demo.manage': 'Open invoice management (Mode B)',
-  'admin.widget.demo.noToken': 'Missing token. Open this page from the settings link.',
 
   // ── Widget ────────────────────────────────────────────────────────────────
   'widget.pay.title': 'Pay invoice',

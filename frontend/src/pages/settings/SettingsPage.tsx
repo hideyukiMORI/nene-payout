@@ -3,7 +3,7 @@ import { OrganizationSettingsForm } from '@/features/manage-organization-setting
 
 export function SettingsPage() {
   return (
-    <div className="flex flex-col gap-stack-lg">
+    <div className="flex flex-col gap-x-stack-lg">
       <OrganizationSettingsForm />
       <GenerateWidgetEmbed />
     </div>

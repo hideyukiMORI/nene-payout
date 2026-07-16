@@ -51,8 +51,8 @@ export function PayInvoiceView() {
     const message =
       invoiceQuery.error instanceof Error ? invoiceQuery.error.message : t('common.state.error')
     return (
-      <div className="flex min-h-screen items-center justify-center bg-surface p-inline-md">
-        <p className="font-sans text-body text-danger">{message}</p>
+      <div className="flex min-h-screen items-center justify-center bg-surface p-x-inline-md">
+        <p className="font-sans text-danger">{message}</p>
       </div>
     )
   }
@@ -81,33 +81,33 @@ export function PayInvoiceView() {
   const vendor = vendorQuery.data ?? null
 
   return (
-    <div className="min-h-screen bg-surface p-inline-md">
-      <div className="mx-auto flex max-w-md flex-col gap-stack-md rounded-md border border-border bg-surface-raised p-inline-md shadow-sm">
-        <h2 className="font-sans text-heading font-medium text-primary">{t('widget.pay.title')}</h2>
+    <div className="min-h-screen bg-surface p-x-inline-md">
+      <div className="mx-auto flex max-w-md flex-col gap-x-stack-md rounded-md border border-border bg-surface-raised p-x-inline-md shadow-sm">
+        <h2 className="font-sans font-medium text-text-primary">{t('widget.pay.title')}</h2>
 
-        <dl className="flex flex-col gap-stack-sm">
-          <div className="flex justify-between gap-inline-md">
-            <dt className="text-muted">{t('common.field.amount')}</dt>
+        <dl className="flex flex-col gap-x-stack-sm">
+          <div className="flex justify-between gap-x-inline-md">
+            <dt className="text-text-muted">{t('common.field.amount')}</dt>
             <dd className="font-medium">{formatJpy(invoice.amount)}</dd>
           </div>
           {vendor !== null && (
             <>
-              <div className="flex justify-between gap-inline-md">
-                <dt className="text-muted">{t('widget.pay.payee')}</dt>
+              <div className="flex justify-between gap-x-inline-md">
+                <dt className="text-text-muted">{t('widget.pay.payee')}</dt>
                 <dd className="font-medium">{vendor.name}</dd>
               </div>
-              <div className="flex justify-between gap-inline-md">
-                <dt className="shrink-0 text-muted">{t('widget.pay.account')}</dt>
+              <div className="flex justify-between gap-x-inline-md">
+                <dt className="shrink-0 text-text-muted">{t('widget.pay.account')}</dt>
                 <dd className="text-right font-medium">{maskAccount(vendor)}</dd>
               </div>
             </>
           )}
-          <div className="flex justify-between gap-inline-md">
-            <dt className="text-muted">{t('common.field.dueDate')}</dt>
+          <div className="flex justify-between gap-x-inline-md">
+            <dt className="text-text-muted">{t('common.field.dueDate')}</dt>
             <dd className="font-medium">{invoice.due_date}</dd>
           </div>
-          <div className="flex justify-between gap-inline-md">
-            <dt className="text-muted">{t('common.field.status')}</dt>
+          <div className="flex justify-between gap-x-inline-md">
+            <dt className="text-text-muted">{t('common.field.status')}</dt>
             <dd className="font-medium">
               {t(STATUS_LABEL[invoice.status] ?? 'admin.receivedInvoices.status.pending')}
             </dd>
@@ -115,7 +115,7 @@ export function PayInvoiceView() {
         </dl>
 
         {payMutation.isError && (
-          <p className="font-sans text-body text-danger">
+          <p className="font-sans text-danger">
             {payMutation.error instanceof Error
               ? payMutation.error.message
               : t('widget.complete.failure')}

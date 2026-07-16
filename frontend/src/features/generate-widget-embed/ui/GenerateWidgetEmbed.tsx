@@ -27,10 +27,10 @@ export function GenerateWidgetEmbed() {
   }
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.widget.title')} />
 
-      <div className="flex max-w-2xl flex-col gap-stack-md">
+      <div className="flex max-w-2xl flex-col gap-x-stack-md">
         <Text tone="muted">{t('admin.widget.description')}</Text>
 
         <div>
@@ -45,17 +45,17 @@ export function GenerateWidgetEmbed() {
         </div>
 
         {generate.isError && (
-          <p className="font-sans text-body text-danger">{t('admin.widget.generateFailed')}</p>
+          <p className="font-sans text-danger">{t('admin.widget.generateFailed')}</p>
         )}
 
         {snippet !== null && (
-          <div className="flex flex-col gap-stack-sm">
+          <div className="flex flex-col gap-x-stack-sm">
             <textarea
               readOnly
               aria-label={t('admin.widget.title')}
               value={snippet}
               rows={3}
-              className="w-full rounded-md border border-border bg-surface-raised p-inline-sm font-sans text-body text-primary"
+              className="w-full rounded-md border border-border bg-surface-raised p-x-inline-sm font-sans text-text-primary"
             />
             <div>
               <Button
@@ -67,17 +67,6 @@ export function GenerateWidgetEmbed() {
                 {copied ? t('admin.widget.copied') : t('admin.widget.copy')}
               </Button>
             </div>
-
-            {import.meta.env.DEV && (
-              <a
-                href={`/widget-demo?token=${encodeURIComponent(generate.data?.token ?? '')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="font-sans text-body text-accent underline"
-              >
-                {t('admin.widget.demoLink')}
-              </a>
-            )}
           </div>
         )}
       </div>

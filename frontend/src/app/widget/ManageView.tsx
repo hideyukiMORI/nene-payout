@@ -50,8 +50,8 @@ export function ManageView() {
     const message =
       invoices.error instanceof Error ? invoices.error.message : t('common.state.error')
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-stack-sm bg-surface p-inline-md">
-        <p className="font-sans text-body text-danger">{message}</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-x-stack-sm bg-surface p-x-inline-md">
+        <p className="font-sans text-danger">{message}</p>
         <Button
           variant="secondary"
           onClick={() => {
@@ -67,24 +67,22 @@ export function ManageView() {
   const items = invoices.data.items
 
   return (
-    <div className="min-h-screen bg-surface p-inline-md">
-      <div className="mx-auto flex max-w-md flex-col gap-stack-md">
-        <h2 className="font-sans text-heading font-medium text-primary">
-          {t('widget.manage.title')}
-        </h2>
+    <div className="min-h-screen bg-surface p-x-inline-md">
+      <div className="mx-auto flex max-w-md flex-col gap-x-stack-md">
+        <h2 className="font-sans font-medium text-text-primary">{t('widget.manage.title')}</h2>
 
         {items.length === 0 ? (
           <Text>{t('widget.manage.empty')}</Text>
         ) : (
-          <ul className="flex flex-col gap-inline-sm">
+          <ul className="flex flex-col gap-x-inline-sm">
             {items.map((invoice) => (
               <li
                 key={invoice.id}
-                className="flex items-center justify-between rounded-md border border-border bg-surface-raised p-inline-md"
+                className="flex items-center justify-between rounded-md border border-border bg-surface-raised p-x-inline-md"
               >
                 <div className="flex flex-col">
                   <span className="font-medium">{formatJpy(invoice.amount)}</span>
-                  <span className="text-body text-muted">
+                  <span className="text-text-muted">
                     {invoice.due_date} ·{' '}
                     {t(STATUS_LABEL[invoice.status] ?? 'admin.receivedInvoices.status.pending')}
                   </span>
