@@ -1949,16 +1949,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.6",
+            "version": "v3.95.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "804e6c9488a836ccb4a34984c6415ac56dc6554c"
+                "reference": "3e47e5d50046f87e3244acde2fe655d1a3b72555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/804e6c9488a836ccb4a34984c6415ac56dc6554c",
-                "reference": "804e6c9488a836ccb4a34984c6415ac56dc6554c",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3e47e5d50046f87e3244acde2fe655d1a3b72555",
+                "reference": "3e47e5d50046f87e3244acde2fe655d1a3b72555",
                 "shasum": ""
             },
             "require": {
@@ -1992,13 +1992,13 @@
             "require-dev": {
                 "facile-it/paraunit": "^1.3.1 || ^2.11.0",
                 "infection/infection": "^0.32.7",
-                "justinrainbow/json-schema": "^6.9.0",
+                "justinrainbow/json-schema": "^6.10.0",
                 "keradus/cli-executor": "^2.3",
                 "mikey179/vfsstream": "^1.6.12",
                 "php-coveralls/php-coveralls": "^2.9.1",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.8",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.8",
-                "phpunit/phpunit": "^9.6.34 || ^10.5.63 || ^11.5.55",
+                "phpunit/phpunit": "^9.6.35 || ^10.5.64 || ^11.5.56 || ^12.5.31",
                 "symfony/polyfill-php85": "^1.38",
                 "symfony/var-dumper": "^5.4.48 || ^6.4.36 || ^7.4.8 || ^8.1.0",
                 "symfony/yaml": "^5.4.53 || ^6.4.41 || ^7.4.13 || ^8.1.0"
@@ -2042,7 +2042,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.6"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.15"
             },
             "funding": [
                 {
@@ -2050,7 +2050,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-13T13:24:51+00:00"
+            "time": "2026-07-15T09:51:47+00:00"
         },
         {
             "name": "league/container",
@@ -2374,11 +2374,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.2",
+            "version": "2.2.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
-                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
+                "reference": "909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
                 "shasum": ""
             },
             "require": {
@@ -2434,7 +2434,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-05T09:00:01+00:00"
+            "time": "2026-07-05T06:31:06+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2821,30 +2821,30 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.2.0",
+            "version": "13.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3796ea973f1e7698f0d432c1c66662af9764fd9a"
+                "reference": "d76d0e24225e587d6a5f0c6f6d9fef0d90712b54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3796ea973f1e7698f0d432c1c66662af9764fd9a",
-                "reference": "3796ea973f1e7698f0d432c1c66662af9764fd9a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d76d0e24225e587d6a5f0c6f6d9fef0d90712b54",
+                "reference": "d76d0e24225e587d6a5f0c6f6d9fef0d90712b54",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-filter": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "ext-xml": "*",
                 "ext-xmlwriter": "*",
                 "myclabs/deep-copy": "^1.13.4",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.4.1",
-                "phpunit/php-code-coverage": "^14.2",
+                "phpunit/php-code-coverage": "^14.2.2",
                 "phpunit/php-file-iterator": "^7.0.0",
                 "phpunit/php-invoker": "^7.0.0",
                 "phpunit/php-text-template": "^6.0.0",
@@ -2901,7 +2901,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.2.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.2.3"
             },
             "funding": [
                 {
@@ -2909,7 +2909,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-06-05T03:13:07+00:00"
+            "time": "2026-07-06T14:55:56+00:00"
         },
         {
             "name": "psr/clock",
@@ -3588,16 +3588,16 @@
         },
         {
             "name": "robmorgan/phinx",
-            "version": "0.16.11",
+            "version": "0.16.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/phinx.git",
-                "reference": "a03014fea316ba021fc0776982e5bed2d10228d4"
+                "reference": "1cce44387a9146dc04c312e6a231b17fb30385cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/phinx/zipball/a03014fea316ba021fc0776982e5bed2d10228d4",
-                "reference": "a03014fea316ba021fc0776982e5bed2d10228d4",
+                "url": "https://api.github.com/repos/cakephp/phinx/zipball/1cce44387a9146dc04c312e6a231b17fb30385cd",
+                "reference": "1cce44387a9146dc04c312e6a231b17fb30385cd",
                 "shasum": ""
             },
             "require": {
@@ -3669,9 +3669,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cakephp/phinx/issues",
-                "source": "https://github.com/cakephp/phinx/tree/0.16.11"
+                "source": "https://github.com/cakephp/phinx/tree/0.16.12"
             },
-            "time": "2026-03-15T00:04:32+00:00"
+            "time": "2026-07-03T07:27:17+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -6174,16 +6174,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v8.1.0",
+            "version": "v8.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "efb42bd2c6f4f3ccfd4683583449938b5fc146b0"
+                "reference": "8e4cdd4311683516be06944f4b85244063cdb886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/efb42bd2c6f4f3ccfd4683583449938b5fc146b0",
-                "reference": "efb42bd2c6f4f3ccfd4683583449938b5fc146b0",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/8e4cdd4311683516be06944f4b85244063cdb886",
+                "reference": "8e4cdd4311683516be06944f4b85244063cdb886",
                 "shasum": ""
             },
             "require": {
@@ -6226,7 +6226,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v8.1.0"
+                "source": "https://github.com/symfony/yaml/tree/v8.1.1"
             },
             "funding": [
                 {
@@ -6246,7 +6246,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-29T05:06:50+00:00"
+            "time": "2026-06-09T11:06:24+00:00"
         },
         {
             "name": "theseer/tokenizer",
