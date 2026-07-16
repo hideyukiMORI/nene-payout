@@ -153,8 +153,17 @@ W1 の残りは **W0b 待ち**（`./testing` サブパスと `resolveLocale` の
 （実測: patch/minor **8** ＋ major **4** ＝ #130 typescript 5.9→7.0 / #128 @types/node 22→26 /
 #124 actions/checkout 6→7 / #132 actions/cache 5→6）。段階計画は #184、major は #185 / #186。
 **実施は (c) レーンの素振り声掛けが済んでから**（統合リナ裁定・重複回避）。
-PR #123（ウィジェット）のコンフリクトは 2026-07-16 に解消し `MERGEABLE`・CI green（レビュー待ち）。
+PR #123（ウィジェット）のコンフリクトは 2026-07-16 に解消し **マージ済み**（widget 本体が main 入り・デモページは別途）。
 フロントの管理 UI 横展開は一巡済み。
+
+**Wave G 先鋒＝CSS ゲート起動（2026-07-16 夜・完了）**: #188 / **PR #189 マージ**。
+`@hideyukimori/nene2-standards` の stylelint 2枚組を `check` に配線し、payout の CSS 違反0・
+変異 assert（stylelint／scan-coverage 両方で赤）まで実証した。意匠・CSS は無改変。
+- **PR #189 が 342 リポ横展開のテンプレート**（統合リナ裁定・stylelint 配線・CI は `npm run check` 経由で自動ゲート）。
+  横展開先（invoice / vault / field / origin）は **fleet 主導**＝payout 単独では動かさない。
+- nene2-check conformance **CLI** の fail-closed 緑化は **Wave G 対象外**に確定（12キーが W0a skeleton unknown＝
+  検査器がツール側で未実装・gate-integrity は canonical eslint 全断片＝ガバナンス移行を要する）。
+  **W0a（fleet の12検査器実装）完了後の別 Wave**。
 
 他リナ待ちで、こちらから動かさないもの（2026-07-16 に統合リナと同期済み）:
 - **#159 の byte 一致の再測**: 道具（fleet PR#50＝namespace 表導出）が施主承認待ちで未マージ。
@@ -172,4 +181,6 @@ PR #123（ウィジェット）のコンフリクトは 2026-07-16 に解消し 
 Last updated: 2026-07-16 (棚卸し: 6/17 以降の 27コミット＝7月の W1 全12本、knip「完了」の嘘の是正、
 ウィジェット #122/#123 の欠落補充、テスト件数を実測値 222/181 へ更新 — Issue #181。
 同日 15:00 追記: nene2-i18n@0.1.0 の publish を実測し I18N-6/20 のブロッカーを W0b へ絞り込み、
-他リナ待ちの4件を明記 — 統合リナと同期)
+他リナ待ちの4件を明記 — 統合リナと同期。
+同日 18:00 追記: Wave G 先鋒＝CSS ゲート起動 完了（#188 / PR #189 マージ）。#189 が 342横展開の
+テンプレ・conformance CLI は W0a 後の別 Wave — Issue #190・統合リナと同期)
