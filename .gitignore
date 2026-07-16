@@ -15,3 +15,7 @@ frontend/storybook-static/
 .phpunit.cache/
 .phpstan.cache/
 .php-cs-fixer.cache
+
+# Claude Code — 個人設定とエージェント作業ツリー（.claude/skills/ は共有資産なので追跡する）
+.claude/settings.local.json
+.claude/worktrees/
