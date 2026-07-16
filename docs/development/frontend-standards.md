@@ -268,7 +268,7 @@ UI event → features/{f}/model (or entity mutation hook) → entities/{r}/mutat
 
 | Pattern | Where |
 | --- | --- |
-| **Hook + View** | `features/{f}/hooks` (logic) + `features/{f}/ui` (presentational) |
+| **Hook + View** | `features/{f}/model` (logic) + `features/{f}/ui` (presentational) |
 | **Entity module** | `entities/{r}/` |
 | **Query key factory** | `query-keys.ts` (hierarchical, typed; no string literals in features) |
 | **Mapper purity** | `mapper.ts` (pure, unit-tested) |
