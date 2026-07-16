@@ -149,7 +149,10 @@ Port lane: 90** (API: 9000, Frontend: 5190, MySQL: 3400, phpMyAdmin: 9001) — f
 
 次の焦点: **本命（スライス9＝Stripe）は ADR 0020 の法務サインオフ待ちで着手不可**。
 W1 の残りは **W0b 待ち**（`./testing` サブパスと `resolveLocale` の提供・fleet-tooling 側）で、
-**payout 単独で動かせる玉は少ない**。手番が来ているのは Dependabot 13本の処理。
+**payout 単独で動かせる玉は少ない**。手番が来ているのは **Dependabot 12本**の処理
+（実測: patch/minor **8** ＋ major **4** ＝ #130 typescript 5.9→7.0 / #128 @types/node 22→26 /
+#124 actions/checkout 6→7 / #132 actions/cache 5→6）。段階計画は #184、major は #185 / #186。
+**実施は (c) レーンの素振り声掛けが済んでから**（統合リナ裁定・重複回避）。
 PR #123（ウィジェット）のコンフリクトは 2026-07-16 に解消し `MERGEABLE`・CI green（レビュー待ち）。
 フロントの管理 UI 横展開は一巡済み。
 
