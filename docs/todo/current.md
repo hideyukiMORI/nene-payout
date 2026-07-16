@@ -161,9 +161,12 @@ PR #123（ウィジェット）のコンフリクトは 2026-07-16 に解消し 
 変異 assert（stylelint／scan-coverage 両方で赤）まで実証した。意匠・CSS は無改変。
 - **PR #189 が 342 リポ横展開のテンプレート**（統合リナ裁定・stylelint 配線・CI は `npm run check` 経由で自動ゲート）。
   横展開先（invoice / vault / field / origin）は **fleet 主導**＝payout 単独では動かさない。
-- nene2-check conformance **CLI** の fail-closed 緑化は **Wave G 対象外**に確定（12キーが W0a skeleton unknown＝
-  検査器がツール側で未実装・gate-integrity は canonical eslint 全断片＝ガバナンス移行を要する）。
-  **W0a（fleet の12検査器実装）完了後の別 Wave**。
+- nene2-check conformance **CLI** の緑ゲート化は **Wave G 対象外**に確定。
+  正確な機構（cli.js:108 `reds.length > 0 ? 1 : 0` を実測・fleet #64）: **exit は red の数だけで決まり unknown は非 blocker**。
+  緑にできない理由は (a) `styling.utilities` 等が W0a skeleton で未実装＝unknown のまま green に到達できず M-3「該当キー green」未達、
+  (b) `gate-integrity` red で exit 1（payout が canonical eslint 全断片を未採用・範囲外）。
+  CI に入れるなら **exit 0 を「緑」と表示しない非blocker 観測出力**に限る（AM-11 空虚合格回避）。
+  **意味ある緑化は W0a（fleet の12検査器実装）完了後の別 Wave**。
 
 他リナ待ちで、こちらから動かさないもの（2026-07-16 に統合リナと同期済み）:
 - **#159 の byte 一致の再測**: 道具（fleet PR#50＝namespace 表導出）が施主承認待ちで未マージ。
