@@ -50,3 +50,9 @@ data flow firmly constrained.
 - Self-review: `docs/review/frontend.md`
 - i18n: `docs/explanation/i18n.md`
 - Reference implementation: `../nene-records` `frontend/`
+- Hooks segment location: this ADR defines FSD **layers** and delegates all
+  **placement specifics** to `frontend-standards.md` (binding). Where a fleet
+  regulation supersedes this repo's prior binding, that document is the authority
+  and is revised accordingly — orchestration hooks now live in
+  `features/{feature}/model/` (fleet reg 05:916; see #194 / PR #195). This ADR
+  itself is **not** superseded: it prescribes no segment placement and stands.
