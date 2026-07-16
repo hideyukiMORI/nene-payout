@@ -25,7 +25,7 @@ export class RootErrorBoundary extends Component<{ children: ReactNode }, RootEr
   override render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div role="alert" className="px-inline-md py-stack-lg font-sans text-body text-danger">
+        <div role="alert" className="px-x-inline-md py-x-stack-lg font-sans text-danger">
           Something went wrong. Please reload the page.
         </div>
       )

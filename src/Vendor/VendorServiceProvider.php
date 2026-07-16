@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Vendor;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Support\ServiceProviderSupport;
 use Psr\Container\ContainerInterface;
 
@@ -39,7 +39,7 @@ final readonly class VendorServiceProvider implements ServiceProviderInterface
                 static fn (ContainerInterface $c): CreateVendorUseCase => new CreateVendorUseCase(
                     self::tx($c),
                     self::vendorsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )
@@ -49,7 +49,7 @@ final readonly class VendorServiceProvider implements ServiceProviderInterface
                     self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::vendorsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )
@@ -59,7 +59,7 @@ final readonly class VendorServiceProvider implements ServiceProviderInterface
                     self::service($c, VendorRepositoryInterface::class),
                     self::tx($c),
                     self::vendorsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )

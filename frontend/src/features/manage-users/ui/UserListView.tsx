@@ -12,13 +12,13 @@ export function UserListView({ state }: UserListViewProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.users.pageTitle')}
         actions={
           <Link
             to="/users/new"
-            className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+            className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
           >
             {t('admin.users.actions.invite')}
           </Link>
@@ -51,23 +51,17 @@ function UserListBody({ state }: UserListViewProps) {
           {state.users.map((user) => (
             <li
               key={user.id}
-              className="flex items-center justify-between border-b border-border py-stack-sm"
+              className="flex items-center justify-between border-b border-border py-x-stack-sm"
             >
               <div>
-                <Link
-                  to={`/users/${user.id}`}
-                  className="font-sans text-body font-medium text-accent"
-                >
+                <Link to={`/users/${user.id}`} className="font-sans font-medium text-accent">
                   {user.email}
                 </Link>
                 <Text tone="muted">
                   {t(ROLE_LABEL_KEY[user.role])} · {t(STATUS_LABEL_KEY[user.status])}
                 </Text>
               </div>
-              <Link
-                to={`/users/${user.id}/edit`}
-                className="font-sans text-body font-medium text-accent"
-              >
+              <Link to={`/users/${user.id}/edit`} className="font-sans font-medium text-accent">
                 {t('common.actions.edit')}
               </Link>
             </li>

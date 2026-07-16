@@ -13,7 +13,7 @@ export function SignInPanel() {
   const mutation = useLogin()
 
   return (
-    <section className="mx-auto flex max-w-md flex-col gap-stack-md px-inline-md py-stack-lg">
+    <section className="mx-auto flex max-w-md flex-col gap-x-stack-md px-x-inline-md py-x-stack-lg">
       <PageHeader title={t('auth.login.title')} />
       <LoginForm
         submitting={mutation.isPending}

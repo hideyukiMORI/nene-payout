@@ -1,30 +1,29 @@
-const STORAGE_KEY = 'nene-payout-token'
+import { createSessionTokenStore } from '@hideyukimori/nene2-client'
+
+/** Fleet-wide naming is `nene_<product>_token` (frontend-standards 02). */
+const STORAGE_KEY = 'nene_payout_token'
 
 /**
- * Bearer token store. The token is sent as `Authorization: Bearer` by the API
- * client. Stored in localStorage for the scaffold; a future ADR may move it to
- * an httpOnly cookie (frontend-standards security).
+ * Fleet-standard bearer token store (`@hideyukimori/nene2-client`,
+ * `createSessionTokenStore`): sessionStorage (#152/#153).
+ * `shared/api/client.ts` hands this same instance to `createNene2Transport`
+ * so there is exactly one store — one source of truth for get/set/clear.
+ */
+export const tokenStore = createSessionTokenStore({ key: STORAGE_KEY })
+
+/**
+ * Thin, stable surface over `tokenStore` for call sites that predate the
+ * transport migration (AuthGate, SignOutButton, session entity). Kept as-is
+ * so those files did not need to change.
  */
 export const authToken = {
   get(): string | null {
-    try {
-      return localStorage.getItem(STORAGE_KEY)
-    } catch {
-      return null
-    }
+    return tokenStore.getToken()
   },
   set(token: string): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, token)
-    } catch {
-      // ignore storage errors
-    }
+    tokenStore.setToken(token)
   },
   clear(): void {
-    try {
-      localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // ignore storage errors
-    }
+    tokenStore.clearToken()
   },
 }

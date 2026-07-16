@@ -5,8 +5,15 @@ export type MessageParams = Record<string, string | number>
 
 /**
  * Look up a message key in the given (possibly partial) catalog, falling back to
- * English, and interpolate `{{param}}` placeholders. English is the source of
- * truth, so any key missing from a locale still renders correctly.
+ * English, and interpolate `{{param}}` placeholders.
+ *
+ * The `en` fallback never fires today: `en.ts` is checked against
+ * `Record<MessageKey, string>` and `locales.test.ts` pins the ja / en key sets
+ * to each other, so every key resolves in its own catalog. The shape predates
+ * fleet i18n I18N-22, which wants a DEV-only miss to surface (`∅` + one
+ * `console.error`) and production to fall back to the authority catalog — ja
+ * since #162, not `en`. Aligning it is W1 work: see the I18N-6/20/22 exemplar
+ * note in that standard.
  */
 export function translate(
   messages: Partial<MessageCatalog>,

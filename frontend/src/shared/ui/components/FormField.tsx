@@ -17,13 +17,13 @@ export function FormField({ id, label, error = null, children }: FormFieldProps)
   const errorId = `${id}-error`
 
   return (
-    <div className="flex flex-col gap-inline-sm">
-      <label htmlFor={id} className="font-sans text-body font-medium text-primary">
+    <div className="flex flex-col gap-x-inline-sm">
+      <label htmlFor={id} className="font-sans font-medium text-text-primary">
         {label}
       </label>
       {children}
       {error !== null ? (
-        <p id={errorId} role="alert" className="font-sans text-body text-danger">
+        <p id={errorId} role="alert" className="font-sans text-danger">
           {error}
         </p>
       ) : null}

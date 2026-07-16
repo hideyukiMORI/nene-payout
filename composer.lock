@@ -74,7 +74,7 @@
             "dist": {
                 "type": "path",
                 "url": "../NENE2",
-                "reference": "e141e341e9b0118fa52a401716c690445c78b551"
+                "reference": "98869b1e494f6ec5c708694a3f3a51e923d43231"
             },
             "require": {
                 "monolog/monolog": "^3.0",
@@ -95,6 +95,7 @@
                 "symfony/yaml": "^8.0"
             },
             "suggest": {
+                "robmorgan/phinx": "Required by Nene2\\Install\\DatabaseSchemaApplier. A consumer that uses it MUST add phinx to its require (NOT require-dev) — it is here only as a dev dependency, so a --no-dev production build would omit it and installs would fatally fail when applying migrations.",
                 "symfony/yaml": "Required to run validate-mcp-tools.php from a consumer project (add to your require-dev)"
             },
             "type": "library",
@@ -142,6 +143,9 @@
                 "mcp": [
                     "php tools/validate-mcp-tools.php"
                 ],
+                "conformance": [
+                    "php tools/conformance.php"
+                ],
                 "version:check": [
                     "php tools/validate-version.php"
                 ],
@@ -163,6 +167,7 @@
                     "@cs",
                     "@openapi",
                     "@mcp",
+                    "@conformance",
                     "@version:check"
                 ]
             },

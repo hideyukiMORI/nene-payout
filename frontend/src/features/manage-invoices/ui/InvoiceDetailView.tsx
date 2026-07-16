@@ -34,14 +34,14 @@ export function InvoiceDetailView({ receivedInvoiceId }: InvoiceDetailViewProps)
   const query = useReceivedInvoice(toReceivedInvoiceId(receivedInvoiceId))
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.receivedInvoices.detailTitle')}
         actions={
           query.isSuccess && query.data.status === 'pending' ? (
             <Link
               to={`/received-invoices/${receivedInvoiceId}/edit`}
-              className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>
@@ -69,7 +69,7 @@ export function InvoiceDetailView({ receivedInvoiceId }: InvoiceDetailViewProps)
     }
     const invoice = query.data
     return (
-      <div className="flex flex-col gap-stack-md">
+      <div className="flex flex-col gap-x-stack-md">
         <DetailList
           rows={[
             {
@@ -97,7 +97,7 @@ export function InvoiceDetailView({ receivedInvoiceId }: InvoiceDetailViewProps)
           ) : (
             <ul>
               {invoice.taxBreakdown.map((item, index) => (
-                <li key={index} className="border-b border-border py-stack-sm">
+                <li key={index} className="border-b border-border py-x-stack-sm">
                   <Text tone="muted">
                     {item.taxRateBps === 800
                       ? t('admin.receivedInvoices.taxBreakdown.rate8')

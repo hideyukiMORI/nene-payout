@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import nene2 from '@hideyukimori/nene2-standards'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import importPlugin from 'eslint-plugin-import-x'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
@@ -95,5 +96,10 @@ export default tseslint.config(
       'react-refresh/only-export-components': 'off',
     },
   },
+  // W1: known-utility fast path（better-tailwindcss/no-unknown-classes）＋ style-prop 規律。
+  // 語彙 codemod スタック直後の連続 PR で有効化する（05 §5.3 O-6・§9.5 正例）。
+  // 配布断片を無改変で合成する（plugin 同梱・raw rule 直書き MUST NOT — README §5/合成規律・
+  // severity の正本は check:tw-oracle — O-5）。
+  ...nene2.styling,
   eslintConfigPrettier,
 )

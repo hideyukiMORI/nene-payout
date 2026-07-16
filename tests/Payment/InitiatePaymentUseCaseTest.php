@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace NenePayout\Tests\Payment;
 
-use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Payment\Gateway\ChargeRequest;
 use NenePayout\Payment\Gateway\ChargeResult;
 use NenePayout\Payment\Gateway\PaymentGatewayInterface;
@@ -19,7 +17,7 @@ use NenePayout\Payment\PaymentNotAllowedException;
 use NenePayout\ReceivedInvoice\ReceivedInvoice;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceNotFoundException;
 use NenePayout\ReceivedInvoice\ReceivedInvoiceRepositoryInterface;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\ReceivedInvoice\InMemoryReceivedInvoiceRepository;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
@@ -27,14 +25,14 @@ use PHPUnit\Framework\TestCase;
 
 final class InitiatePaymentUseCaseTest extends TestCase
 {
-    private InMemoryAuditLogRepository $auditRepo;
+    private InMemoryAuditRecorderFactory $auditRepo;
 
     /** @var RequestScopedHolder<string> */
     private RequestScopedHolder $orgId;
 
     protected function setUp(): void
     {
-        $this->auditRepo = new InMemoryAuditLogRepository();
+        $this->auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
         $holder->set('01ORG00000000000000000001');
@@ -51,12 +49,9 @@ final class InitiatePaymentUseCaseTest extends TestCase
         };
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(): Closure
+    private function auditFactory(): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($this->auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $this->auditRepo;
     }
 
     private function invoice(string $status): ReceivedInvoice

@@ -7,8 +7,8 @@ export interface PageHeaderProps {
 
 export function PageHeader({ title, actions }: PageHeaderProps) {
   return (
-    <header className="flex items-center justify-between py-stack-md">
-      <h1 className="font-sans text-heading text-primary font-medium">{title}</h1>
+    <header className="flex items-center justify-between py-x-stack-md">
+      <h1 className="font-sans text-text-primary font-medium">{title}</h1>
       {actions}
     </header>
   )

@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace NenePayout\Audit;
 
-use Closure;
 use LogicException;
+use Nene2\Audit\AuditEventRepositoryInterface;
+use Nene2\Audit\AuditPayloadMode;
+use Nene2\Audit\AuditRecorderFactory;
+use Nene2\Audit\AuditRecorderFactoryInterface;
+use Nene2\Audit\AuditTableConfig;
+use Nene2\Audit\PdoAuditEventRepository;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
@@ -15,53 +20,71 @@ use Nene2\Http\RequestScopedHolder;
 use NenePayout\ApplicationServiceProvider;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Wires the framework audit module (`Nene2\Audit`, ADR 0014) onto Payout's
+ * existing `audit_logs` table — no re-migration.
+ *
+ * The whole product/framework seam is {@see AuditTableConfig}: it points the
+ * framework repository and recorder at Payout's physical columns (ULID string
+ * id, `actor_user_id`, `created_at`, `before_json`/`after_json`, and the
+ * `request_id` column reused as the framework `metadata` receptacle). Records
+ * are written by the framework's transaction-atomic
+ * {@see AuditRecorderFactoryInterface::forExecutor()}; reads go through the
+ * product's {@see AuditReadRepositoryInterface}, which keeps the org-scoping and
+ * actor-email concerns the framework contract intentionally omits.
+ */
 final readonly class AuditServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerBuilder $builder): void
     {
         $builder
             ->set(
-                AuditLogRepositoryInterface::class,
-                static function (ContainerInterface $container): AuditLogRepositoryInterface {
-                    $query = $container->get(DatabaseQueryExecutorInterface::class);
-                    $orgId = $container->get(ApplicationServiceProvider::ORG_ID_HOLDER);
-
-                    if (!$query instanceof DatabaseQueryExecutorInterface) {
-                        throw new LogicException('Database query executor service is invalid.');
-                    }
-
-                    if (!$orgId instanceof RequestScopedHolder) {
-                        throw new LogicException('Org id holder service is invalid.');
-                    }
-
-                    /** @var RequestScopedHolder<string> $orgId */
-                    return new PdoAuditLogRepository($query, $orgId);
+                AuditTableConfig::class,
+                static fn (): AuditTableConfig => self::tableConfig(),
+            )
+            // Non-transactional repository, used by the read side. Mutating use
+            // cases build their own repository bound to the transaction executor
+            // via AuditRecorderFactoryInterface::forExecutor().
+            ->set(
+                AuditEventRepositoryInterface::class,
+                static function (ContainerInterface $container): AuditEventRepositoryInterface {
+                    return new PdoAuditEventRepository(self::query($container), self::tableConfig());
                 },
             )
             ->set(
-                AuditRecorderInterface::class,
-                static function (ContainerInterface $container): AuditRecorderInterface {
-                    $repo = $container->get(AuditLogRepositoryInterface::class);
-                    $clock = $container->get(ClockInterface::class);
+                AuditRecorderFactoryInterface::class,
+                static function (ContainerInterface $container): AuditRecorderFactoryInterface {
+                    // No organization holder is passed: every Payout use case sets
+                    // AuditEvent::$organizationId explicitly (including holder-less
+                    // superadmin provisioning), so the recorder never needs the
+                    // fallback. Payout's holder is also RequestScopedHolder<string>,
+                    // which is invariant against the framework's <string|int>.
+                    return new AuditRecorderFactory(self::clock($container), self::tableConfig());
+                },
+            )
+            ->set(
+                AuditReadRepositoryInterface::class,
+                static function (ContainerInterface $container): AuditReadRepositoryInterface {
+                    $events = $container->get(AuditEventRepositoryInterface::class);
 
-                    if (!$repo instanceof AuditLogRepositoryInterface) {
-                        throw new LogicException('Audit log repository service is invalid.');
+                    if (!$events instanceof AuditEventRepositoryInterface) {
+                        throw new LogicException('Audit event repository service is invalid.');
                     }
 
-                    if (!$clock instanceof ClockInterface) {
-                        throw new LogicException('Clock service is invalid.');
-                    }
-
-                    return new AuditRecorder($repo, $clock);
+                    return new PdoAuditReadRepository(
+                        $events,
+                        self::query($container),
+                        self::orgHolder($container),
+                    );
                 },
             )
             ->set(
                 ListAuditLogsUseCaseInterface::class,
                 static function (ContainerInterface $container): ListAuditLogsUseCaseInterface {
-                    $repo = $container->get(AuditLogRepositoryInterface::class);
+                    $repo = $container->get(AuditReadRepositoryInterface::class);
 
-                    if (!$repo instanceof AuditLogRepositoryInterface) {
-                        throw new LogicException('Audit log repository service is invalid.');
+                    if (!$repo instanceof AuditReadRepositoryInterface) {
+                        throw new LogicException('Audit read repository service is invalid.');
                     }
 
                     return new ListAuditLogsUseCase($repo);
@@ -99,27 +122,65 @@ final readonly class AuditServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * Builds an AuditRecorder bound to a given transaction executor, so a
-     * mutation and its audit row commit atomically (ADR 0011). Used by mutating
-     * use cases inside `DatabaseTransactionManagerInterface::transactional()`.
-     *
-     * @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface
+     * Points the framework audit module at Payout's existing `audit_logs` table
+     * (ADR 0014). This is the single knob a product turns to adopt `Nene2\Audit`
+     * without re-migrating: physical column names, ULID string id
+     * (`idIsAutoIncrement: false`), and canonical before/after payload mode.
      */
-    public static function recorderFactory(ContainerInterface $container): Closure
+    private static function tableConfig(): AuditTableConfig
+    {
+        return new AuditTableConfig(
+            table: 'audit_logs',
+            mode: AuditPayloadMode::BeforeAfter,
+            idColumn: 'id',
+            actionColumn: 'action',
+            entityTypeColumn: 'entity_type',
+            entityIdColumn: 'entity_id',
+            actorColumn: 'actor_user_id',
+            organizationColumn: 'organization_id',
+            occurredAtColumn: 'created_at',
+            metadataColumn: 'request_id',
+            beforeColumn: 'before_json',
+            afterColumn: 'after_json',
+            payloadColumn: null,
+            idIsAutoIncrement: false,
+        );
+    }
+
+    private static function query(ContainerInterface $container): DatabaseQueryExecutorInterface
+    {
+        $query = $container->get(DatabaseQueryExecutorInterface::class);
+
+        if (!$query instanceof DatabaseQueryExecutorInterface) {
+            throw new LogicException('Database query executor service is invalid.');
+        }
+
+        return $query;
+    }
+
+    private static function clock(ContainerInterface $container): ClockInterface
     {
         $clock = $container->get(ClockInterface::class);
-        $orgId = $container->get(ApplicationServiceProvider::ORG_ID_HOLDER);
 
         if (!$clock instanceof ClockInterface) {
             throw new LogicException('Clock service is invalid.');
         }
 
-        if (!$orgId instanceof RequestScopedHolder) {
+        return $clock;
+    }
+
+    /**
+     * @return RequestScopedHolder<string>
+     */
+    private static function orgHolder(ContainerInterface $container): RequestScopedHolder
+    {
+        $holder = $container->get(ApplicationServiceProvider::ORG_ID_HOLDER);
+
+        if (!$holder instanceof RequestScopedHolder) {
             throw new LogicException('Org id holder service is invalid.');
         }
 
-        /** @var RequestScopedHolder<string> $orgId */
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface
-            => new AuditRecorder(new PdoAuditLogRepository($exec, $orgId), $clock);
+        /** @var RequestScopedHolder<string> $holder */
+        return $holder;
     }
 }

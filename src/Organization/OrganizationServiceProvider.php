@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Organization;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\DependencyInjection\ContainerBuilder;
 use Nene2\DependencyInjection\ServiceProviderInterface;
-use NenePayout\Audit\AuditServiceProvider;
 use NenePayout\Support\ServiceProviderSupport;
 use Psr\Container\ContainerInterface;
 
@@ -37,7 +37,7 @@ final readonly class OrganizationServiceProvider implements ServiceProviderInter
                     self::service($c, OrganizationRepositoryInterface::class),
                     self::tx($c),
                     self::organizationsFactory($c),
-                    AuditServiceProvider::recorderFactory($c),
+                    self::service($c, AuditRecorderFactoryInterface::class),
                     self::orgHolder($c),
                 ),
             )

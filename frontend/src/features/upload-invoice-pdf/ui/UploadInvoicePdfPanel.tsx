@@ -23,7 +23,7 @@ export function UploadInvoicePdfPanel({ receivedInvoiceId }: UploadInvoicePdfPan
   const mutation = useAttachReceivedInvoicePdf()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.receivedInvoices.uploadPdf')} />
       {renderBody()}
     </section>
@@ -49,7 +49,7 @@ export function UploadInvoicePdfPanel({ receivedInvoiceId }: UploadInvoicePdfPan
     }
 
     return (
-      <div className="flex flex-col gap-stack-md">
+      <div className="flex flex-col gap-x-stack-md">
         <Text tone="muted">
           {t('admin.payments.amountDue', { amount: formatJpy(query.data.amount, locale) })}
         </Text>

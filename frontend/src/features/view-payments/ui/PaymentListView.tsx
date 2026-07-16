@@ -21,7 +21,7 @@ export function PaymentListView({ state }: PaymentListViewProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.payments.pageTitle')} />
       <PaymentListBody state={state} />
     </section>
@@ -48,11 +48,8 @@ function PaymentListBody({ state }: PaymentListViewProps) {
       return (
         <ul>
           {state.payments.map((payment) => (
-            <li key={payment.id} className="border-b border-border py-stack-sm">
-              <Link
-                to={`/payments/${payment.id}`}
-                className="font-sans text-body font-medium text-accent"
-              >
+            <li key={payment.id} className="border-b border-border py-x-stack-sm">
+              <Link to={`/payments/${payment.id}`} className="font-sans font-medium text-accent">
                 {formatJpy(payment.amount, locale)}
               </Link>
               <Text tone="muted">

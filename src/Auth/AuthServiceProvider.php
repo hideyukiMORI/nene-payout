@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NenePayout\Auth;
 
 use LogicException;
+use Nene2\Auth\GuardedJwtSecretResolver;
 use Nene2\Auth\LocalBearerTokenVerifier;
 use Nene2\Auth\TokenIssuerInterface;
 use Nene2\Auth\TokenVerifierInterface;
@@ -19,6 +20,15 @@ use Psr\Container\ContainerInterface;
 
 final readonly class AuthServiceProvider implements ServiceProviderInterface
 {
+    /**
+     * Development-only fallback secret, used **only** in local/test when
+     * NENE2_LOCAL_JWT_SECRET is unset and the operator opts in via
+     * NENE2_ALLOW_DEV_SECRET. Production ignores this value entirely — see
+     * {@see GuardedJwtSecretResolver}. This value is not secret, so signing
+     * real tokens with it would be a full authentication bypass.
+     */
+    private const DEFAULT_DEV_SECRET = 'nene-payout-dev-secret';
+
     public function register(ContainerBuilder $builder): void
     {
         $builder
@@ -31,7 +41,9 @@ final readonly class AuthServiceProvider implements ServiceProviderInterface
                         throw new LogicException('Application config service is invalid.');
                     }
 
-                    return new LocalBearerTokenVerifier((string) ($config->localJwtSecret ?? ''));
+                    return new LocalBearerTokenVerifier(
+                        GuardedJwtSecretResolver::fromConfig($config, self::DEFAULT_DEV_SECRET),
+                    );
                 },
             )
             ->set(

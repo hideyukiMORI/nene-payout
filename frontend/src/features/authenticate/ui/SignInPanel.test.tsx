@@ -9,7 +9,7 @@ import {
 } from '../../../../tests/msw/handlers/session'
 import { SignInPanel } from './SignInPanel'
 
-const TOKEN_KEY = 'nene-payout-token'
+const TOKEN_KEY = 'nene_payout_token'
 
 function fillAndSubmit() {
   fireEvent.change(screen.getByLabelText('Email address'), {
@@ -25,7 +25,7 @@ describe('SignInPanel', () => {
   })
   beforeEach(() => {
     localStorage.setItem('nene-payout-locale', 'en')
-    localStorage.removeItem(TOKEN_KEY)
+    sessionStorage.removeItem(TOKEN_KEY)
   })
   afterEach(() => {
     mswServer.resetHandlers()
@@ -41,8 +41,9 @@ describe('SignInPanel', () => {
     fillAndSubmit()
 
     await waitFor(() => {
-      expect(localStorage.getItem(TOKEN_KEY)).toBe(TEST_TOKEN)
+      expect(sessionStorage.getItem(TOKEN_KEY)).toBe(TEST_TOKEN)
     })
+    expect(localStorage.getItem(TOKEN_KEY)).toBeNull()
   })
 
   it('shows the failure message and stores no token on invalid credentials', async () => {
@@ -52,6 +53,7 @@ describe('SignInPanel', () => {
     fillAndSubmit()
 
     expect(await screen.findByText('Invalid email or password.')).toBeInTheDocument()
+    expect(sessionStorage.getItem(TOKEN_KEY)).toBeNull()
     expect(localStorage.getItem(TOKEN_KEY)).toBeNull()
   })
 })

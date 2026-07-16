@@ -14,14 +14,14 @@ export function VendorDetailView({ vendorId }: VendorDetailViewProps) {
   const query = useVendor(toVendorId(vendorId))
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader
         title={t('admin.vendors.detailTitle')}
         actions={
           query.isSuccess ? (
             <Link
               to={`/vendors/${vendorId}/edit`}
-              className="rounded-md bg-accent px-inline-md py-stack-sm font-sans text-body font-medium text-accent-contrast"
+              className="rounded-x-md bg-accent px-x-inline-md py-x-stack-sm font-sans font-medium text-on-accent"
             >
               {t('common.actions.edit')}
             </Link>

@@ -1,10 +1,12 @@
-import type { MessageCatalog } from './en'
-
 /**
- * Japanese message catalog. Must define every key in `en.ts` (enforced by the
- * parity test in `locales.test.ts`) so language switching never shows a gap.
+ * Japanese message catalog — the authority catalog (規約 04 I18N-8).
+ *
+ * `MessageKey` is derived from these keys (`keyof typeof ja`). `en.ts` mirrors
+ * this catalog exactly: it is typed `Record<MessageKey, string>`, so adding or
+ * removing a key here surfaces as a compile error in `en.ts`. The runtime
+ * parity test (`locales.test.ts`) keeps every locale in sync as well.
  */
-export const ja: Partial<MessageCatalog> = {
+export const ja = {
   // ── App shell ─────────────────────────────────────────────────────────────
   'app.name': 'NeNe Payout',
   'app.nav.label': 'メイン',
@@ -290,3 +292,7 @@ export const ja: Partial<MessageCatalog> = {
   'widget.manage.title': '請求書の支払い',
   'widget.manage.empty': '支払い対象の請求書はありません。',
 }
+
+/** Authority key set (規約 04 I18N-8): every `MessageKey` derives from `ja`. */
+export type MessageKey = keyof typeof ja
+export type MessageCatalog = Record<MessageKey, string>

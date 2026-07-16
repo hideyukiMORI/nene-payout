@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace NenePayout\Tests\Vendor;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
 use NenePayout\Vendor\CreateVendorInput;
@@ -24,14 +23,14 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorUseCaseTest extends TestCase
 {
-    private InMemoryAuditLogRepository $auditRepo;
+    private InMemoryAuditRecorderFactory $auditRepo;
 
     /** @var RequestScopedHolder<string> */
     private RequestScopedHolder $orgId;
 
     protected function setUp(): void
     {
-        $this->auditRepo = new InMemoryAuditLogRepository();
+        $this->auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
         $holder->set('01ORG00000000000000000001');
@@ -44,12 +43,9 @@ final class VendorUseCaseTest extends TestCase
         return static fn (DatabaseQueryExecutorInterface $exec): VendorRepositoryInterface => $repo;
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(): Closure
+    private function auditFactory(): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($this->auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $this->auditRepo;
     }
 
     private function createInput(string $name = '仕入先株式会社'): CreateVendorInput

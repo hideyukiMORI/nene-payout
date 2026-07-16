@@ -5,9 +5,13 @@ changed **what**, **when**, and **how** — including the **before** and **after
 state. An auditor or reviewer must be able to reconstruct the full history of any
 vendor, received invoice, payment execution, organization, or setting.
 
-This is a compliance control (`payment-compliance.md` §9). It is modeled on the
-`nene-invoice` audit implementation (ADR 0008 there) and adapted to Payout's
-identifiers (ULID) and tenant model.
+This is a compliance control (`payment-compliance.md` §9). Since #144 the
+implementation is the framework audit module **`Nene2\Audit`** (NENE2 ADR 0014);
+Payout no longer ships its own recorder/repository. The module is pointed at
+Payout's existing `audit_logs` table (no re-migration) via an `AuditTableConfig`,
+and Payout keeps only the read side (org scoping, actor-email join) and the
+`payout.*`/entity action vocabulary. The compliance principles below are
+unchanged — only the classes that enforce them moved into the framework.
 
 See: [ADR 0011](../adr/0011-audit-logging.md),
 [`payment-compliance.md`](./payment-compliance.md) §9,
@@ -42,31 +46,30 @@ See: [ADR 0011](../adr/0011-audit-logging.md),
 | entity_id | ULID\|null | Id of the changed entity |
 | before_json | json\|null | **Sanitized** snapshot before (null for create) |
 | after_json | json\|null | **Sanitized** snapshot after (null for void/delete) |
-| request_id | string\|null | `X-Request-Id` correlation (NENE2 `RequestIdMiddleware`) |
-| created_at | datetime | UTC instant from injected `ClockInterface` (ADR 0012) |
+| request_id | string\|null | `X-Request-Id` correlation; physical column reused as the framework `metadata` receptacle (ADR 0014) |
+| created_at | datetime | UTC instant from injected `ClockInterface` (ADR 0012) — the framework `occurredAt` field |
 | actor_email | string\|null | Resolved **at read time** only (never stored) |
 
+Records are the framework value object `Nene2\Audit\AuditEvent`, appended through
+`Nene2\Audit\AuditRecorderFactoryInterface::forExecutor($exec)->record($event)`:
+
 ```php
-interface AuditRecorderInterface
-{
-    /**
-     * @param array<string,mixed>|null $before sanitized snapshot before (null for create)
-     * @param array<string,mixed>|null $after  sanitized snapshot after  (null for delete/void)
-     */
-    public function record(
-        ?string $actorUserId,
-        ?string $organizationId,
-        string $action,
-        string $entityType,
-        ?string $entityId,
-        ?array $before,
-        ?array $after,
-    ): void;
-}
+$this->auditFactory->forExecutor($exec)->record(new \Nene2\Audit\AuditEvent(
+    action: 'vendor.updated',        // free string owned by Payout (terms.md §10)
+    entityType: 'vendor',
+    entityId: $id,
+    actorId: $actorUserId,
+    organizationId: $organizationId,
+    before: $beforeSnapshot,         // null for create
+    after: $afterSnapshot,           // null for void/delete
+    id: \NenePayout\Support\Ulid::generate(),  // ULID supplied by the call site
+));
 ```
 
-The recorder timestamps with the injected `ClockInterface` (UTC), so audit time
-is deterministic in tests and consistent with every other "now".
+The framework recorder fills `occurredAt` from the injected `ClockInterface`
+(UTC), so audit time is deterministic in tests and consistent with every other
+"now". Because Payout's ids are ULID strings (`AuditTableConfig::$idIsAutoIncrement
+= false`), the call site supplies the id; the framework does not generate it.
 
 ---
 
@@ -101,7 +104,9 @@ UseCase.execute(actorUserId, …):
   before  = presenter(repo.find(id))        # snapshot before (null for create)
   …perform the mutation…
   after   = presenter(repo.find(id))        # snapshot after  (null for void/delete)
-  auditRecorder.record(actorUserId, orgId, '{entity}.{verb}', entityType, id, before, after)
+  auditFactory.forExecutor(exec).record(new AuditEvent(
+      action: '{entity}.{verb}', entityType, entityId: id,
+      actorId: actorUserId, organizationId: orgId, before, after, id: Ulid::generate()))
 ```
 
 - **before/after are built from the same `*Response` presenters used for API
@@ -134,21 +139,30 @@ mutation rolls back, no audit row is written; if the audit write fails, the
 mutation rolls back. There is **no** best-effort, out-of-transaction audit.
 
 Implementation pattern (NENE2): wrap the mutation in
-`DatabaseTransactionManagerInterface::transactional()`, and rebind the repository
-and `AuditRecorder` to the transaction's `DatabaseQueryExecutorInterface` via
-factories so both writes share the one transaction.
+`DatabaseTransactionManagerInterface::transactional()`, rebind the repository to
+the transaction's `DatabaseQueryExecutorInterface` via its factory, and obtain a
+recorder bound to the **same** executor from
+`Nene2\Audit\AuditRecorderFactoryInterface::forExecutor()` so both writes share
+the one transaction.
 
 ```php
 return $this->tx->transactional(function (DatabaseQueryExecutorInterface $exec)
     use ($actorUserId, $orgId, $id, $input, $existing) {
-    $repo  = ($this->repoFactory)($exec);
-    $audit = ($this->auditFactory)($exec);
+    $repo = ($this->repoFactory)($exec);
 
     $repo->update(/* … */);
     $after = $repo->findById($id);
 
-    $audit->record($actorUserId, $orgId, 'vendor.updated', 'vendor', $id,
-        VendorResponse::toArray($existing), VendorResponse::toArray($after));
+    $this->auditFactory->forExecutor($exec)->record(new \Nene2\Audit\AuditEvent(
+        action: 'vendor.updated',
+        entityType: 'vendor',
+        entityId: $id,
+        actorId: $actorUserId,
+        organizationId: $orgId,
+        before: VendorResponse::toArray($existing),
+        after: VendorResponse::toArray($after),
+        id: \NenePayout\Support\Ulid::generate(),
+    ));
 
     return $after;
 });
@@ -203,4 +217,5 @@ See [`../development/database-standards.md`](../development/database-standards.m
 - Compliance: [`payment-compliance.md`](./payment-compliance.md) §9
 - Immutability / retention: [ADR 0013](../adr/0013-payment-record-immutability-and-retention.md)
 - Action names: [`../terms.md` §10](../terms.md)
-- Reference implementation: `../nene-invoice` `src/Audit/`
+- Framework module: `Nene2\Audit` (NENE2 ADR 0014) — `vendor/hideyukimori/nene2/src/Audit/`
+- Product read side: `src/Audit/` (`AuditReadRepositoryInterface`, `PdoAuditReadRepository`, list route)

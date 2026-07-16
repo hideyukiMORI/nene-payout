@@ -12,7 +12,7 @@ export function CreateVendorForm() {
   const mutation = useCreateVendor()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('admin.vendors.newTitle')} />
       <VendorForm
         submitLabel={t('common.actions.create')}

@@ -6,23 +6,24 @@ namespace NenePayout\Organization;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
+use NenePayout\Support\Ulid;
 
 final readonly class UpdateOrganizationUseCase implements UpdateOrganizationUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): OrganizationRepositoryInterface $organizationsFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
         private OrganizationRepositoryInterface $organizations,
         private DatabaseTransactionManagerInterface $tx,
         private Closure $organizationsFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -55,15 +56,16 @@ final readonly class UpdateOrganizationUseCase implements UpdateOrganizationUseC
                 throw new LogicException('Organization disappeared immediately after update.');
             }
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'organization.updated',
-                'organization',
-                $organizationId,
-                OrganizationResponse::toArray($existing),
-                OrganizationResponse::toArray($updated),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'organization.updated',
+                entityType: 'organization',
+                entityId: $organizationId,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: OrganizationResponse::toArray($existing),
+                after: OrganizationResponse::toArray($updated),
+                id: Ulid::generate(),
+            ));
 
             return $updated;
         });

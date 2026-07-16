@@ -6,23 +6,23 @@ namespace NenePayout\Vendor;
 
 use Closure;
 use LogicException;
+use Nene2\Audit\AuditEvent;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Database\DatabaseTransactionManagerInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Support\Ulid;
 
 final readonly class CreateVendorUseCase implements CreateVendorUseCaseInterface
 {
     /**
      * @param Closure(DatabaseQueryExecutorInterface): VendorRepositoryInterface $vendorsFactory
-     * @param Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface $auditFactory
      * @param RequestScopedHolder<string> $orgId
      */
     public function __construct(
         private DatabaseTransactionManagerInterface $tx,
         private Closure $vendorsFactory,
-        private Closure $auditFactory,
+        private AuditRecorderFactoryInterface $auditFactory,
         private RequestScopedHolder $orgId,
     ) {
     }
@@ -54,15 +54,16 @@ final readonly class CreateVendorUseCase implements CreateVendorUseCaseInterface
                 throw new LogicException('Vendor disappeared immediately after creation.');
             }
 
-            ($this->auditFactory)($exec)->record(
-                $actorUserId,
-                $organizationId,
-                'vendor.created',
-                'vendor',
-                $id,
-                null,
-                VendorResponse::toArray($created),
-            );
+            $this->auditFactory->forExecutor($exec)->record(new AuditEvent(
+                action: 'vendor.created',
+                entityType: 'vendor',
+                entityId: $id,
+                actorId: $actorUserId,
+                organizationId: $organizationId,
+                before: null,
+                after: VendorResponse::toArray($created),
+                id: Ulid::generate(),
+            ));
 
             return $created;
         });

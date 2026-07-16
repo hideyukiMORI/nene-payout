@@ -5,7 +5,7 @@ export function ForbiddenPage() {
   const { t } = useTranslation()
 
   return (
-    <section className="px-inline-md">
+    <section className="px-x-inline-md">
       <PageHeader title={t('common.error.forbidden')} />
       <Text tone="muted">{t('common.error.forbidden')}</Text>
     </section>

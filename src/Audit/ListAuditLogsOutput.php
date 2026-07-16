@@ -7,7 +7,7 @@ namespace NenePayout\Audit;
 final readonly class ListAuditLogsOutput
 {
     /**
-     * @param list<AuditLog> $items
+     * @param list<AuditLogView> $items
      */
     public function __construct(
         public array $items,

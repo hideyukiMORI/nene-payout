@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace NenePayout\Tests\Organization;
 
 use Closure;
+use Nene2\Audit\AuditRecorderFactoryInterface;
 use Nene2\Database\DatabaseQueryExecutorInterface;
 use Nene2\Http\RequestScopedHolder;
-use NenePayout\Audit\AuditRecorder;
-use NenePayout\Audit\AuditRecorderInterface;
 use NenePayout\Organization\GetOrganizationUseCase;
 use NenePayout\Organization\Organization;
 use NenePayout\Organization\OrganizationNotFoundException;
 use NenePayout\Organization\OrganizationRepositoryInterface;
 use NenePayout\Organization\UpdateOrganizationInput;
 use NenePayout\Organization\UpdateOrganizationUseCase;
-use NenePayout\Tests\Audit\InMemoryAuditLogRepository;
+use NenePayout\Tests\Audit\InMemoryAuditRecorderFactory;
 use NenePayout\Tests\Support\FixedClock;
 use NenePayout\Tests\Support\ImmediateTransactionManager;
 use PHPUnit\Framework\TestCase;
@@ -24,14 +23,14 @@ final class OrganizationUseCaseTest extends TestCase
 {
     private const ORG_ID = '01ORG00000000000000000001';
 
-    private InMemoryAuditLogRepository $auditRepo;
+    private InMemoryAuditRecorderFactory $auditRepo;
 
     /** @var RequestScopedHolder<string> */
     private RequestScopedHolder $orgId;
 
     protected function setUp(): void
     {
-        $this->auditRepo = new InMemoryAuditLogRepository();
+        $this->auditRepo = new InMemoryAuditRecorderFactory(new FixedClock());
         /** @var RequestScopedHolder<string> $holder */
         $holder = new RequestScopedHolder();
         $holder->set(self::ORG_ID);
@@ -44,12 +43,9 @@ final class OrganizationUseCaseTest extends TestCase
         return static fn (DatabaseQueryExecutorInterface $exec): OrganizationRepositoryInterface => $repo;
     }
 
-    /** @return Closure(DatabaseQueryExecutorInterface): AuditRecorderInterface */
-    private function auditFactory(): Closure
+    private function auditFactory(): AuditRecorderFactoryInterface
     {
-        $recorder = new AuditRecorder($this->auditRepo, new FixedClock());
-
-        return static fn (DatabaseQueryExecutorInterface $exec): AuditRecorderInterface => $recorder;
+        return $this->auditRepo;
     }
 
     private function existing(string $name = 'Acme 株式会社'): Organization
