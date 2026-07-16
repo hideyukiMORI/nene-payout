@@ -10,7 +10,8 @@
   "packageManager": "npm@10.9.7",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && npm run build:widget",
+    "build:widget": "vite build --config vite.widget.config.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --check .",

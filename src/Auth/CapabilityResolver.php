@@ -14,6 +14,12 @@ final class CapabilityResolver
     {
         $method = strtoupper($method);
 
+        // Widget embed-code generation grants broad org access — admins only.
+        // (The widget runtime under /api/v1/widget/ is token-gated separately.)
+        if (str_starts_with($path, '/api/v1/widget-tokens')) {
+            return Capability::ManageOrganizationSettings;
+        }
+
         if (str_starts_with($path, '/api/v1/organizations')) {
             return Capability::ManageOrganizations;
         }

@@ -34,6 +34,9 @@ use NenePayout\User\UserServiceProvider;
 use NenePayout\Vendor\VendorNotFoundExceptionHandler;
 use NenePayout\Vendor\VendorRouteRegistrar;
 use NenePayout\Vendor\VendorServiceProvider;
+use NenePayout\Widget\WidgetRouteRegistrar;
+use NenePayout\Widget\WidgetServiceProvider;
+use NenePayout\Widget\WidgetTokenExceptionHandler;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -67,6 +70,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
         $builder->addProvider(new ReceivedInvoiceServiceProvider());
         $builder->addProvider(new PaymentServiceProvider());
         $builder->addProvider(new UserServiceProvider());
+        $builder->addProvider(new WidgetServiceProvider());
 
         $builder
             ->set(
@@ -89,6 +93,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $receivedInvoice = $container->get(ReceivedInvoiceRouteRegistrar::class);
                     $payment = $container->get(PaymentRouteRegistrar::class);
                     $user = $container->get(UserRouteRegistrar::class);
+                    $widget = $container->get(WidgetRouteRegistrar::class);
 
                     if (!$auth instanceof AuthRouteRegistrar) {
                         throw new LogicException('Auth route registrar service is invalid.');
@@ -122,7 +127,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('User route registrar service is invalid.');
                     }
 
-                    return [$auth, $audit, $organization, $organizations, $vendor, $receivedInvoice, $payment, $user];
+                    if (!$widget instanceof WidgetRouteRegistrar) {
+                        throw new LogicException('Widget route registrar service is invalid.');
+                    }
+
+                    return [$auth, $audit, $organization, $organizations, $vendor, $receivedInvoice, $payment, $user, $widget];
                 },
             )
             ->set(
@@ -139,6 +148,7 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                     $userEmailConflict = $container->get(UserEmailConflictExceptionHandler::class);
                     $organizationNotFound = $container->get(OrganizationNotFoundExceptionHandler::class);
                     $organizationSlugConflict = $container->get(OrganizationSlugConflictExceptionHandler::class);
+                    $widgetTokenInvalid = $container->get(WidgetTokenExceptionHandler::class);
 
                     if (!$invalidCredentials instanceof InvalidCredentialsExceptionHandler) {
                         throw new LogicException('Invalid credentials exception handler service is invalid.');
@@ -180,7 +190,11 @@ final readonly class ApplicationServiceProvider implements ServiceProviderInterf
                         throw new LogicException('Organization slug conflict exception handler service is invalid.');
                     }
 
-                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed, $userNotFound, $userEmailConflict, $organizationNotFound, $organizationSlugConflict];
+                    if (!$widgetTokenInvalid instanceof WidgetTokenExceptionHandler) {
+                        throw new LogicException('Widget token exception handler service is invalid.');
+                    }
+
+                    return [$invalidCredentials, $vendorNotFound, $invoiceNotFound, $invoiceNotEditable, $paymentNotFound, $paymentNotAllowed, $userNotFound, $userEmailConflict, $organizationNotFound, $organizationSlugConflict, $widgetTokenInvalid];
                 },
             );
     }
