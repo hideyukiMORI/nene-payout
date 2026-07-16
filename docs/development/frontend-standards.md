@@ -182,12 +182,20 @@ entities/received-invoice/
 | HTTP transport | `shared/api/client.ts` |
 | Problem Details parse | `shared/api/errors.ts` |
 | Component props | same `.tsx` as component (`{Component}Props`) |
-| Feature orchestration hooks | `features/{feature}/hooks/` |
+| Feature orchestration hooks | `features/{feature}/model/` |
 | MSW handlers | `tests/msw/{resource}.ts` or `entities/{resource}/__msw__/` |
 | Test factories (build **models**) | `tests/factories/{resource}.ts` |
 | Design token CSS | `shared/ui/theme/themes/*.css` only |
 | UI primitives / composed | `shared/ui/primitives/` / `shared/ui/components/` |
 | Stories | colocated `shared/ui/**/*.stories.tsx` |
+
+> **Hooks segment location — fleet reg 05:916（移行中・#194）**: orchestration hooks は
+> `features/{feature}/model/` に置く。fleet reg が本リポの旧 binding（`hooks/`）を supersede する
+> （規約プログラムの成立条件 — binding は fleet reg の下位互換に改訂していく）。
+> 既存の `features/*/hooks/`（7 features・命名は `use-kebab-case.ts` で既に正）は**物理移設が未了**で、
+> **A1 codemod で移設する（手作業移設禁止・pilot=vault の後に payout へ）**。codemod 到着まで
+> `hooks/` はツリーに残る（設計どおりの過渡状態）。①「form 系 model を use-*-form フック化せよ」は
+> 05:916 の要求ではない（hook を export しない module は kebab-case のまま正 — fleet #66 差し戻し）。
 
 ### Forbidden placements (automatic reject)
 
@@ -207,7 +215,7 @@ entities/received-invoice/
 
 ```text
 API JSON → shared/api/client.ts → entities/{r}/api-types.ts → entities/{r}/mapper.ts
-  → entities/{r}/queries.ts (TanStack cache) → features/{f}/hooks → features/{f}/ui (render models)
+  → entities/{r}/queries.ts (TanStack cache) → features/{f}/model → features/{f}/ui (render models)
 ```
 
 - **Mappers run inside entity hooks**, not components.
@@ -217,7 +225,7 @@ API JSON → shared/api/client.ts → entities/{r}/api-types.ts → entities/{r}
 ### Write path (UI → server)
 
 ```text
-UI event → features/{f}/hooks (or entity mutation hook) → entities/{r}/mutations.ts
+UI event → features/{f}/model (or entity mutation hook) → entities/{r}/mutations.ts
   → shared/api/client.ts → API
   → onSuccess: invalidate query-keys (explicit) ; onError: Problem Details → AppError → UI feedback
 ```
@@ -260,7 +268,7 @@ UI event → features/{f}/hooks (or entity mutation hook) → entities/{r}/mutat
 
 | Pattern | Where |
 | --- | --- |
-| **Hook + View** | `features/{f}/hooks` (logic) + `features/{f}/ui` (presentational) |
+| **Hook + View** | `features/{f}/model` (logic) + `features/{f}/ui` (presentational) |
 | **Entity module** | `entities/{r}/` |
 | **Query key factory** | `query-keys.ts` (hierarchical, typed; no string literals in features) |
 | **Mapper purity** | `mapper.ts` (pure, unit-tested) |
