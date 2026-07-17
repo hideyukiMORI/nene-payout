@@ -28,6 +28,19 @@ updates:
       # Reference: #128 (declined @types/node 22 -> 26).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # Toolchain policy: typescript major is gated by typescript-eslint, not us.
+      # TS 7.0 (native port) is npm "latest", but every @typescript-eslint/*
+      # package still pins peer typescript ">=4.8.4 <6.1.0" (8.64.0 stable and
+      # canary alike; no v9+ exists yet), so TS >=6.1 has zero tooling support.
+      # typescript-eslint is owned by @hideyukimori/nene2-standards (pins
+      # typescript-eslint ^8.35.0), so Payout cannot raise it alone. A forced
+      # install (--legacy-peer-deps) only destabilises type-aware lint under
+      # --max-warnings 0 with no upside. Track ^5 minor/patch only.
+      # Lift this when typescript-eslint ships a TS 6.1+ peer AND nene2-standards
+      # adopts it, then re-verify in one batch. Reference: #206 (declined
+      # typescript 5.9.3 -> 7.0.2), #210.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions used by CI workflows.
   - package-ecosystem: github-actions
