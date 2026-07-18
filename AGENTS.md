@@ -35,7 +35,7 @@ See [ADR 0002](docs/adr/0002-separate-from-sibling-products.md).
 - **API contract (OpenAPI):** `docs/openapi/openapi.yaml` (inventory: `docs/api/endpoints.md`)
 - **Sibling integration:** `docs/integrations/sibling-products.md`
 - **NENE2 inheritance map:** `docs/inheritance-from-nene2.md`
-- **Current work:** `docs/todo/current.md`
+- **Current work / handoff:** private `nene-origin/internal-docs/payout/todo/current.md` (operational logs — `docs/todo`, `docs/daily` — moved to the private mirror in P3, 2026-07-18; the public repo keeps only Diátaxis docs + ADR/CHANGELOG)
 - **Roadmap:** `docs/roadmap.md`
 
 ## Operating Rules
