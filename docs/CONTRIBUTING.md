@@ -3,7 +3,7 @@
 ## Workflow
 
 1. Create or reuse a GitHub Issue.
-2. Read `docs/roadmap.md` and `docs/todo/current.md`.
+2. Read `docs/roadmap.md` and the private handoff `nene-origin/internal-docs/payout/todo/current.md` (operational logs moved to the private mirror in P3, 2026-07-18).
 3. Branch from `main`: `type/issue-number-summary`.
 4. Implement the smallest useful change.
 5. Check `docs/terms.md` for all new identifiers.
