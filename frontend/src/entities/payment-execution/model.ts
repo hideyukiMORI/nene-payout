@@ -3,11 +3,7 @@ import type { PaymentExecutionId } from './ids'
 export type GatewayId = 'stripe' | 'gmo_pg'
 
 export type PaymentExecutionStatus =
-  | 'initiated'
-  | 'succeeded'
-  | 'failed'
-  | 'refunded'
-  | 'charged_back'
+  'initiated' | 'succeeded' | 'failed' | 'refunded' | 'charged_back'
 
 export interface PaymentExecution {
   id: PaymentExecutionId
