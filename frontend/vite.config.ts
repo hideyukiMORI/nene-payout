@@ -14,7 +14,11 @@ export default defineConfig({
     port: Number(process.env.NENE_PAYOUT_FRONTEND_PORT) || 5190,
     proxy: {
       '/api': {
-        target: process.env.NENE_PAYOUT_API_URL || 'http://localhost:9000',
+        // Single source of truth is NENE_PAYOUT_PORT; the proxy target follows it.
+        // NENE_PAYOUT_API_URL stays as an explicit override (escape hatch). See #170.
+        target:
+          process.env.NENE_PAYOUT_API_URL ||
+          `http://localhost:${process.env.NENE_PAYOUT_PORT || 9000}`,
         changeOrigin: true,
       },
     },

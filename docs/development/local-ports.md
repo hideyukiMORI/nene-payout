@@ -28,6 +28,10 @@ the single source of truth in `docs/terms.md` §8.
 
 Health check: `curl -fsS http://localhost:9000/health`
 
+The Vite dev proxy target is derived from `NENE_PAYOUT_PORT` (the single source of
+truth for the API port), so changing that one variable moves both the API and the
+proxy together. `NENE_PAYOUT_API_URL` remains only as an explicit override. See #170.
+
 > Previously Payout used the `89 lane`; that collides with **NeNe Corpus**
 > (`89**`), so it was moved to the free `90 lane`.
 
