@@ -5,6 +5,15 @@
   cacheDirectory=".phpunit.cache"
 >
   <php>
+    <!--
+      NENE2 M-2 (#1600): GuardedJwtSecretResolver ignores the dev-secret opt-in
+      whenever AppEnvironment resolves to production, and an unset APP_ENV
+      resolves to production — so without this the container build fails closed
+      under a clean CI checkout (NENE2 is cloned unpinned at ref: main). `test`
+      keeps the dev-secret path valid; the production throw path is covered by
+      its own tests and is not weakened here.
+    -->
+    <env name="APP_ENV" value="test" />
     <env name="NENE2_ALLOW_DEV_SECRET" value="1" />
   </php>
   <testsuites>
