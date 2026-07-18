@@ -11,6 +11,6 @@
 
 ## 索引（新しい順）
 
-- [2026-07-18](2026-07-18.md) — W1 初弾: pre-stage 実測で指示書前提の stale を確定（dead class 17→0 既済み）／先行 PR-C＝dead token 5本削除（#218）／Inter 未適用の潜在バグ発見→AI-18 送付／PR-A は tokens 1.0.2 publish 待ち
+- [2026-07-18](2026-07-18.md) — W1 初弾 pre-stage（stale 確定・dead token 5本 #218）＋**セッション2で W1 payout を 1 番手クローズ**（PR-A #230＝tokens 1.1.0 pin・固定点 diff0／PR-B/C 既済み）。Dependabot #212-216 精査・#170 API_URL 正本一本化（#221）・フロントテスト T0/T1-lite（#222-225・+24tests）・日報 §8 D2 自己点検（#227）
 - [2026-07-17](2026-07-17.md) — hooks segment の規約衝突を再定義して移設完了（#194）／Dependabot 12本棚卸し（10 マージ・#128 方針化・#130 上流 HOLD）／Wave G 先鋒 CSS ゲート補記
 - [2026-07-16](2026-07-16.md) — repo-status の齟齬是正（PR 4本マージ）／nene2-i18n publish 実測／Dependabot 件数の暗算ミス訂正
