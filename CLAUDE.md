@@ -27,9 +27,11 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | Frontend self-review (binding) | `docs/review/frontend.md` |
 | Local Docker ports (binding) | `docs/development/local-ports.md` |
 | API contract (OpenAPI) | `docs/openapi/openapi.yaml` (inventory: `docs/api/endpoints.md`) |
-| Current tasks | `docs/todo/current.md` |
-| Daily reports | `docs/daily/YYYY-MM-DD.md` |
+| Current tasks / 引き継ぎ | private `nene-origin/internal-docs/payout/todo/current.md`（運用ログは private へ移設・下記注記参照） |
+| Daily reports | private `nene-origin/internal-docs/payout/daily/YYYY-MM-DD.md` |
 | Roadmap | `docs/roadmap.md` |
+
+> **運用ログ（`docs/todo`・`docs/daily` 相当）は private `nene-origin/internal-docs/payout/` に移設済み**（P3・2026-07-18）。最新の作業状況・申し送り・引き継ぎはそちらを読むこと。公開リポの `docs` は Diátaxis（tutorial/howto/reference/explanation）＋ADR/CHANGELOG のみを正とする。現在の作業レーンと未処理 Issue は必ず private `nene-origin/internal-docs/payout/todo/current.md` を先に読むこと。
 
 ## Quick Rules
 
@@ -37,7 +39,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 - **Branch**: `type/issue-number-summary` from `main`; never commit directly to `main`.
 - **Commits**: Conventional Commits; type/scope English, description/body Japanese, include `(#issue)`.
 - **PR**: purpose, changes, verification, checklist name, `Closes #n`.
-- **Daily report**: write `docs/daily/YYYY-MM-DD.md` on every working day, as far as possible (施主方針). Format follows `nene-records/docs/daily/*.md`: lead paragraph → headline → work in timeline order (with PR/Issue numbers) → 📊 numbers → lessons → open items. **Distinguish what you measured yourself from numbers handed to you, and "merged" from "awaiting review". State your own mistakes and how you caught them. Do not inflate results.** The report is a doc change, so it follows the Issue-driven rule above like any other.
+- **Daily report**: write `nene-origin/internal-docs/payout/daily/YYYY-MM-DD.md` (private mirror — moved from public `docs/daily` in P3, 2026-07-18) on every working day, as far as possible (施主方針). Format follows the fleet daily-report convention: lead paragraph → headline → work in timeline order (with PR/Issue numbers) → 📊 numbers → lessons → open items. **Distinguish what you measured yourself from numbers handed to you, and "merged" from "awaiting review". State your own mistakes and how you caught them. Do not inflate results.** The report is a doc change, so it follows the Issue-driven rule above like any other.
 - **Secrets**: never commit `.env`, tokens, or credentials.
 - **Framework**: NENE2 via Composer — read `vendor/hideyukimori/nene2/docs/` for runtime patterns.
 - **Coding (binding)**: follow NENE2 conventions exactly (ADR 0016). Use real NENE2 classes per `docs/development/nene2-runtime-reference.md` — there is NO `PdoConnection::getInstance()`, `DbUpsert`, `BearerAuth`, or `ResponseDecorator`; use `DatabaseQueryExecutorInterface`, `BearerTokenMiddleware`, `SecurityHeadersMiddleware`. Layer Handler→UseCase→RepositoryInterface→PdoRepository; constructor injection; no service locator in domain code.
