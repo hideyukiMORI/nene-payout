@@ -55,7 +55,7 @@ export function GenerateWidgetEmbed() {
               aria-label={t('admin.widget.title')}
               value={snippet}
               rows={3}
-              className="w-full rounded-md border border-border bg-surface-raised p-x-inline-sm font-sans text-text-primary"
+              className="w-full rounded-x-md border border-border bg-surface-raised p-x-inline-sm font-sans text-text-primary"
             />
             <div>
               <Button
