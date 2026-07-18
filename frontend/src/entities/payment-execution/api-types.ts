@@ -1,11 +1,7 @@
 export type GatewayIdDto = 'stripe' | 'gmo_pg'
 
 export type PaymentExecutionStatusDto =
-  | 'initiated'
-  | 'succeeded'
-  | 'failed'
-  | 'refunded'
-  | 'charged_back'
+  'initiated' | 'succeeded' | 'failed' | 'refunded' | 'charged_back'
 
 export interface PaymentExecutionDto {
   id: string

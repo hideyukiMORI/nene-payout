@@ -6,8 +6,7 @@ const envSchema = z.object({
 
 const parsed = envSchema.parse({
   VITE_NENE_PAYOUT_API_BASE_URL: import.meta.env['VITE_NENE_PAYOUT_API_BASE_URL'] as
-    | string
-    | undefined,
+    string | undefined,
 })
 
 export const env = {
