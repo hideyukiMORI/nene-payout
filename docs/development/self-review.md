@@ -74,4 +74,4 @@ security, testing — ADR 0019 / `frontend-standards.md`). Key reminders:
 - [ ] New or renamed identifiers registered in `docs/terms.md` in this PR; old spelling removed everywhere
 - [ ] Product/domain names use canonical spelling (`NeNe Payout`, `NENE2`, …)
 - [ ] ADR created when an architectural decision is made
-- [ ] `docs/todo/current.md` updated if phase status changed
+- [ ] private handoff `nene-origin/internal-docs/payout/todo/current.md` updated if phase status changed
