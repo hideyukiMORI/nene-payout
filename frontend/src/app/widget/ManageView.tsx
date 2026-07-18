@@ -78,7 +78,7 @@ export function ManageView() {
             {items.map((invoice) => (
               <li
                 key={invoice.id}
-                className="flex items-center justify-between rounded-md border border-border bg-surface-raised p-x-inline-md"
+                className="flex items-center justify-between rounded-x-md border border-border bg-surface-raised p-x-inline-md"
               >
                 <div className="flex flex-col">
                   <span className="font-medium">{formatJpy(invoice.amount)}</span>

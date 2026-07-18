@@ -125,7 +125,7 @@ export function QuickPayView() {
 
   return (
     <div className="min-h-screen bg-surface p-x-inline-md">
-      <div className="mx-auto flex max-w-md flex-col gap-x-stack-md rounded-md border border-border bg-surface-raised p-x-inline-md shadow-sm">
+      <div className="mx-auto flex max-w-md flex-col gap-x-stack-md rounded-x-md border border-border bg-surface-raised p-x-inline-md shadow-sm">
         <h2 className="font-sans font-medium text-text-primary">{t('widget.pay.title')}</h2>
 
         <dl className="flex flex-col gap-x-stack-sm">
