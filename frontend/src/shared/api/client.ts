@@ -1,12 +1,23 @@
 import {
   createNene2Transport,
+  createSessionTokenStore,
   isNene2ClientError,
   isValidationProblemDetails,
   type Nene2ClientError,
 } from '@hideyukimori/nene2-client'
 import { env } from '@/shared/config/env'
 import { AppError, type ProblemDetails } from '@/shared/api/errors'
-import { tokenStore } from '@/shared/api/auth-token'
+
+/** Fleet-wide naming is `nene_<product>_token` (frontend-standards 02). */
+const STORAGE_KEY = 'nene_payout_token'
+
+/**
+ * Fleet-standard bearer token store (`createSessionTokenStore`): sessionStorage
+ * (#152/#153). Created here — the single `@hideyukimori/nene2-client` contact
+ * file (A-2) — and handed to the transport below so there is exactly one store.
+ * `shared/api/auth-token.ts` re-exports it and wraps it for call sites.
+ */
+export const tokenStore = createSessionTokenStore({ key: STORAGE_KEY })
 
 /**
  * Fleet-standard transport (`@hideyukimori/nene2-client`, issue #102): every

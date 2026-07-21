@@ -1,15 +1,12 @@
-import { createSessionTokenStore } from '@hideyukimori/nene2-client'
-
-/** Fleet-wide naming is `nene_<product>_token` (frontend-standards 02). */
-const STORAGE_KEY = 'nene_payout_token'
+import { tokenStore } from '@/shared/api/client'
 
 /**
- * Fleet-standard bearer token store (`@hideyukimori/nene2-client`,
- * `createSessionTokenStore`): sessionStorage (#152/#153).
- * `shared/api/client.ts` hands this same instance to `createNene2Transport`
- * so there is exactly one store — one source of truth for get/set/clear.
+ * The bearer token store is created in `shared/api/client.ts` — the single
+ * `@hideyukimori/nene2-client` contact file (A-2) — and re-exported here so the
+ * store's public import path (`shared/api/auth-token`) stays stable for callers
+ * and tests. There is exactly one store: one source of truth for get/set/clear.
  */
-export const tokenStore = createSessionTokenStore({ key: STORAGE_KEY })
+export { tokenStore }
 
 /**
  * Thin, stable surface over `tokenStore` for call sites that predate the

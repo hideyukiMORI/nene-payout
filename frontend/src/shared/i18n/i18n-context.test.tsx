@@ -8,7 +8,7 @@ function Probe() {
 
   return (
     <div>
-      <span data-testid="title">{t('admin.nav.dashboard')}</span>
+      <h1>{t('admin.nav.dashboard')}</h1>
       <button
         type="button"
         onClick={() => {
@@ -41,13 +41,13 @@ describe('I18nProvider language switching', () => {
       </I18nProvider>,
     )
 
-    expect(screen.getByTestId('title').textContent).toBe('ダッシュボード')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('ダッシュボード')
 
     fireEvent.click(screen.getByText('to-en'))
-    expect(screen.getByTestId('title').textContent).toBe('Dashboard')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Dashboard')
 
     fireEvent.click(screen.getByText('to-ja'))
-    expect(screen.getByTestId('title').textContent).toBe('ダッシュボード')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('ダッシュボード')
   })
 
   it('persists the chosen locale and reflects it on the document element', () => {
