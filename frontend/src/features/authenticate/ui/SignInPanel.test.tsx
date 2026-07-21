@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { renderWithRouterAndProviders } from '../../../../tests/render/render-with-providers'
-import { mswServer } from '../../../../tests/msw/server'
+import { renderWithRouterAndProviders } from '@tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
 import {
   invalidCredentialsHandlers,
   sessionHandlers,
   TEST_TOKEN,
-} from '../../../../tests/msw/handlers/session'
+} from '@tests/msw/handlers/session'
 import { SignInPanel } from './SignInPanel'
 
 const TOKEN_KEY = 'nene_payout_token'

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { renderWithProviders } from '../../../../tests/render/render-with-providers'
+import { renderWithProviders } from '@tests/render/render-with-providers'
 import { InvoiceForm } from './InvoiceForm'
 
 const VENDORS = [

@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import { renderWithProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { renderWithProviders } from '@tests/render/render-with-providers'
 import { GenerateWidgetEmbed } from './GenerateWidgetEmbed'
 
 describe('GenerateWidgetEmbed', () => {

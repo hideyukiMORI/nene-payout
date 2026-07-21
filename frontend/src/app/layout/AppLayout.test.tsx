@@ -4,9 +4,9 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { I18nProvider } from '@/shared/i18n'
 import { authToken } from '@/shared/api/auth-token'
-import { mswServer } from '../../../tests/msw/server'
-import { currentUserHandlers } from '../../../tests/msw/handlers/session'
-import { createTestQueryClient } from '../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { currentUserHandlers } from '@tests/msw/handlers/session'
+import { createTestQueryClient } from '@tests/render/render-with-providers'
 import { AppLayout } from './AppLayout'
 
 function renderShell(initialPath: string) {

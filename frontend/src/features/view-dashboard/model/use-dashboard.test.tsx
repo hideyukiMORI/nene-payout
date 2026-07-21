@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import { errorVendorHandlers } from '../../../../tests/msw/handlers/vendor'
-import { renderHookWithProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { errorVendorHandlers } from '@tests/msw/handlers/vendor'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { useDashboard } from './use-dashboard'
 
 describe('useDashboard', () => {

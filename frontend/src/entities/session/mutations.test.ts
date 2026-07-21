@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../tests/msw/server'
+import { mswServer } from '@tests/msw/server'
 import {
   invalidCredentialsHandlers,
   sessionHandlers,
   TEST_TOKEN,
-} from '../../../tests/msw/handlers/session'
-import { renderHookWithProviders } from '../../../tests/render/render-with-providers'
+} from '@tests/msw/handlers/session'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { authToken } from '@/shared/api/auth-token'
 import { AppError } from '@/shared/api/client'
 import { useLogin } from './mutations'

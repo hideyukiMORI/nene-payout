@@ -1,11 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import {
-  emptyAuditLogHandlers,
-  errorAuditLogHandlers,
-} from '../../../../tests/msw/handlers/audit-log'
-import { renderHookWithProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { emptyAuditLogHandlers, errorAuditLogHandlers } from '@tests/msw/handlers/audit-log'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { useAuditLogsPage } from './use-audit-logs-page'
 
 describe('useAuditLogsPage', () => {

@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { http, HttpResponse } from 'msw'
-import { mswServer } from '../../../tests/msw/server'
-import { vendorDto } from '../../../tests/factories/vendor'
+import { mswServer } from '@tests/msw/server'
+import { vendorDto } from '@tests/factories/vendor'
 import { apiClient, AppError } from './client'
 import { tokenStore } from './auth-token'
 

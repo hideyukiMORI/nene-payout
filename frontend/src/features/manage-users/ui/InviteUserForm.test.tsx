@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import { renderWithRouterAndProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { renderWithRouterAndProviders } from '@tests/render/render-with-providers'
 import { InviteUserForm } from './InviteUserForm'
 
 describe('InviteUserForm', () => {

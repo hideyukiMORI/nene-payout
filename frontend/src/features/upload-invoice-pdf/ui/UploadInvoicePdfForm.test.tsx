@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../../tests/render/render-with-providers'
+import { renderWithProviders } from '@tests/render/render-with-providers'
 import { UploadInvoicePdfForm } from './UploadInvoicePdfForm'
 
 function pdf(name = 'invoice.pdf'): File {

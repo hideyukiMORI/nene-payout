@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import { emptyOrganizationsManagementHandlers } from '../../../../tests/msw/handlers/organization'
-import { renderHookWithProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { emptyOrganizationsManagementHandlers } from '@tests/msw/handlers/organization'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { useOrganizationsPage } from './use-organizations-page'
 
 describe('useOrganizationsPage', () => {
