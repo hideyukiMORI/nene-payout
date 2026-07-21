@@ -1,4 +1,4 @@
-import { LOCALES, resolveLocale, SUPPORTED_LOCALE_IDS, useTranslation } from '@/shared/i18n'
+import { LOCALES, resolveLocale, SUPPORTED_LOCALES, useTranslation } from '@/shared/i18n'
 
 /**
  * Locale selector for the app shell. Bound to the i18n context, so switching is
@@ -16,7 +16,7 @@ export function LocaleSwitcher() {
       }}
       className="rounded-x-md border border-border bg-surface-raised px-x-inline-sm py-x-stack-sm font-sans text-text-primary"
     >
-      {SUPPORTED_LOCALE_IDS.map((id) => (
+      {SUPPORTED_LOCALES.map((id) => (
         <option key={id} value={id}>
           {LOCALES[id].label}
         </option>
