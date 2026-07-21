@@ -1,105 +1,113 @@
-import js from '@eslint/js'
 import nene2 from '@hideyukimori/nene2-standards'
 import eslintConfigPrettier from 'eslint-config-prettier'
-import importPlugin from 'eslint-plugin-import-x'
-import jsxA11y from 'eslint-plugin-jsx-a11y'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import tseslint from 'typescript-eslint'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-// FSD private entity files — only their own `index.ts` may be imported by upper layers.
-const entityInternalFiles = [
-  './src/entities/*/api-types.ts',
-  './src/entities/*/mapper.ts',
-  './src/entities/*/queries.ts',
-  './src/entities/*/mutations.ts',
-  './src/entities/*/query-keys.ts',
-  './src/entities/*/ids.ts',
-  './src/entities/*/model.ts',
-  './src/entities/*/enum.ts',
-]
-
-const importZones = [
-  { target: './src/features', from: entityInternalFiles },
-  { target: './src/features', from: './src/shared/api' },
-  { target: './src/pages', from: entityInternalFiles },
-  { target: './src/pages', from: './src/shared/api' },
-  { target: './src/shared/ui', from: './src/entities' },
-  { target: './src/shared/ui', from: './src/features' },
-  { target: './src/shared/ui', from: './src/shared/api' },
-]
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', 'coverage', '../public_html/assets', 'storybook-static'],
+    ignores: [
+      'dist',
+      'node_modules',
+      'coverage',
+      '../public_html/assets',
+      'storybook-static',
+      // Build/config files live outside tsconfig; base enables the typed
+      // projectService, which errors on files it can't find in a project.
+      '*.config.ts',
+      'vite.widget.config.ts',
+      'tools/**',
+      'widget-loader/**',
+      '.storybook/**',
+      'eslint.config.js',
+      '**/*.mjs',
+    ],
   },
+  // base enables the typed projectService (auto-discovers tsconfig), so we only
+  // supply browser globals here — no explicit parserOptions.project.
   {
-    extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked],
     files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2023,
       globals: globals.browser,
-      parserOptions: {
-        project: ['./tsconfig.json'],
-        tsconfigRootDir: __dirname,
-      },
     },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'jsx-a11y': jsxA11y,
-      'import-x': importPlugin,
-    },
-    settings: {
-      'import-x/resolver': {
-        typescript: { project: './tsconfig.json' },
-      },
-    },
+  },
+  // Shared synthesized form (README canonical order). fsd/api/i18n/testing carry
+  // the FSD boundaries, transport bans, a11y, and testing-library rules that were
+  // previously hand-rolled or missing. styling uses the no-arg FSD-canonical entry.
+  ...nene2.base,
+  ...nene2.fsd,
+  ...nene2.api,
+  ...nene2.stylingWith(),
+  ...nene2.i18n,
+  ...nene2.testing,
+  // React hygiene is not part of the fleet form; keep it as a repo-local addition.
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      ...jsxA11y.configs.recommended.rules,
-      // Numbers in template literals are safe and needed for RHF typed
-      // field-array paths (e.g. `taxBreakdown.${index}.taxAmount`).
+    },
+  },
+  // Registered payout exception: numbers in template literals are needed for RHF
+  // typed field-array paths (e.g. `taxBreakdown.${index}.taxAmount`).
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
-      'import-x/no-restricted-paths': ['error', { zones: importZones }],
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'JSXAttribute[name.name="className"] Literal[value=/\\[.*\\]/]',
-          message: 'Tailwind arbitrary values are forbidden outside shared/ui/theme.',
-        },
-      ],
     },
   },
   {
-    // Tests may use jsdom/node globals and looser type-aware rules.
-    files: ['tests/**/*.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
+    // Tests and stories: jsdom/node globals and looser type-aware rules.
+    files: ['tests/**/*.{ts,tsx}', 'src/**/*.test.{ts,tsx}', 'src/**/*.stories.{ts,tsx}'],
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
     },
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
-      // Test render helpers legitimately export both components and utilities.
+      // Test render helpers and stories legitimately export non-components.
       'react-refresh/only-export-components': 'off',
     },
+  },
+  // ── Registered exceptions (hub 裁定 07-21・playbook §7 判例15–19) ──────────────
+  // Each is a files×rule override with a reason; scope-off, never inline disable.
+  {
+    // I18N-13: this is payout's own Intl wrapper. Removal condition: delete this
+    // override when B-2 lands nene2-i18n/format and format.ts migrates to it
+    // (Phase B ledger B-2). format.ts has no other restricted-syntax usage.
+    files: ['src/shared/lib/format.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
   },
   {
-    // Stories export a default meta object and named story objects, not components.
-    files: ['src/**/*.stories.{ts,tsx}'],
-    rules: {
-      'react-refresh/only-export-components': 'off',
-    },
+    // AM-18 false positive: the I18nProvider is the one place AM-18 *permits*
+    // setting `lang`. Root fix is in the shared config (exclude the provider);
+    // tracked as nene2-fleet-tooling#118. Local override until that lands.
+    files: ['src/shared/i18n/i18n-context.tsx'],
+    rules: { 'no-restricted-syntax': 'off' },
   },
-  // W1: known-utility fast path（better-tailwindcss/no-unknown-classes）＋ style-prop 規律。
-  // 語彙 codemod スタック直後の連続 PR で有効化する（05 §5.3 O-6・§9.5 正例）。
-  // 配布断片を無改変で合成する（plugin 同梱・raw rule 直書き MUST NOT — README §5/合成規律・
-  // severity の正本は check:tw-oracle — O-5）。
-  ...nene2.styling,
+  {
+    // R1⑦ exemption (判例18): '普通'/'当座' are backend wire values (the
+    // VendorInputMapper contract / AccountType union), not user-perceived
+    // strings — display is separated via ACCOUNT_TYPE_LABEL_KEY + t() in
+    // VendorForm. English-ising them would change the backend contract.
+    files: ['src/entities/vendor/model.ts', 'src/features/manage-vendors/model/vendor-form.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
+    // R1⑦ exemption (判例19): language endonyms ('日本語'/'English') are the
+    // self-name of each locale and are not translated.
+    files: ['src/shared/i18n/locales.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
+    // Widget surface (判例14・provisional). The embeddable widget is injected
+    // into third-party pages and cannot depend on the app's apiClient/i18n, so
+    // it uses raw fetch (A-1) and Intl (I18N-13). Permanence is decided in the
+    // W2a widget lane; do not treat as permanent.
+    files: ['src/app/widget/**/*.{ts,tsx}'],
+    rules: { 'no-restricted-globals': 'off', 'no-restricted-syntax': 'off' },
+  },
   eslintConfigPrettier,
 )
