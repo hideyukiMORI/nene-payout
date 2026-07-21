@@ -18,11 +18,13 @@
     "format:fix": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "coverage:check": "vitest run --coverage && node tools/coverage-ratchet.mjs",
     "knip": "knip",
     "stylelint": "stylelint \"src/**/*.css\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "check": "npm run type-check && npm run lint && npm run format && npm run test && npm run knip && npm run stylelint"
+    "check": "npm run type-check && npm run lint && npm run format && npm run coverage:check && npm run knip && npm run stylelint"
   },
   "dependencies": {
     "@hideyukimori/nene2-client": "^1.1.0",
@@ -46,6 +48,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.0",
     "eslint-import-resolver-typescript": "^4.4.0",
