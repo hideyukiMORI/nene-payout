@@ -23,10 +23,10 @@
     "e2e": "NODE_PATH=./node_modules playwright test",
     "e2e:smoke": "npm run e2e -- --grep @smoke",
     "knip": "knip",
-    "stylelint": "stylelint \"src/**/*.css\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "check": "npm run type-check && npm run lint && npm run format && npm run coverage:check && npm run knip && npm run stylelint"
+    "check": "npm run type-check && npm run lint && npm run format && npm run coverage:check && npm run knip && npm run lint:styles",
+    "lint:styles": "stylelint \"src/**/*.css\""
   },
   "dependencies": {
     "@hideyukimori/nene2-client": "^1.1.0",
@@ -39,7 +39,7 @@
     "zod": "^4.1.0"
   },
   "devDependencies": {
-    "@hideyukimori/nene2-standards": "^1.1.0",
+    "@hideyukimori/nene2-standards": "^2.0.1",
     "@hideyukimori/nene2-tokens": "1.1.0",
     "@playwright/test": "^1.56.1",
     "@storybook/react-vite": "^10.5.2",
@@ -73,6 +73,11 @@
   "overrides": {
     "eslint-plugin-jsx-a11y": {
       "eslint": "$eslint"
-    }
+    },
+    "esbuild": "^0.28.1",
+    "js-yaml": "^4.3.0",
+    "brace-expansion@1": "1.1.16",
+    "brace-expansion@2": "2.1.2",
+    "brace-expansion@5": "5.0.7"
   }
 }

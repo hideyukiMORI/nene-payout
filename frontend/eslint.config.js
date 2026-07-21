@@ -15,12 +15,10 @@ export default tseslint.config(
       'storybook-static',
       // Build/config files live outside tsconfig; base enables the typed
       // projectService, which errors on files it can't find in a project.
-      '*.config.ts',
-      'vite.widget.config.ts',
+      '*.config.{ts,js,mjs}',
       'tools/**',
       'widget-loader/**',
       '.storybook/**',
-      'eslint.config.js',
       '**/*.mjs',
     ],
   },
