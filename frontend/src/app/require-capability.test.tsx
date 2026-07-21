@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { authToken } from '@/shared/api/auth-token'
-import { mswServer } from '../../tests/msw/server'
-import { currentUserHandlers } from '../../tests/msw/handlers/session'
-import { createTestQueryClient } from '../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { currentUserHandlers } from '@tests/msw/handlers/session'
+import { createTestQueryClient } from '@tests/render/render-with-providers'
 import { RequireCapability } from './require-capability'
 
 function renderGuarded() {

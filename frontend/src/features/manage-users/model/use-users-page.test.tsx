@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
-import { emptyUserHandlers, errorUserHandlers } from '../../../../tests/msw/handlers/user'
-import { renderHookWithProviders } from '../../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { emptyUserHandlers, errorUserHandlers } from '@tests/msw/handlers/user'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { useUsersPage } from './use-users-page'
 
 describe('useUsersPage', () => {

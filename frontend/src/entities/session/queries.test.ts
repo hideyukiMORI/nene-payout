@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../tests/msw/server'
-import { currentUserHandlers } from '../../../tests/msw/handlers/session'
-import { renderHookWithProviders } from '../../../tests/render/render-with-providers'
+import { mswServer } from '@tests/msw/server'
+import { currentUserHandlers } from '@tests/msw/handlers/session'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { authToken } from '@/shared/api/auth-token'
 import { useCurrentUser } from './queries'
 

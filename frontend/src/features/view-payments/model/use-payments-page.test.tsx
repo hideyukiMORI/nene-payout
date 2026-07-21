@@ -1,11 +1,11 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { waitFor } from '@testing-library/react'
-import { mswServer } from '../../../../tests/msw/server'
+import { mswServer } from '@tests/msw/server'
 import {
   emptyPaymentExecutionHandlers,
   errorPaymentExecutionHandlers,
-} from '../../../../tests/msw/handlers/payment-execution'
-import { renderHookWithProviders } from '../../../../tests/render/render-with-providers'
+} from '@tests/msw/handlers/payment-execution'
+import { renderHookWithProviders } from '@tests/render/render-with-providers'
 import { usePaymentsPage } from './use-payments-page'
 
 describe('usePaymentsPage', () => {
