@@ -5,7 +5,9 @@ import {
   useUpdateReceivedInvoice,
 } from '@/entities/received-invoice'
 import { useVendorList } from '@/entities/vendor'
-import { ErrorState, PageHeader, Spinner } from '@/shared/ui'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
 import { useTranslation } from '@/shared/i18n'
 import { invoiceToFormValues } from '../model/invoice-form'
 import { InvoiceForm } from './InvoiceForm'

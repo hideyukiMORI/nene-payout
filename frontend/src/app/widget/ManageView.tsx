@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
-import { Button, Spinner, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
+import { Text } from '@/shared/ui/primitives/Text'
 import { formatJpy, notifyHost, widgetApi } from './widget-client'
 
 const STATUS_LABEL: Record<string, MessageKey> = {

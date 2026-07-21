@@ -4,7 +4,10 @@ import {
   useAttachReceivedInvoicePdf,
   useReceivedInvoice,
 } from '@/entities/received-invoice'
-import { ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
+import { Text } from '@/shared/ui/primitives/Text'
 import { formatJpy } from '@/shared/lib'
 import { useTranslation } from '@/shared/i18n'
 import { UploadInvoicePdfForm } from './UploadInvoicePdfForm'

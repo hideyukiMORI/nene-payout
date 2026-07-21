@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Button, FormField, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation } from '@/shared/i18n'
 import { validatePdfFile } from '../model/pdf-file'
 

@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useCreateReceivedInvoice } from '@/entities/received-invoice'
 import { useVendorList } from '@/entities/vendor'
-import { ErrorState, PageHeader, Spinner } from '@/shared/ui'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
 import { useTranslation } from '@/shared/i18n'
 import { InvoiceForm } from './InvoiceForm'
 

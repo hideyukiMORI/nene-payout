@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
-import { Text } from '@/shared/ui'
+import { Text } from '@/shared/ui/primitives/Text'
 import { roleHasCapability, useCurrentUser, type Capability } from '@/entities/session'
 import { LocaleSwitcher } from '@/features/switch-locale'
 import { SignOutButton } from './sign-out-button'

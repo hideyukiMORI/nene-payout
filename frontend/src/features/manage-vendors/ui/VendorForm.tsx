@@ -1,7 +1,11 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ACCOUNT_TYPES, type CreateVendorInput } from '@/entities/vendor'
-import { Button, FormField, Input, Select, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Input } from '@/shared/ui/primitives/Input'
+import { Select } from '@/shared/ui/primitives/Select'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 import {
   EMPTY_VENDOR_FORM_VALUES,

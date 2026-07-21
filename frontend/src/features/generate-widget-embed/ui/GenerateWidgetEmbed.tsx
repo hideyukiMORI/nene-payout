@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useGenerateWidgetToken } from '@/entities/widget-token'
 import { useTranslation } from '@/shared/i18n'
-import { Button, PageHeader, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Text } from '@/shared/ui/primitives/Text'
 
 /**
  * Settings panel that issues an organization-scoped widget token and shows the

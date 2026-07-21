@@ -5,7 +5,11 @@ import {
   type ReceivedInvoiceStatus,
 } from '@/entities/received-invoice'
 import { toVendorId, useVendor } from '@/entities/vendor'
-import { DetailList, ErrorState, PageHeader, Spinner, Text } from '@/shared/ui'
+import { DetailList } from '@/shared/ui/components/DetailList'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
+import { Text } from '@/shared/ui/primitives/Text'
 import { formatDate, formatJpy } from '@/shared/lib'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
 import { toVendorId, useVendor } from '@/entities/vendor'
-import { DetailList, ErrorState, PageHeader, Spinner } from '@/shared/ui'
+import { DetailList } from '@/shared/ui/components/DetailList'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
 import { useTranslation } from '@/shared/i18n'
 
 const EMPTY = '—'

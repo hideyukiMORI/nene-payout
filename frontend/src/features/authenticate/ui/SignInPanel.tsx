@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useLogin } from '@/entities/session'
-import { PageHeader } from '@/shared/ui'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
 import { useTranslation } from '@/shared/i18n'
 import { LoginForm } from './LoginForm'
 

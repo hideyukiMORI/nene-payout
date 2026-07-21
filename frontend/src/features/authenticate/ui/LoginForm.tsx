@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Credentials } from '@/entities/session'
-import { Button, FormField, Input, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Input } from '@/shared/ui/primitives/Input'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 import {
   EMPTY_LOGIN_FORM_VALUES,

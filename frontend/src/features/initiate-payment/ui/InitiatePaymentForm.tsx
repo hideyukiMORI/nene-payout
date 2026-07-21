@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { GatewayId, InitiatePaymentInput } from '@/entities/payment-execution'
-import { Button, FormField, Select, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Select } from '@/shared/ui/primitives/Select'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation } from '@/shared/i18n'
 import {
   formValuesToInitiateInput,

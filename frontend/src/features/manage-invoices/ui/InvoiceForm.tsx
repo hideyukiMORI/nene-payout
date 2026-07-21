@@ -1,7 +1,11 @@
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { CreateReceivedInvoiceInput } from '@/entities/received-invoice'
-import { Button, FormField, Input, Select, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Input } from '@/shared/ui/primitives/Input'
+import { Select } from '@/shared/ui/primitives/Select'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation } from '@/shared/i18n'
 import {
   EMPTY_INVOICE_FORM_VALUES,
