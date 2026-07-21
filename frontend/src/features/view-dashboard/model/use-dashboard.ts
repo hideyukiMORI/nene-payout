@@ -10,6 +10,10 @@ export interface DashboardCard {
   to: string
 }
 
+// [nene2-exemplar:union-page-state]
+// 規約 第2部 UI-1: container hook は判別ユニオンの page state を返す。status 語彙は
+// 3値固定（'loading'/'error'/'success'）— 'empty'/'idle' 等の第4値の発明 MUST NOT。
+// 空状態は success のデータから導出する（UI-4）。
 export type DashboardState =
   | { status: 'loading' }
   | { status: 'error'; retry: () => void }
