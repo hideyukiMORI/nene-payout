@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { authToken } from '@/shared/api/auth-token'
-import { Button } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
 import { useTranslation } from '@/shared/i18n'
 
 /**

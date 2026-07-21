@@ -2,7 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateOrganization } from '@/entities/organization'
-import { Button, FormField, Input, PageHeader, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Input } from '@/shared/ui/primitives/Input'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 import {
   createFormValuesToInput,

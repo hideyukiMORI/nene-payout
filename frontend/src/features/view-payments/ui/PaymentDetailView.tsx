@@ -3,7 +3,10 @@ import {
   usePaymentExecution,
   type PaymentExecutionStatus,
 } from '@/entities/payment-execution'
-import { DetailList, ErrorState, PageHeader, Spinner } from '@/shared/ui'
+import { DetailList } from '@/shared/ui/components/DetailList'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
 import { formatDateTime, formatJpy } from '@/shared/lib'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 

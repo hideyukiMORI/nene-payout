@@ -1,7 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useTranslation } from '@/shared/i18n'
-import { Button, Spinner, Text } from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
+import { Text } from '@/shared/ui/primitives/Text'
 import { formatJpy, maskAccount, notifyHost, widgetApi, type WidgetVendor } from './widget-client'
 
 function readString(source: Record<string, unknown>, key: string): string | null {

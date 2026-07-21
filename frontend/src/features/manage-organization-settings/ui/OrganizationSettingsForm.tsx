@@ -5,16 +5,14 @@ import {
   useUpdateOrganizationName,
   type Organization,
 } from '@/entities/organization'
-import {
-  Button,
-  DetailList,
-  ErrorState,
-  FormField,
-  Input,
-  PageHeader,
-  Spinner,
-  Text,
-} from '@/shared/ui'
+import { Button } from '@/shared/ui/primitives/Button'
+import { DetailList } from '@/shared/ui/components/DetailList'
+import { ErrorState } from '@/shared/ui/components/ErrorState'
+import { FormField } from '@/shared/ui/components/FormField'
+import { Input } from '@/shared/ui/primitives/Input'
+import { PageHeader } from '@/shared/ui/components/PageHeader'
+import { Spinner } from '@/shared/ui/primitives/Spinner'
+import { Text } from '@/shared/ui/primitives/Text'
 import { useTranslation, type MessageKey } from '@/shared/i18n'
 import {
   formValuesToUpdateInput,
