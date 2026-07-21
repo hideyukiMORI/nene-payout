@@ -1,26 +1,42 @@
-import { en, type MessageCatalog } from './messages/en'
+import { ja } from './messages/ja'
+import type { MessageCatalog, MessageKey } from './messages/ja'
 
-export type MessageKey = keyof MessageCatalog
+export type { MessageKey }
 export type MessageParams = Record<string, string | number>
 
+/** console.error is fired once per missing key (DEV only) to avoid log spam. */
+const reportedMisses = new Set<MessageKey>()
+
 /**
- * Look up a message key in the given (possibly partial) catalog, falling back to
- * English, and interpolate `{{param}}` placeholders.
+ * Look up a message key in the given (possibly partial) catalog and interpolate
+ * `{{param}}` placeholders.
  *
- * The `en` fallback never fires today: `en.ts` is checked against
- * `Record<MessageKey, string>` and `locales.test.ts` pins the ja / en key sets
- * to each other, so every key resolves in its own catalog. The shape predates
- * fleet i18n I18N-22, which wants a DEV-only miss to surface (`∅` + one
- * `console.error`) and production to fall back to the authority catalog — ja
- * since #162, not `en`. Aligning it is W1 work: see the I18N-6/20/22 exemplar
- * note in that standard.
+ * 規約 04 I18N-22 (沈黙フォールバック MUST NOT): a miss must never be silently
+ * papered over. In DEV the miss is made visible — the value renders as `∅<key>`
+ * and `console.error` fires once per key — so a dropped translation is caught in
+ * review/E2E. In production the authority catalog (ja, #162 — never `en`) is the
+ * one place a user is spared the `∅`. With today's full `Record<MessageKey,…>`
+ * catalogs a miss cannot actually occur; this is the fail-loud shape the rule
+ * requires regardless.
  */
 export function translate(
   messages: Partial<MessageCatalog>,
   key: MessageKey,
   params?: MessageParams,
 ): string {
-  const raw: string = messages[key] ?? en[key]
+  let raw = messages[key]
+
+  if (raw === undefined) {
+    if (import.meta.env.DEV) {
+      if (!reportedMisses.has(key)) {
+        reportedMisses.add(key)
+        console.error(`i18n: unresolved key ∅${key}`)
+      }
+      raw = `∅${key}`
+    } else {
+      raw = ja[key]
+    }
+  }
 
   if (params === undefined || Object.keys(params).length === 0) {
     return raw
