@@ -4,3 +4,6 @@ coverage
 ../public_html/assets
 package-lock.json
 storybook-static
+test-results
+playwright-report
+blob-report
