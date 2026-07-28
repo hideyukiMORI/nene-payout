@@ -41,20 +41,42 @@ A hand-run check is not a gate — that is why this step exists.
 | Advisory | Package | Why it does not apply here | Expires |
 | --- | --- | --- | --- |
 | [GHSA-qwww-vcr4-c8h2](https://github.com/advisories/GHSA-qwww-vcr4-c8h2) | `react-router` (7.12.0–8.2.0) | payout's console is a **static SPA built by Vite** (`vite build`, no SSR entry) served from `public_html/`. `src/main.tsx` mounts with `createRoot`; there is no `hydrateRoot` / `renderToString` / `renderToPipeableStream` in `src/`. Routing uses the **declarative** `<BrowserRouter>` + `<Routes>` API (`src/App.tsx`, `src/app/router.tsx`) — `createBrowserRouter` and data routers are not used, so **no route-level `action:` / `loader:` exists at all**, and there is no RSC / server runtime (`react-router/server`, `@react-router/dev`, `'use server'`, `createStaticHandler` — 0 hits). The advisory's attack path (a server executing a route action before returning 400) has no counterpart here. Measured 2026-07-29 on this tree. | **2026-08-31** |
+| [GHSA-mh99-v99m-4gvg](https://github.com/advisories/GHSA-mh99-v99m-4gvg) | `brace-expansion` (≤ 5.0.7) | The fix (5.0.8) **is taken** where adoptable: `"brace-expansion@5": "^5.0.8"`. It cannot be taken on the 1.x branch — no patched 1.x exists, and forcing 5.x into that slot breaks `minimatch@3` (see below). What remains is **exactly one dev-only copy**: `eslint-plugin-jsx-a11y/node_modules/brace-expansion@1.1.16`. `npm ls brace-expansion --omit=dev --all` is empty, so it ships in nothing and is on no request path; it is reached only by lint globbing our own committed config. Measured 2026-07-29 (#261). | **2026-08-31** |
 
 There is **no fix available in the 7.x line**: `react-router-dom` ends at 7.18.1, and the fix
 lands in `react-router` v8 (≥ 8.2.1) — a different package and a breaking upgrade. The exception
 is removed by the **react-router v8 migration wave** (bundled with the NENE2 RR8 re-evaluation).
 
-## Pins are time-limited, not fixes
+## Pins are time-limited — and widening them is not automatically safe
 
 Pinning a transitive dependency to dodge an advisory buys time; it does not end the problem,
 because **the pinned version can itself fall inside a later advisory**. payout demonstrated this:
 the 2026-07-21 `overrides` pinned `brace-expansion@1: 1.1.16 / @2: 2.1.2 / @5: 5.0.7`, and on
 2026-07-29 [GHSA-mh99-v99m-4gvg](https://github.com/advisories/GHSA-mh99-v99m-4gvg) (`<= 5.0.7`)
 made two of those three pins vulnerable, dragging `minimatch`, `eslint-plugin-jsx-a11y` and
-`@hideyukimori/nene2-standards` in with them. The fix was to stop pinning per major and take a
-range (`"brace-expansion": "^5.0.8"`). **Prefer ranges; revisit pins.**
+`@hideyukimori/nene2-standards` in with them.
+
+**The obvious repair was wrong, and the gate did not catch it.** Replacing the per-major pins
+with a flat `"brace-expansion": "^5.0.8"` (#257 / PR #259) forced 5.x into the 1.x slot. 1.x *is*
+the function (`module.exports = expand`); 5.x exports a **named** `expand`. `minimatch@3.1.5`
+calls the module, so it started throwing `TypeError: expand is not a function` —
+and `npm run check` stayed **green**, because payout's lint config never reaches
+`eslint-plugin-jsx-a11y`'s minimatch call sites (they need `settings['jsx-a11y']` component
+config). A green check meant "not exercised", not "works". Fixed in #261 by scoping the
+override to `"brace-expansion@5": "^5.0.8"` and allowlisting the residue.
+
+**Therefore: when you change a `overrides` entry that spans majors, probe every resolved copy —
+do not trust a green lint.**
+
+```bash
+cd frontend
+npm ls minimatch --all                       # 1. enumerate every path, nested copies included
+node -e "const m=require('./node_modules/eslint-plugin-jsx-a11y/node_modules/minimatch');\
+  console.log(m('abd','a{b,c}d'))"           # 2. call each resolved copy directly — expect true
+```
+
+Prefer ranges over pins, prefer **scoped** (`pkg@major`) over flat overrides when a package has
+changed its export shape across majors, and revisit both at the allowlist expiry.
 
 ## Fleet note
 

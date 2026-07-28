@@ -39,5 +39,36 @@
     // NENE2 RR8 re-evaluation). If that wave slips past the expiry, the entry must be
     // re-argued in a PR — not silently extended.
     "GHSA-qwww-vcr4-c8h2",
+
+    // GHSA-mh99-v99m-4gvg — brace-expansion "DoS via unbounded expansion length" (high).
+    // Vulnerable range <= 5.0.7; the fix is 5.0.8. We TAKE that fix where it is adoptable —
+    // `"brace-expansion@5": "^5.0.8"` in overrides — and this entry covers only what is left.
+    //
+    // Why the fix is NOT adoptable on the 1.x branch (measured 2026-07-29, #261): there is no
+    // patched 1.x release, and forcing 5.0.8 into the 1.x slot with a *flat* override breaks
+    // its consumer. brace-expansion 1.x IS the module (`module.exports = expand`); 5.x exports
+    // a named `expand`. `minimatch@3.1.5` does `require('brace-expansion')` and calls the
+    // module, so the flat override made it throw:
+    //     TypeError: expand is not a function   (minimatch.js:271, Minimatch.braceExpand)
+    // That is exactly the regression this entry exists to avoid re-introducing. Overriding
+    // `minimatch@3` upward instead fails the other way: `eslint-plugin-jsx-a11y` does
+    // `_interopRequireDefault(require('minimatch'))` and calls the default, which minimatch
+    // >= 9 does not provide. Retiring the chain needs an eslint-plugin major upgrade.
+    //
+    // Why the residual risk is acceptable here (measured 2026-07-29 on this tree):
+    //   - **dev-only**: `npm ls brace-expansion --omit=dev --all` is empty. It is in no shipped
+    //     bundle and on no request path.
+    //   - **exactly one vulnerable copy**: `node_modules/eslint-plugin-jsx-a11y/node_modules/
+    //     brace-expansion@1.1.16` (the hoisted copy is 5.0.8). Enumerated with `npm ls
+    //     minimatch --all` plus a `find` over node_modules — not assumed from the audit summary.
+    //   - The advisory needs an attacker-supplied brace pattern. This copy is reached only by
+    //     lint running over our own repo contents, with glob patterns that are literals in
+    //     committed config.
+    //
+    // Expiry: 2026-08-31. Removed by the eslint-plugin major wave that moves jsx-a11y onto
+    // `minimatch@10` → `brace-expansion@^5`, or by an upstream 1.x backport. Re-check at
+    // expiry — do not extend by reflex. Before ever going back to a flat override, re-run the
+    // probe in docs/development/dependency-audit.md.
+    "GHSA-mh99-v99m-4gvg",
   ],
 }
