@@ -17,6 +17,7 @@ Claude Code / AI agent guide for this repository. Cursor summaries live in `.cur
 | Agent entry | `AGENTS.md` |
 | Workflow | `docs/workflow.md` |
 | CI / Dependabot / secret scanning | `docs/development/ci.md` |
+| Dependency vulnerability gate (binding) | `docs/development/dependency-audit.md` |
 | Commits | `docs/development/commit-conventions.md` |
 | Coding (index) | `docs/development/coding-standards.md` |
 | Backend standards (binding) | `docs/development/backend-standards.md` |

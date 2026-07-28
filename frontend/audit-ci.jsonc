@@ -1,0 +1,43 @@
+{
+  // Dependency-vulnerability gate for CI (replaces the bare `npm audit --audit-level=high`,
+  // which has no way to record a reasoned exception).
+  //
+  // The gate stays sharp: anything high/critical that is NOT listed below fails the build.
+  // `allowlist` is per-advisory (GHSA id), never per-severity — we do not lower the level.
+  //
+  // Adding an entry requires, in this file: (1) the advisory id, (2) why it does not apply to
+  // THIS codebase, measured — not assumed, (3) an expiry date, (4) what removes the need for it.
+  // An expired entry is a task, not a renewal: re-check it, do not extend it by reflex.
+  //
+  // Policy: docs/development/dependency-audit.md
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  "moderate": false,
+  "high": true,
+  "critical": true,
+  "allowlist": [
+    // GHSA-qwww-vcr4-c8h2 — react-router "RSC Mode CSRF Bypass Allows Action Execution Before
+    // 400 Response" (high). Vulnerable range 7.12.0–8.2.0; there is NO fix in the 7.x line
+    // (react-router-dom stops at 7.18.1; the fix is react-router v8 >= 8.2.1, a different
+    // package and a breaking upgrade).
+    //
+    // Why it does not apply to payout (measured 2026-07-29, on this tree):
+    //   - The admin console is a **static SPA built by Vite** (`npm run build` = `vite build`,
+    //     no SSR entry) and served from `public_html/`. `src/main.tsx` mounts with
+    //     `createRoot(...).render(...)`; there is no `hydrateRoot` / `renderToString` /
+    //     `renderToPipeableStream` anywhere in `src/` (grep: 0 hits).
+    //   - Routing is the **declarative** API — `<BrowserRouter>` + `<Routes>` in `src/App.tsx`
+    //     and `src/app/router.tsx`. `createBrowserRouter` / data routers are not used, so there
+    //     are no route-level `action:` / `loader:` definitions at all (grep for
+    //     `^\s*(action|loader)\s*:` in `src/` matches only audit-log domain fields, never a
+    //     route config object).
+    //   - No RSC and no server runtime: grep for `react-router/server`, `@react-router/dev`,
+    //     `'use server'`, `createStaticHandler`, `createStaticRouter` in `src/` = 0 hits.
+    // The advisory's attack path (a server executing a route action before returning 400) has
+    // no counterpart in a client-only bundle with no data-router actions.
+    //
+    // Expiry: 2026-08-31. Removed by the react-router v8 migration wave (bundled with the
+    // NENE2 RR8 re-evaluation). If that wave slips past the expiry, the entry must be
+    // re-argued in a PR — not silently extended.
+    "GHSA-qwww-vcr4-c8h2",
+  ],
+}
