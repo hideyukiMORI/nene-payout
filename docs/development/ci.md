@@ -10,8 +10,14 @@ PR と `main` への push で以下を実行する。全ジョブ green が**マ
 | ジョブ | 内容 | ローカル同等コマンド |
 | --- | --- | --- |
 | `backend` | PHP 8.4 セットアップ → NENE2 を兄弟ディレクトリに checkout → `composer install` → `composer check`（`test` / `analyse` / `cs` / `openapi`） | `composer check` |
-| `frontend` | Node 22 → `npm ci` → `npm run check`（type-check / lint / format / test） | `npm run check --prefix frontend` |
+| `frontend` | Node 22 → `npm ci` → `npm run check`（type-check / lint / format / coverage+ratchet / knip / stylelint）→ `npm run audit`（依存脆弱性ゲート） | `npm run check --prefix frontend` / `npm run audit --prefix frontend` |
 | `secret-scan` | gitleaks による秘密情報スキャン | — |
+
+### 依存脆弱性ゲート（`npm run audit`）
+
+`audit-ci` が high / critical の勧告で**ビルドを落とす**。個別の勧告だけを、理由・実測・
+期限・解除条件つきで `frontend/audit-ci.jsonc` に allowlist できる（severity は下げない）。
+方針の正本は [`dependency-audit.md`](./dependency-audit.md)。
 
 ### NENE2 path dependency の扱い
 
