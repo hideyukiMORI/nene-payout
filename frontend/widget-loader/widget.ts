@@ -67,7 +67,9 @@ interface FrameMessage {
   }
 
   function emit(event: PayoutEvent, detail: unknown): void {
-    listeners[event].forEach((callback) => callback(detail))
+    listeners[event].forEach((callback) => {
+      callback(detail)
+    })
     window.dispatchEvent(new CustomEvent(`nenepayout:${event}`, { detail }))
   }
 
