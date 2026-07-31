@@ -15,9 +15,10 @@ export default tseslint.config(
       'storybook-static',
       // Build/config files live outside tsconfig; base enables the typed
       // projectService, which errors on files it can't find in a project.
+      // widget-loader/ is NOT here: it ships to third-party pages, so it is in
+      // tsconfig's include and is linted like src (#265).
       '*.config.{ts,js,mjs}',
       'tools/**',
-      'widget-loader/**',
       '.storybook/**',
       '**/*.mjs',
     ],
@@ -25,7 +26,7 @@ export default tseslint.config(
   // base enables the typed projectService (auto-discovers tsconfig), so we only
   // supply browser globals here — no explicit parserOptions.project.
   {
-    files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}', 'widget-loader/**/*.ts'],
     languageOptions: {
       ecmaVersion: 2023,
       globals: globals.browser,

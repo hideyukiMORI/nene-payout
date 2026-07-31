@@ -77,6 +77,14 @@ jobs:
       - name: Run checks
         run: npm run check
 
+      # `check` verifies types, lint, format, tests and styles, but never bundles anything —
+      # so a failure that only shows up in the Vite build (module/asset resolution, the widget
+      # IIFE lib build) used to reach main with a green gate. The widget bundle in particular
+      # ships to third-party pages. Kept in CI rather than in `check` so the local `check`
+      # stays fast. Fleet context: the cross-repo "check が本番 build を走らせない" sweep (#265).
+      - name: Build (app bundle + embeddable widget)
+        run: npm run build
+
       # audit-ci = npm audit + a per-advisory allowlist, so a not-yet-fixable advisory can be
       # excepted with a written, expiring reason instead of blunting the whole gate. Anything
       # high/critical that is not listed in frontend/audit-ci.jsonc still fails.
