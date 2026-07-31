@@ -100,10 +100,13 @@ export default tseslint.config(
     rules: { 'no-restricted-syntax': 'off' },
   },
   {
-    // Widget surface (判例14・provisional). The embeddable widget is injected
-    // into third-party pages and cannot depend on the app's apiClient/i18n, so
-    // it uses raw fetch (A-1) and Intl (I18N-13). Permanence is decided in the
-    // W2a widget lane; do not treat as permanent.
+    // Widget surface (判例14・provisional). The embeddable widget is injected into
+    // third-party pages and must stay independent of the app's HTTP transport, so
+    // widget-client.ts uses raw fetch (A-1) and its own Intl formatting (I18N-13).
+    // It does NOT opt out of the app's i18n: the widget views import useTranslation
+    // from @/shared/i18n. Permanence is decided in the W2a widget lane; do not treat
+    // as permanent. The duplicated formatJpy is folded into nene2-i18n ./format with
+    // B-2 (hub 裁定 07-31); this override shrinks then.
     files: ['src/app/widget/**/*.{ts,tsx}'],
     rules: { 'no-restricted-globals': 'off', 'no-restricted-syntax': 'off' },
   },
