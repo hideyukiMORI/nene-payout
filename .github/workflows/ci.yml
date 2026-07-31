@@ -85,6 +85,19 @@ jobs:
       - name: Build (app bundle + embeddable widget)
         run: npm run build
 
+      # @smoke runs inside this required job on purpose (#263). payout's whole e2e suite is
+      # the one hermetic smoke spec, so a separate `e2e` job would only make a one-spec job
+      # required and cost a second `npm ci`. The fleet target form is a dedicated e2e job
+      # (invoice #733/#735); split this out when B-4 (nene2-e2e) grows the suite.
+      # No continue-on-error: a red smoke must fail this job, or "required" means nothing.
+      - name: Install Playwright browser (chromium)
+        run: npx playwright install --with-deps chromium
+
+      # Hermetic: page.route() stubs the API, and playwright.config.ts starts the Vite dev
+      # server itself — no backend, DB or Docker, and it never touches a deployed host.
+      - name: Run @smoke (boot → sign in → dashboard shell)
+        run: npm run e2e:smoke
+
       # audit-ci = npm audit + a per-advisory allowlist, so a not-yet-fixable advisory can be
       # excepted with a written, expiring reason instead of blunting the whole gate. Anything
       # high/critical that is not listed in frontend/audit-ci.jsonc still fails.
