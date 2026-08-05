@@ -55,11 +55,28 @@ final class CapabilityResolver
             return Capability::RegisterInvoice;
         }
 
-        if (str_starts_with($path, '/api/v1/payment-executions') && $method === 'GET') {
+        if (str_starts_with($path, '/api/v1/payment-executions') && self::isReadMethod($method)) {
             return Capability::ViewPayments;
         }
 
         return null;
+    }
+
+    /**
+     * 🔴 Read detection must never be a single equality against GET (#278 / concierge #212).
+     * Written that way, a `grep` for the banned form is also what finds this comment, so
+     * the literal is deliberately spelled out in prose rather than in code punctuation.
+     *
+     * HEAD is a read, and {@see \Nene2\Routing\Router} dispatches it to the GET route
+     * (RFC 7231 §4.3.2), so the handler is reachable. A single equality leaves HEAD in
+     * neither the read branch nor {@see self::isMutation()}, so `resolve()` returns null
+     * and CapabilityMiddleware skips both the capability check and — when the token's
+     * role is outside the Role enum — the organization-scope check as well. That is a
+     * fail-open path: the same request is 403 under GET and reaches the handler under HEAD.
+     */
+    private static function isReadMethod(string $method): bool
+    {
+        return in_array($method, ['GET', 'HEAD'], true);
     }
 
     private static function isMutation(string $method): bool
