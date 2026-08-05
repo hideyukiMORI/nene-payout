@@ -55,9 +55,12 @@ final class CapabilityResolverTest extends TestCase
         // Payment initiation — the /payments special case must win over RegisterInvoice.
         yield 'payment initiate POST' => ['/api/v1/received-invoices/01I/payments', 'POST', Capability::InitiatePayment];
 
-        // Payment executions — read requires ViewPayments.
+        // Payment executions — read requires ViewPayments. HEAD is a read too
+        // (Router maps it onto the GET route), so it must resolve identically (#278).
         yield 'payment executions GET' => ['/api/v1/payment-executions', 'GET', Capability::ViewPayments];
         yield 'payment execution GET by id' => ['/api/v1/payment-executions/01P', 'GET', Capability::ViewPayments];
+        yield 'payment executions HEAD' => ['/api/v1/payment-executions', 'HEAD', Capability::ViewPayments];
+        yield 'payment execution HEAD by id' => ['/api/v1/payment-executions/01P', 'HEAD', Capability::ViewPayments];
 
         // No capability required.
         yield 'health' => ['/health', 'GET', null];

@@ -74,6 +74,39 @@ final class CapabilityMiddlewareTest extends TestCase
         self::assertSame(403, $response->getStatusCode());
     }
 
+    /**
+     * Regression for #278. A signed token whose `role` claim is outside the Role
+     * enum resolves to `$role === null`, which fails closed on GET (403) but used
+     * to fail *open* on HEAD: the resolver returned null for HEAD, so neither the
+     * capability check nor the organization-scope check ran, and Router (which maps
+     * HEAD onto GET routes per RFC 7231 §4.3.2) delivered the request to the handler.
+     */
+    public function test_head_read_is_authorized_like_get(): void
+    {
+        $handler = new CapturingRequestHandler($this->psr17);
+
+        $response = $this->middleware->process(
+            $this->request('HEAD', '/api/v1/payment-executions', ['role' => 'not-a-role', 'org_id' => '01ORG_A']),
+            $handler,
+        );
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertNull($handler->seen);
+    }
+
+    public function test_get_read_with_unknown_role_is_forbidden(): void
+    {
+        $handler = new CapturingRequestHandler($this->psr17);
+
+        $response = $this->middleware->process(
+            $this->request('GET', '/api/v1/payment-executions', ['role' => 'not-a-role', 'org_id' => '01ORG_A']),
+            $handler,
+        );
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertNull($handler->seen);
+    }
+
     public function test_unauthenticated_request_passes_through(): void
     {
         $handler = new CapturingRequestHandler($this->psr17);
