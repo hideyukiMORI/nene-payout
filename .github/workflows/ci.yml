@@ -77,6 +77,14 @@ jobs:
         working-directory: nene-payout
         run: composer install --no-interaction --no-progress --prefer-dist
 
+      # Dependency-vulnerability gate. Kept as its own step rather than folded into
+      # `composer check`, so the job log (and any cross-repo tooling that reads it)
+      # can tell whether the audit ran at all. A check that leaves no trace cannot be
+      # distinguished from a check that is missing.
+      - name: composer audit
+        working-directory: nene-payout
+        run: composer audit --no-interaction
+
       - name: Run checks
         working-directory: nene-payout
         run: composer check
