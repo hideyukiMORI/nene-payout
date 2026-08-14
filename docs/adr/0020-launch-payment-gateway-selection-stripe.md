@@ -112,6 +112,11 @@ Checkout concerns money coming **in**. Payout's product definition
 1. **Stripe's third-party payout product is not available in Japan.**
    Global Payouts lists its availability as **`GB` and `US` only**
    〔measured 2026-08-14, "利用可否" section of the Global Payouts documentation〕.
+   ⚠️ **Do not confuse this with the "160 か国以上へ送金できる" figure on the same page.**
+   That number is the set of **destination** countries money can be sent *to*;
+   「利用可否」is the set of countries the **sending business** may operate from.
+   They are different axes, and reading the first as covering the second would give
+   "160 countries, so Japan is fine" — which the page does not say.
 2. **Stripe's own documentation routes the licensed / segregated-funds case to a
    different product.** The same page says Global Payouts also suits businesses
    「**資金移動を仲介するために必要なライセンス (資金移動業ライセンスなど) を保有している**」, and:
