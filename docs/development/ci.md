@@ -43,8 +43,14 @@ Dependabot PR も通常どおり CI ゲートを通過し、レビュー後に�
 - リポジトリに必要な秘密情報は **GitHub Actions Secrets**（`Settings → Secrets and
   variables → Actions`）に登録し、ワークフローからは `${{ secrets.* }}` で参照する。
   ワークフローのログに値を出力しない。
-- PR・push ごとに **gitleaks** が履歴を走査する。誤検知は `.gitleaks.toml` の
-  `allowlist` で個別に許可する（コミットされた実シークレットは即時失効・ローテーション）。
+- **gitleaks** の走査範囲はトリガーによって違う（2026-08-14 実測）。
+  **PR・push では直近コミットのみ**、**`workflow_dispatch` / `schedule` では
+  `--all` で全履歴**を走査する。したがって **PR が緑でも履歴が検査されたことにはならない**。
+  `.gitleaks.toml` を変更したときは `workflow_dispatch` を実行して確かめること。
+- 誤検知は `.gitleaks.toml` の `[[allowlists]]` で**1件ずつ**許可する。ルール単位・
+  パス単位で塞がない（次に来る本物を同じ穴に隠すため）。作法は
+  `frontend/audit-ci.jsonc` と同じ **ID / 理由 / 期限 / 解除条件**の4点。
+  理由は必ず**現物を測った事実**で書く（コミットされた実シークレットは即時失効・ローテーション）。
 - カード番号（PAN）は SAQ-A 方針によりシステムに保存・通過させない（ADR 0010、
   `docs/explanation/payment-compliance.md`）。
 
