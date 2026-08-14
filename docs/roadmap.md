@@ -1,6 +1,21 @@
 # Roadmap — NeNe Payout
 
-## Phase 0 — Governance and product design (current)
+> **This file lists what gets built, not how far along it is.** Do not read progress off it —
+> it went two months describing shipped work as unstarted (fixed in #291), because a
+> hand-maintained status marker drifts from the tree while nobody is looking at it.
+>
+> Progress is measured, not recorded. Take it from the source:
+>
+> ```bash
+> composer check                      # backend: tests, PHPStan, CS, OpenAPI, conformance
+> npm run check --prefix frontend     # frontend: types, lint, tests, coverage ratchet
+> gh issue list --state open          # what is actually left
+> ```
+>
+> The live handover — current lane, blockers, next step — is private
+> `nene-origin/internal-docs/payout/todo/current.md`.
+
+## Phase 0 — Governance and product design
 
 - [x] Governance bootstrap (AGENTS.md, CLAUDE.md, scope-contract, ADRs 0001–0007)
 - [x] Domain model and terms registry
@@ -35,9 +50,12 @@ pass `docs/review/compliance.md`.
 - [ ] Stripe adapter (hosted charge + verify)
 - [x] PaymentExecution create + invoice→processing (initiate, audited, 1-tx) — Issue #40 (immutable terminal records — ADR 0013)
 - [x] Audit foundation (`Ulid`, `AuditRecorder`, audit_logs migration, `GET /api/v1/audit-logs`); mutation+audit transaction wiring applied per resource — ADR 0011 — Issue #32
+- [x] Own-organization settings API (`GET`/`PATCH /api/v1/organization`, admin, own tenant, audited) — Issue #110
+- [x] User management API (list/get/invite/update role/deactivate, own-tenant scope, audited) — Issue #106
+- [x] Superadmin cross-organization management (`/api/v1/organizations` list/get/create/update/deactivate — `src/Organization/Management/`, wired in `OrganizationsRouteRegistrar`)
 - [ ] UTC storage / JST display bootstrap (ADR 0012)
 - [ ] Webhook handler (payment result from gateway; signature-verified, idempotent)
-- [ ] OpenAPI contract validation (composer openapi)
+- [x] OpenAPI contract validation (`composer openapi` → `tools/validate-openapi.php`, run as part of `composer check`)
 
 ## Compliance follow-ups (gated)
 
@@ -55,7 +73,8 @@ pass `docs/review/compliance.md`.
 - [x] Payment initiation UI (initiate-payment feature: gateway select → useInitiatePayment → gateway redirect, pending-only — Issue #69)
 - [x] Invoice PDF upload UI (multipart postForm, upload-invoice-pdf feature, client type/size validation — Issue #76)
 - [x] Detail screens (DetailList + formatDateTime; vendor/invoice/payment detail views with list links — Issue #78)
-- [ ] React admin UI (remaining: dashboard/settings/audit-log screens)
+- [x] Dashboard / settings / audit-log screens (`frontend/src/pages/{dashboard,settings,audit-logs}`)
+- [x] User management + superadmin organization screens (`frontend/src/pages/{users,organizations}`)
 - [x] Embeddable payment widget (script tag embed) — two modes (host-passed pay + embedded management), org-scoped token, host JS API (ADR 0021, Issue #122)
 - [ ] CSS variable customization
 - [ ] Admin panel: gateway configuration + connectivity check (疎通確認)
@@ -76,4 +95,4 @@ pass `docs/review/compliance.md`.
 
 ---
 
-Last updated: 2026-06-13
+Last updated: 2026-08-14 (#291 — three checkboxes and the Phase 0 "current" marker were wrong; see the note at the top)
