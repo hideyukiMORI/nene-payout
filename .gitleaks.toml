@@ -1,0 +1,79 @@
+# Secret-scanning configuration (gitleaks) — see docs/development/ci.md.
+#
+# The gate stays sharp: the full default ruleset is kept (`useDefault = true`) and no rule is
+# disabled. Exceptions live below and are written like an entry in `frontend/audit-ci.jsonc`:
+# (1) what was found, identified precisely enough that it cannot widen, (2) why it is not a
+# secret — measured on this tree, not assumed, (3) an expiry date, (4) what removes the need
+# for it. An expired entry is a task, not a renewal.
+#
+# ── Two traps, both measured on 2026-08-14. Read before editing. ────────────────────────
+#
+# TRAP 1 — a green PR proves nothing here. gitleaks-action scans only the latest commit on
+#   `push` / `pull_request`, but the FULL history (`--all`) on `workflow_dispatch` /
+#   `schedule`. This repository had no dispatch or schedule trigger until #287, which is why
+#   the finding below sat unseen for two months. After changing this file, run the CI
+#   workflow via `workflow_dispatch` and check `Secret scanning (gitleaks)` there.
+#
+# TRAP 2 — CI does not run the gitleaks you have locally. `gitleaks-action@v3` pinned
+#   **8.24.3** on 2026-08-14, and 8.24.3 differs from current gitleaks in two ways that both
+#   fail silently — no error, no warning, the config is simply ignored or inverted:
+#     * `[[allowlists]]` (the plural, array-of-tables form) is NOT applied when extending the
+#       default config. It parses fine and does nothing. Use the singular `[allowlist]`.
+#     * Multiple criteria inside one allowlist are OR'd, not AND'd (`condition` is not
+#       supported). So adding `paths` or `regexes` alongside `commits` **widens** the
+#       exception — `paths = ['^\.env\.example$']` would exempt that file across ALL history.
+#       Keep exactly one criterion.
+#   The first draft of this file hit both traps at once: it looked maximally strict, passed
+#   locally on 8.30.1, and was a no-op in CI. Verify against the version CI actually pins.
+#
+# ────────────────────────────────────────────────────────────────────────────────────────
+
+[extend]
+useDefault = true
+
+# ── Exception 1 ──────────────────────────────────────────────────────────────────────────
+# Commit 4c381bd40ac4496a18c73bd3c98af9cece077a52 (2026-06-13)
+# Fingerprint: 4c381bd40ac4496a18c73bd3c98af9cece077a52:.env.example:generic-api-key:23
+#
+# WHAT WAS FOUND (measured 2026-08-14 on this tree, with gitleaks 8.24.3 and 8.30.1):
+#   `generic-api-key` matched across a newline at `.env.example:23` (`DB_PASSWORD=`) and
+#   extracted the FOLLOWING line as the secret. The string gitleaks reports as the secret is:
+#
+#       DB_CHARSET=utf8mb4
+#
+#   — a MySQL character set name. It is not a credential, and it is not the `DB_PASSWORD`
+#   value: that value is empty.
+#
+# WHY IT IS NOT A SECRET:
+#   Deliberately NOT recorded as "it's a placeholder". Every credential key in `.env.example`
+#   at that commit has an EMPTY right-hand side — `NENE2_MACHINE_API_KEY=`,
+#   `NENE2_LOCAL_JWT_SECRET=`, `DATABASE_URL=`, `DB_PASSWORD=` — so there is no value here to
+#   be weak or strong; there is no value at all. "Placeholder" would invite the reading that a
+#   placeholder is fine as long as it looks fake, and the next finding in this file — on a
+#   line that DOES carry a value — would hide behind this same entry.
+#
+# WHY THIS CANNOT WIDEN:
+#   The exception is pinned to one commit, and a commit is immutable: its content can never
+#   grow, so neither can this exemption. That commit adds 4 files (174 lines) and contains
+#   exactly one finding, the one above — a full-history scan with this entry removed reports
+#   `leaks found: 1` and nothing else. Every other commit, and the working tree, stay fully
+#   scanned. Positive control (run on both versions before committing): making a commit that
+#   adds a real-looking `NENE2_MACHINE_API_KEY=sk_live_...` still fails the scan with this
+#   entry in place.
+#
+# EXPIRY: 2027-02-14 (six months). Re-measure then; do not extend by reflex.
+#
+# WHAT REMOVES THE NEED FOR IT:
+#   Rewriting the history containing 4c381bd4 (not planned — force-pushing a public
+#   repository's history is a heavier act than this entry), or an upstream fix to
+#   `generic-api-key` that stops the match spanning a newline. Either way the check is the
+#   same: delete this block, run `gitleaks git --no-banner .`, confirm 0 findings.
+#
+#   Note for whoever edits `.env.example` next: because the exception is pinned to a commit,
+#   editing the `DB_PASSWORD=` / `DB_CHARSET=` pair can reproduce the same newline-spanning
+#   false positive as a NEW finding in a NEW commit, which this entry will not cover — by
+#   design. The cheap fix then is to stop those two keys being adjacent, not to widen this.
+# ─────────────────────────────────────────────────────────────────────────────────────────
+[allowlist]
+description = "2026-06-13 4c381bd4 .env.example L23: generic-api-key matched across a newline and extracted 'DB_CHARSET=utf8mb4' (a MySQL charset name); the DB_PASSWORD value on that line is empty. Expires 2027-02-14."
+commits = ["4c381bd40ac4496a18c73bd3c98af9cece077a52"]
