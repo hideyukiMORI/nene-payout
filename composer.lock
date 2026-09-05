@@ -74,7 +74,7 @@
             "dist": {
                 "type": "path",
                 "url": "../NENE2",
-                "reference": "d9773abdcedbb4367511ceeec8762a6b1b90cc4f"
+                "reference": "3f599fb016a7fc9c95fad7f518984769e595b62e"
             },
             "require": {
                 "monolog/monolog": "^3.0",
@@ -2373,11 +2373,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.8",
+            "version": "2.2.12",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e285254e60f33c21902efef4a926ca0987c06804",
-                "reference": "e285254e60f33c21902efef4a926ca0987c06804",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/174b0d88710f00a42598886504dd7a146f91ace5",
+                "reference": "174b0d88710f00a42598886504dd7a146f91ace5",
                 "shasum": ""
             },
             "require": {
@@ -2433,7 +2433,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-04T22:21:45+00:00"
+            "time": "2026-08-31T19:09:43+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
