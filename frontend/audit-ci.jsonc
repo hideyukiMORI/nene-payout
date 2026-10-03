@@ -15,6 +15,26 @@
   "high": true,
   "critical": true,
   "allowlist": [
+    // GHSA-vfj7-8cjw-p6xm — braces <= 3.0.3, stack-exhaustion DoS through deeply nested brace
+    // patterns. Added 2026-10-03 (#322). **Expires 2026-11-03.**
+    //
+    // No fix exists to take: the advisory lists first_patched_version = none, and 3.0.3 is the
+    // latest braces on npm (`gh api /advisories/GHSA-vfj7-8cjw-p6xm`, `npm view braces version`,
+    // both read 2026-10-03). An override cannot help for the same reason.
+    //
+    // Why it does not apply here, measured on this tree:
+    //   - `npm ls braces --all` → exactly one copy, stylelint > micromatch > braces@3.0.3
+    //     (stylelint arrives via @hideyukimori/nene2-standards). Lockfile marks it dev: true.
+    //   - `npm ls braces --omit=dev --all` → (empty). It ships in nothing and is on no
+    //     request path.
+    //   - The only patterns it ever expands are our own committed globs: the `lint:styles`
+    //     script argument ("src/**/*.css") and the stylelint config. No user- or
+    //     network-supplied string reaches it, so there is no attacker-controlled pattern to
+    //     nest. The worst case is a developer crashing their own lint run.
+    //
+    // Removed by: a patched braces release (> 3.0.3), or micromatch / stylelint dropping it.
+    // Re-read the advisory before touching this entry — see the react-router note below.
+    "GHSA-vfj7-8cjw-p6xm",
     // GHSA-qwww-vcr4-c8h2 (react-router, high) was here until 2026-08-14 (#295). It is now
     // REMOVED, not renewed — and the reason it could be removed is NOT the one the entry
     // anticipated, which is worth recording.

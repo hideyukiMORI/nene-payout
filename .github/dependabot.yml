@@ -18,6 +18,17 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      # react and react-dom must resolve to the exact same version or the app
+      # throws "Incompatible React versions" at runtime, so a PR that bumps
+      # only one of them can never go green. Keep the pair (and their types)
+      # in a single PR. Reference: #322 (#301 / #304 arrived split).
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
     ignore:
       # Fleet policy: @types/* track the engines Node range, not npm latest.
       # engines.node is ">=22 <25", so @types/node major bumps (which type a
