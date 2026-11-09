@@ -91,7 +91,7 @@ jobs:
 
   frontend:
     name: Frontend (npm run check)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # 2026-11-09: ubuntu-latest=26.04 は Playwright <1.65 の chromium 非対応。1.65+ に上げたら latest へ戻す
     defaults:
       run:
         working-directory: frontend
