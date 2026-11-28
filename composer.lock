@@ -74,7 +74,7 @@
             "dist": {
                 "type": "path",
                 "url": "../NENE2",
-                "reference": "6146abd6d1224655104aa1b9db43f3c551d767d6"
+                "reference": "96eca2743a283e6f12800134644c9ed0f8d8ab9d"
             },
             "require": {
                 "monolog/monolog": "^3.0",
@@ -6236,16 +6236,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v8.1.11",
+            "version": "v8.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "e8266f55160f674f290a5f567cb55e11e21f921b"
+                "reference": "deb300ddc3ef3eab0476569fd88d14e3b194881a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/e8266f55160f674f290a5f567cb55e11e21f921b",
-                "reference": "e8266f55160f674f290a5f567cb55e11e21f921b",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/deb300ddc3ef3eab0476569fd88d14e3b194881a",
+                "reference": "deb300ddc3ef3eab0476569fd88d14e3b194881a",
                 "shasum": ""
             },
             "require": {
@@ -6288,7 +6288,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v8.1.11"
+                "source": "https://github.com/symfony/yaml/tree/v8.1.12"
             },
             "funding": [
                 {
@@ -6308,7 +6308,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T08:39:20+00:00"
+            "time": "2026-11-16T12:51:10+00:00"
         },
         {
             "name": "theseer/tokenizer",
